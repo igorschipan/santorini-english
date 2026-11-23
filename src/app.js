@@ -140,21 +140,16 @@ function parallax(){
     hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
     hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
   }
-  document.querySelectorAll(".sign .ph").forEach(el => {
-    const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt - 50 || r.top > mt + h + 50) return;
-    const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
-    el.style.transform = `translateY(${(-c*60).toFixed(1)}px)`;
-  });
 }
 let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
 
 /* path */
-const X = [-58, -18, 22, 58];
+const X = [-58, -18, 22, 58, 22, -18];
 const CONN = `<svg viewBox="0 0 96 30" aria-hidden="true"><rect x="2" y="18" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="2" y="25" width="30" height="4" rx="1.5" fill="#DDBBA8"/><rect x="33" y="10" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="33" y="17" width="30" height="4" rx="1.5" fill="#DDBBA8"/><rect x="64" y="2" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="64" y="9" width="30" height="4" rx="1.5" fill="#DDBBA8"/></svg>`;
 function renderPath(){
   const cur = current();
-  const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? 1 : -1}">${CONN}</div>`;
+  const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
     <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
@@ -164,10 +159,10 @@ function renderPath(){
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
-      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)});background-position:${({guests:"center 55%",team:"center 85%",suppliers:"center 70%",owner:"center 70%"})[w.id]}"></div><div class="shade"></div>
+      <div class="sign"><img class="ph" src="${IMG.world(w.id)}" alt="" loading="lazy">
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
-      if (li > 0) h += conn(X[(li-1) % 4], l.boss ? 0 : X[li % 4]);
+      if (li > 0) h += conn(X[(li-1) % 6], l.boss ? 0 : X[li % 6]);
       const st = isDone(l) ? "done" : (l === cur ? "now" : "lock");
       const open = isOpen(l);
       if (l.boss){
@@ -176,7 +171,7 @@ function renderPath(){
           <span class="t">${esc(l.en)}<small class="${l === cur ? "now" : ""}">${l === cur ? "Нажмите, чтобы начать" : esc(l.title) + (isDone(l) ? " · пройдено" : "")}</small></span></button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
-        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${X[li % 4]}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
+        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${X[li % 6]}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
           <span class="ic">${ic}</span><span class="t">${esc(l.en)}<small>${l === cur ? "Нажмите, чтобы начать" : esc(l.title)}</small></span></button>`;
       }
     });
@@ -235,7 +230,7 @@ function renderTalk(){
   if (!TK.accent || !TALK.accents[TK.cat].includes(TK.accent)) rollPersona();
   const sp = speedOf();
   $("#main").innerHTML = `<div class="pane">
-    <div class="banner" style="background-image:url(assets/codex/talk.webp)"><div class="shade"></div><h1>Разговор с учителем</h1></div>
+    <img class="banner" src="assets/codex/talk.webp" alt=""><h1>Разговор с учителем</h1>
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
@@ -292,7 +287,7 @@ function renderMe(){
   const pct = next ? Math.round((S.xp - RANKS[r][1]) / (next[1] - RANKS[r][1]) * 100) : 100;
   const done = LESSONS.filter(isDone).length, acc = S.answered ? Math.round(S.right / S.answered * 100) : 0;
   $("#main").innerHTML = `<div class="pane">
-    <div class="banner" style="background-image:url(${IMG.world("owner")})"><div class="shade"></div><h1>${RANKS[r][0]}</h1></div>
+    <img class="banner" src="${IMG.world("owner")}" alt=""><h1>${RANK_EN[r] === "Legend" ? "Legend of Santorini" : RANK_EN[r]}</h1><p class="lead" style="margin:2px 0 0">${RANKS[r][0]}</p>
     <p class="lead">${next ? `До звания «${next[0]}» осталось ${next[1] - S.xp} опыта.` : "Высшее звание. Браво!"}</p>
     <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <div class="stat"><div><b>${S.xp}</b><span>опыта</span></div><div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div>

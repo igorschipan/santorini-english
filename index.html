@@ -69,16 +69,15 @@ main::-webkit-scrollbar{display:none}
 /* ---------- path: the stair alley ---------- */
 .path{display:flex;flex-direction:column;padding:0 0 10px}
 .flight{display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 0 26px;position:relative}
-.flight::before{content:"";position:absolute;left:9%;right:9%;top:170px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
+.flight::before{content:"";position:absolute;left:9%;right:9%;top:240px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
 .flight>*{position:relative;z-index:1}
-.sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;aspect-ratio:16/10;max-height:300px;background:var(--sea);box-shadow:var(--shadow)}
-.sign .ph{position:absolute;left:0;right:0;top:-36px;bottom:-36px;background-size:cover;background-position:center;will-change:transform}
-.sign .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,42,85,.78) 0%,rgba(12,42,85,.18) 55%,rgba(12,42,85,0) 100%)}
-.sign .tx{position:absolute;left:16px;right:16px;bottom:12px;color:#fff;display:flex;align-items:flex-end;gap:12px}
-.sign .n{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-weight:800;color:var(--aegean);flex:none}
+.sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;background:#fff;box-shadow:var(--shadow)}
+.sign .ph{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--sea)}
+.sign .tx{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.sign .n{width:38px;height:38px;border-radius:12px;background:var(--aegean);display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
 .sign h2{font-size:22px;font-weight:800;line-height:1.05}
-.sign p{margin:2px 0 0;font-size:14px;opacity:.9}
-.sign .count{margin-left:auto;font-weight:800;font-size:15px;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+.sign p{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
+.sign .count{margin-left:auto;font-weight:800;font-size:15px;color:var(--aegean);background:var(--sea);padding:4px 10px;border-radius:999px}
 .step{position:relative;width:min(64%,230px);min-height:70px;display:flex;align-items:center;gap:12px;padding:10px 14px 20px;text-align:left;border-radius:16px 16px 14px 14px;
   background:linear-gradient(to top,#E3E9F1 12px,#FBFBF9 12px);color:var(--ink-3);transform:translateX(var(--x,0));outline:1.5px dashed var(--sea-2);outline-offset:-1.5px}
 .conn{width:96px;height:30px;margin:-8px 0;transform:translateX(var(--x,0)) scaleX(var(--f,1))}
@@ -173,9 +172,7 @@ main::-webkit-scrollbar{display:none}
 .speeds{display:flex;gap:6px;flex-wrap:wrap}
 .speeds .chipbtn{min-height:44px;padding:6px 11px;font-size:14px}
 .prompt{white-space:pre-wrap;font-size:14px;line-height:1.45;background:var(--plaster);border-radius:14px;padding:14px;color:var(--ink);max-height:200px;overflow:auto;margin:12px 0}
-.banner{position:relative;height:150px;border-radius:var(--r);overflow:hidden;margin:-4px 0 16px;background:var(--sea) center/cover}
-.banner .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,42,85,.75),rgba(12,42,85,0) 65%)}
-.banner h1{position:absolute;left:16px;bottom:12px;color:#fff;font-size:26px}
+img.banner{display:block;width:100%;height:auto;border-radius:var(--r);margin:-4px 0 14px;box-shadow:var(--shadow-lo)}
 ol.how{margin:0 0 6px;padding-left:22px;color:var(--ink-2)} ol.how li{margin:4px 0}
 .stat{display:flex;margin:16px 0 18px;padding:12px 0;border-top:1px solid var(--pebble);border-bottom:1px solid var(--pebble)}
 .stat div{flex:1;padding:0 8px;border-left:1px solid var(--pebble)}
@@ -191,7 +188,7 @@ ol.how{margin:0 0 6px;padding-left:22px;color:var(--ink-2)} ol.how li{margin:4px
 .ranks li.me{font-weight:800;color:var(--aegean)}
 .ranks li.next{opacity:.6}
 .empty{text-align:center}
-.empty img{width:100%;height:220px;object-fit:cover;border-radius:var(--r);margin-bottom:12px}
+.empty img{width:100%;height:auto;border-radius:var(--r);margin-bottom:12px}
 select.in{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--pebble);padding:0 12px;background:#fff;color:var(--ink);font-size:16px}
 .note-ok{font-size:14px;color:var(--plate);font-weight:700;margin-top:8px}
 .import{position:fixed;inset:0;z-index:40;background:rgba(12,42,85,.45);display:grid;place-items:end center;padding:0}
@@ -1099,21 +1096,16 @@ function parallax(){
     hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
     hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
   }
-  document.querySelectorAll(".sign .ph").forEach(el => {
-    const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt - 50 || r.top > mt + h + 50) return;
-    const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
-    el.style.transform = `translateY(${(-c*60).toFixed(1)}px)`;
-  });
 }
 let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
 
 /* path */
-const X = [-58, -18, 22, 58];
+const X = [-58, -18, 22, 58, 22, -18];
 const CONN = `<svg viewBox="0 0 96 30" aria-hidden="true"><rect x="2" y="18" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="2" y="25" width="30" height="4" rx="1.5" fill="#DDBBA8"/><rect x="33" y="10" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="33" y="17" width="30" height="4" rx="1.5" fill="#DDBBA8"/><rect x="64" y="2" width="30" height="8" rx="2" fill="#F3E6DC"/><rect x="64" y="9" width="30" height="4" rx="1.5" fill="#DDBBA8"/></svg>`;
 function renderPath(){
   const cur = current();
-  const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? 1 : -1}">${CONN}</div>`;
+  const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
     <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
@@ -1123,10 +1115,10 @@ function renderPath(){
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
-      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)});background-position:${({guests:"center 55%",team:"center 85%",suppliers:"center 70%",owner:"center 70%"})[w.id]}"></div><div class="shade"></div>
+      <div class="sign"><img class="ph" src="${IMG.world(w.id)}" alt="" loading="lazy">
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
-      if (li > 0) h += conn(X[(li-1) % 4], l.boss ? 0 : X[li % 4]);
+      if (li > 0) h += conn(X[(li-1) % 6], l.boss ? 0 : X[li % 6]);
       const st = isDone(l) ? "done" : (l === cur ? "now" : "lock");
       const open = isOpen(l);
       if (l.boss){
@@ -1135,7 +1127,7 @@ function renderPath(){
           <span class="t">${esc(l.en)}<small class="${l === cur ? "now" : ""}">${l === cur ? "Нажмите, чтобы начать" : esc(l.title) + (isDone(l) ? " · пройдено" : "")}</small></span></button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
-        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${X[li % 4]}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
+        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${X[li % 6]}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
           <span class="ic">${ic}</span><span class="t">${esc(l.en)}<small>${l === cur ? "Нажмите, чтобы начать" : esc(l.title)}</small></span></button>`;
       }
     });
@@ -1194,7 +1186,7 @@ function renderTalk(){
   if (!TK.accent || !TALK.accents[TK.cat].includes(TK.accent)) rollPersona();
   const sp = speedOf();
   $("#main").innerHTML = `<div class="pane">
-    <div class="banner" style="background-image:url(assets/codex/talk.webp)"><div class="shade"></div><h1>Разговор с учителем</h1></div>
+    <img class="banner" src="assets/codex/talk.webp" alt=""><h1>Разговор с учителем</h1>
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
@@ -1251,7 +1243,7 @@ function renderMe(){
   const pct = next ? Math.round((S.xp - RANKS[r][1]) / (next[1] - RANKS[r][1]) * 100) : 100;
   const done = LESSONS.filter(isDone).length, acc = S.answered ? Math.round(S.right / S.answered * 100) : 0;
   $("#main").innerHTML = `<div class="pane">
-    <div class="banner" style="background-image:url(${IMG.world("owner")})"><div class="shade"></div><h1>${RANKS[r][0]}</h1></div>
+    <img class="banner" src="${IMG.world("owner")}" alt=""><h1>${RANK_EN[r] === "Legend" ? "Legend of Santorini" : RANK_EN[r]}</h1><p class="lead" style="margin:2px 0 0">${RANKS[r][0]}</p>
     <p class="lead">${next ? `До звания «${next[0]}» осталось ${next[1] - S.xp} опыта.` : "Высшее звание. Браво!"}</p>
     <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <div class="stat"><div><b>${S.xp}</b><span>опыта</span></div><div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div>
