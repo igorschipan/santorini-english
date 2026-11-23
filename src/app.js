@@ -141,6 +141,15 @@ function parallax(){
     hero.querySelector(".wm").style.transform = `translateY(${(-hy*0.12).toFixed(1)}px)`;
     hero.querySelector(".sea").style.transform = `scale(${(1 + hy*0.0003).toFixed(4)})`;
   }
+  /* world photos: drift while the card is entering or leaving, settle to the full uncropped photo once the whole card is in view */
+  const vt = mt, vb = mt + h;
+  document.querySelectorAll(".sign .ph").forEach(el => {
+    const r = el.getBoundingClientRect(); if (r.bottom < vt || r.top > vb) return;
+    let t = 0;
+    if (r.bottom > vb) t = Math.min(1, (r.bottom - vb) / r.height);
+    else if (r.top < vt) t = -Math.min(1, (vt - r.top) / r.height);
+    el.style.transform = t ? `translateY(${(t*5).toFixed(2)}%) scale(${(1 + Math.abs(t)*0.12).toFixed(3)})` : "";
+  });
 }
 let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
