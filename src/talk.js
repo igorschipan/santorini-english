@@ -5,7 +5,7 @@ const TALK = {
     { id:"reviews", name:"По отзывам", role:"a guest at the restaurant" },
     { id:"team", name:"Персонал", role:"a staff member of the restaurant" },
     { id:"suppliers", name:"Поставщики", role:"a supplier of the restaurant" },
-    { id:"owner", name:"Руководство", role:"the owner of the restaurant, a member of the Greek family that runs it" }
+    { id:"owner", name:"Руководство", role:"the restaurant's leadership: either Mikalis, the Greek owner, or his daughter Lia, the general manager (choose one who fits the situation and introduce yourself by name)" }
   ],
   accents: {
     guests: ["Australian","British (London)","Scottish","Irish","American (New York)","American Southern","Indian","Singaporean","German","French","Italian","Russian","Japanese","Chinese","Dutch"],

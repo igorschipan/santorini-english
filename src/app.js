@@ -198,6 +198,7 @@ function renderMist(){
 
 /* talk with the ChatGPT teacher: scene + random accent, speed and mood */
 const pickOne = a => a[Math.floor(Math.random()*a.length)];
+const GUESTS = ["guest-anna","guest-james"];
 let TK = { cat:"guests", scene:null, accent:null, speed:"rand", mood:null };
 function persona(cat){ return { accent: pickOne(TALK.accents[cat]), mood: pickOne(TALK.moods), speedRoll: pickOne(TALK.speeds).id }; }
 function rollPersona(){ const p = persona(TK.cat); TK.accent = p.accent; TK.mood = p.mood; TK.roll = p.speedRoll; }
@@ -224,7 +225,7 @@ function renderTalk(){
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
-    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:10px"><div class="av">${pic(IMG.av(({guests:"guest-anna",reviews:"guest-james",team:"waiter-made",suppliers:"supplier-ketut",owner:"owner-nikos"})[TK.cat]), "", "", "")}</div><h3 style="margin:0">Собеседник</h3></div>
+    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:10px"><div class="av">${pic(IMG.av(({guests:"guest-anna",reviews:"guest-james",team:"waiter-made",suppliers:"supplier-ketut",owner:"owner-mikalis"})[TK.cat]), "", "", "")}</div><h3 style="margin:0">Собеседник</h3></div>
       <div class="persona">
         <div class="prow"><span class="k">Акцент</span><span class="v">${esc(TK.accent)}</span><button class="reroll" data-roll="accent" aria-label="Другой акцент">${I.dice}</button></div>
         <div class="prow"><span class="k">Настроение</span><span class="v">${esc(TK.mood)}</span><button class="reroll" data-roll="mood" aria-label="Другое настроение">${I.dice}</button></div>
@@ -433,10 +434,11 @@ function showTask(){
       <button class="skip" data-skip>Не могу сейчас говорить</button>`, false);
   }
 }
-function whoLabel(){ const w = L.lesson ? L.lesson.world.id : "guests"; return ({guests:"Гость", team:"Сотрудник", suppliers:"Поставщик", owner:"Владелец"})[w]; }
+function whoLabel(){ const l = L.lesson, w = l ? l.world.id : "guests"; if (w === "owner") return l.who === "lia" ? "Лиа, управляющая" : "Микалис, владелец"; return ({guests:"Гость", team:"Сотрудник", suppliers:"Поставщик"})[w]; }
 function whoPic(){ const l = L.lesson; if (!l) return "guest-anna"; if (l.boss && l.world.id === "guests") return "critic";
-  return ({guests: L.guestPic || (L.guestPic = pickOne(["guest-anna","guest-james"])), team:"waiter-made", suppliers:"supplier-ketut", owner:"owner-nikos"})[l.world.id]; }
-function whoInitial(){ const w = L.lesson ? L.lesson.world.id : "guests"; return ({guests:"Г", team:"С", suppliers:"П", owner:"В"})[w]; }
+  if (l.world.id === "owner") return l.who === "lia" ? "manager-lia" : "owner-mikalis";
+  return ({guests: L.guestPic || (L.guestPic = pickOne(GUESTS)), team:"waiter-made", suppliers:"supplier-ketut"})[l.world.id]; }
+function whoInitial(){ const l = L.lesson, w = l ? l.world.id : "guests"; if (w === "owner") return l.who === "lia" ? "Л" : "М"; return ({guests:"Г", team:"С", suppliers:"П"})[w]; }
 function drawOrder(){
   const s = L.state;
   $("#slots").innerHTML = s.line.map((b,k) => `<button class="tile in" data-out="${k}">${esc(b.w)}</button>`).join("");

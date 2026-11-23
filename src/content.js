@@ -434,10 +434,10 @@ const WORLDS = [
   ]
 },
 {
-  id: "owner", name: "Владелец", en: "Owner",
+  id: "owner", name: "Руководство", en: "Management",
   lessons: [
   {
-    id: "o1", title: "Отчёт за неделю", en: "Weekly report",
+    id: "o1", who: "mikalis", title: "Отчёт за неделю", en: "Weekly report",
     w: [["revenue","выручка"],["guests","гости"],["increase","рост"],["decrease","спад"],["average","средний"]],
     p: [
       ["Here is the report for last week.", "Вот отчёт за прошлую неделю.", "report"],
@@ -462,7 +462,7 @@ const WORLDS = [
     talk: "you give the owner a short weekly report with numbers"
   },
   {
-    id: "o2", title: "Плохой отзыв", en: "A bad review",
+    id: "o2", who: "lia", title: "Плохой отзыв", en: "A bad review",
     w: [["review","отзыв"],["rude","грубый"],["happen","случиться"],["reply","ответить"],["prevent","не допустить"]],
     p: [
       ["We got a bad review on Google.", "Нам оставили плохой отзыв в Google.", "review"],
@@ -487,7 +487,7 @@ const WORLDS = [
     talk: "the owner asks you about a one-star review"
   },
   {
-    id: "o3", title: "Просьба о бюджете", en: "Asking for budget",
+    id: "o3", who: "mikalis", title: "Просьба о бюджете", en: "Asking for budget",
     w: [["budget","бюджет"],["staff","персонал"],["repair","ремонт"],["worth it","того стоит"],["cost","стоить"]],
     p: [
       ["I'd like to ask for a small budget.", "Я хочу попросить небольшой бюджет.", "budget"],
@@ -512,7 +512,7 @@ const WORLDS = [
     talk: "you ask the owner for budget for an extra weekend waiter"
   },
   {
-    id: "o4", title: "Идея для ресторана", en: "Pitching an idea",
+    id: "o4", who: "lia", title: "Идея для ресторана", en: "Pitching an idea",
     w: [["idea","идея"],["sunset","закат"],["event","мероприятие"],["profit","прибыль"],["test","проверить"]],
     p: [
       ["I have an idea for the restaurant.", "У меня есть идея для ресторана.", "idea"],
@@ -537,7 +537,7 @@ const WORLDS = [
     talk: "you pitch a sunset happy hour idea to the owner"
   },
   {
-    id: "o5", title: "Босс: итоги месяца", en: "Boss: monthly review", boss: true,
+    id: "o5", who: "mikalis", title: "Босс: итоги месяца", en: "Boss: monthly review", boss: true,
     w: [["goal","цель"],["achieve","достичь"],["responsibility","ответственность"],["raise","повышение (зарплаты)"],["improve","улучшить"]],
     p: [
       ["We reached our goal this month.", "В этом месяце мы достигли цели.", "goal"],
