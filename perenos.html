@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Santorini English: перенос прогресса</title>
+<style>
+body{margin:0;font:17px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#FCFCFA;color:#0C2A55}
+.w{max-width:480px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;margin:0 0 10px}
+p{color:#4A5C78}
+.card{background:#fff;border-radius:20px;padding:18px;box-shadow:10px 14px 22px -12px rgba(12,42,85,.3);margin:18px 0}
+a.btn,button{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border-radius:16px;border:0;font:inherit;font-weight:800;background:#1550A8;color:#fff;text-decoration:none;margin-top:12px}
+.ghost{background:#F1EFEB!important;color:#0C2A55!important}
+b{color:#0C2A55}
+</style>
+</head>
+<body><div class="w">
+<h1>Перенос прогресса</h1>
+<div id="out"><p>Ищу прогресс старой версии…</p></div>
+</div>
+<script>
+var APP = "https://igorschipan.github.io/santorini-english/";
+function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+var S = null;
+try { S = JSON.parse(localStorage.getItem("santorini-english-v1") || "null"); } catch(e){}
+var out = document.getElementById("out");
+if (S && (S.xp || (S.done && Object.keys(S.done).length))){
+  var pack = { v:2, xp:S.xp||0, streak:S.streak||0, lastDay:S.lastDay||null, done:Object.keys(S.done||{}), answered:S.answered||0, right:S.right||0,
+    m:(S.mistakes||[]).map(function(m){ return [m.en, m.ru, m.wrong||"", m.src||"", m.fixed?1:0]; }) };
+  var url = APP + "#import=" + b64e(pack);
+  out.innerHTML = '<div class="card"><p>Нашёл прогресс: пройдено уроков <b>' + pack.done.length + '</b>, опыт <b>' + pack.xp + '</b>, серия <b>' + pack.streak + '</b>.</p>' +
+    '<a class="btn" href="' + url + '">Открыть новую версию с прогрессом</a>' +
+    '<button class="ghost" id="cp">Скопировать ссылку</button></div><p>Ссылку стоит сохранить: по ней прогресс переносится в любой браузер.</p>';
+  document.getElementById("cp").onclick = function(){
+    var b = this; (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function(){ b.textContent = "Скопировано"; }, function(){ prompt("Скопируйте ссылку:", url); });
+  };
+} else {
+  out.innerHTML = '<div class="card"><p>Прогресс старой версии здесь не виден. Так бывает, если этот файл открыт не тем же способом, что и старое приложение.</p>' +
+    '<p>Попробуйте открыть этот файл так же, как открывали старое приложение. Если не получится, откройте новую версию и в «Профиле» выберите последний пройденный урок: всё до него отметится пройденным.</p>' +
+    '<a class="btn" href="' + APP + '">Открыть новую версию</a></div>';
+}
+</script>
+</body></html>
