@@ -1034,11 +1034,39 @@ function lev(a, b){ const m = a.length, n = b.length; if (!m) return n; if (!n) 
   for (let i = 1; i <= m; i++){ const c = [i]; for (let j = 1; j <= n; j++) c[j] = Math.min(p[j]+1, c[j-1]+1, p[j-1]+(a[i-1]===b[j-1]?0:1)); p = c; }
   return p[n]; }
 const close = (a, b) => { a = norm(a); b = norm(b); if (a === b) return true; return lev(a,b) <= Math.max(1, Math.floor(b.length*0.08)); };
+/* speech check: contractions, numbers, Greek dish names, words split by the recognizer */
+const CONTR = {"i'm":"i am","you're":"you are","we're":"we are","they're":"they are","it's":"it is","that's":"that is","there's":"there is","what's":"what is","here's":"here is","let's":"let us","don't":"do not","doesn't":"does not","didn't":"did not","can't":"can not","cannot":"can not","won't":"will not","isn't":"is not","aren't":"are not","wasn't":"was not","weren't":"were not","haven't":"have not","hasn't":"has not","wouldn't":"would not","couldn't":"could not","shouldn't":"should not","i'll":"i will","we'll":"we will","you'll":"you will","it'll":"it will","i'd":"i would","we'd":"we would","you'd":"you would","i've":"i have","we've":"we have","you've":"you have","okay":"ok"};
+const NUMW = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty".split(" ");
+const TENS = {2:"twenty",3:"thirty",4:"forty",5:"fifty",6:"sixty",7:"seventy",8:"eighty",9:"ninety"};
+function toks(str){ const out = [];
+  norm(str).split(" ").forEach(w => { if (!w) return;
+    if (CONTR[w]) out.push(...CONTR[w].split(" "));
+    else if (/^\d+$/.test(w)){ const n = Number(w);
+      if (n <= 20) out.push(NUMW[n]); else if (n < 100) { out.push(TENS[Math.floor(n/10)]); if (n % 10) out.push(NUMW[n % 10]); }
+      else if (n === 100) out.push("one","hundred"); else out.push(w); }
+    else out.push(w.replace(/'/g,"")); });
+  return out; }
+/* Greek and Italian food names: English speech recognition can't spell them, so they are not checked */
+const FOREIGN = "patates fournou revithokeftedes potatokeftedes tomatokeftedes kolokythokeftedes keftedes meze feta halloumi kavourosalata dolmades bruschetta spanakopita tiropita pita melitzana tirokafteri fava hummus skordalia tzatziki creta mousaka moussaka fakies gemista fasolakia arakas schnitzel soutzoukakia napoletana napoli bolognese makaronia kima pastitsio calamari saganaki barbounia souvlaki giga gyros pancetta bifteki kebab loukoumades nutella crepes ekmek ravani galaktoboureko panna cotta profiterole eclair tiramisu kalamata falafel filo bechamel penne parmesan".split(" ");
+let SOFT = null;
+function softWords(){ if (SOFT) return SOFT;
+  const en = new Set(), add = x => { if (x) toks(x).forEach(w => en.add(w)); };
+  LESSONS.forEach(l => { (l.p||[]).forEach(p => add(p[0])); (l.r||[]).forEach(r => { add(r.ok); add(r.s); }); });
+  SOFT = new Set(FOREIGN);
+  MENU.forEach(d => toks(d.n || "").forEach(w => { if (w.length > 9 && !en.has(w)) SOFT.add(w); }));
+  return SOFT; }
+const wsim = (x, w) => x === w || x === w + "s" || w === x + "s" || (w.length >= 4 && lev(x, w) <= (w.length >= 7 ? 2 : 1));
+function takeWord(pool, w){
+  const k = pool.findIndex(x => wsim(x, w)); if (k >= 0){ pool.splice(k, 1); return true; }
+  if (w.length >= 5) for (let n = 2; n <= 3; n++) for (let i = 0; i + n <= pool.length; i++)
+    if (lev(pool.slice(i, i + n).join(""), w) <= Math.floor(w.length * 0.3)){ pool.splice(i, n); return true; }
+  return false; }
 function wordScore(said, target){
-  const t = norm(target).split(" "), s = norm(said).split(" ");
-  let hit = 0; const pool = s.slice();
-  t.forEach(w => { const k = pool.findIndex(x => x === w || (w.length > 3 && lev(x,w) <= 1)); if (k >= 0){ hit++; pool.splice(k,1); } });
-  return hit / t.length;
+  const t = toks(target), pool = toks(said), soft = softWords();
+  const hard = t.filter(w => !soft.has(w)), use = hard.length >= 3 ? hard : t;
+  if (!use.length || !pool.length) return 0;
+  let hit = 0; use.forEach(w => { if (takeWord(pool, w)) hit++; });
+  return hit / use.length;
 }
 
 /* ---------- voice ---------- */
@@ -1408,7 +1436,7 @@ function showTask(){
       <div class="speak" style="margin-bottom:14px"><button class="play slow" data-say aria-label="Прослушать образец" style="width:auto;padding:0 16px;gap:6px;display:flex">${I.play}<span>Образец</span></button></div>
       ${REC ? `<button class="mic" data-mic>${I.mic}<span>Нажмите и говорите</span></button><div class="heard" id="heard"></div>` : ""}
       <label class="sr" for="tin">Что вы сказали</label>
-      <textarea class="in ${REC ? "hide" : ""}" id="tin" placeholder="Нажмите сюда, затем микрофон на клавиатуре и скажите фразу" autocomplete="off" spellcheck="false"></textarea>
+      <textarea class="in ${REC ? "hide" : ""}" id="tin" lang="en" placeholder="Нажмите сюда, затем микрофон на клавиатуре и скажите фразу" autocomplete="off" spellcheck="false"></textarea>
       ${REC ? "" : `<div class="hint">${I.mic}<span>Нажмите в поле, затем значок микрофона на клавиатуре iPhone и скажите фразу. Текст появится сам.</span></div>`}
       <button class="skip" data-skip>Не могу сейчас говорить</button>`, false);
   }
@@ -1434,10 +1462,14 @@ function answerOf(t){
 }
 function check(){
   const t = L.tasks[L.i];
-  const [got, want] = answerOf(t);
+  let [got, want] = answerOf(t);
   let ok;
   if (t.type === "type") ok = close(got, want);
-  else if (t.type === "speak") ok = wordScore(got, want) >= 0.75;
+  else if (t.type === "speak"){
+    let best = got, sc = 0;
+    [got, ...(L.state.alts || [])].filter(Boolean).forEach(x => { const v = wordScore(x, want); if (v > sc){ sc = v; best = x; } });
+    ok = sc >= 0.75; got = best;
+  }
   else if (t.type === "order") ok = norm(got) === norm(want);
   else ok = got === want;
   finishTask(t, ok, got);
@@ -1540,16 +1572,32 @@ function noHearts(){
 function quit(){ if (window.speechSynthesis) speechSynthesis.cancel(); hideSheet(); $("#lesson").classList.add("hide"); $("#lesson").innerHTML = ""; L = null; render(); }
 
 /* speech recognition (when the browser has it) */
-let recog = null;
+let recog = null, recPause = 0, recMax = 0;
+/* Safari on iPhone repeats the whole phrase in every new result, Chrome sends pieces: glue both correctly */
+function joinRes(res, k){ let acc = "";
+  res.forEach(r => { const a = r[Math.min(k, r.length - 1)]; const t = a ? a.transcript.trim() : ""; if (!t) return;
+    const na = norm(acc), nt = norm(t);
+    if (!na || nt.startsWith(na)) acc = t; else if (!na.endsWith(nt)) acc += " " + t; });
+  return acc.trim(); }
 function toggleMic(btn){
   if (recog){ recog.stop(); return; }
-  recog = new REC(); recog.lang = "en-US"; recog.interimResults = true; recog.maxAlternatives = 1;
+  const r = recog = new REC(); r.lang = "en-US"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = true;
+  L.state.alts = []; L.state.heard = "";
   btn.classList.add("on"); btn.querySelector("span").textContent = "Говорите…";
-  recog.onresult = e => { const s = Array.from(e.results).map(r => r[0].transcript).join(" "); L.state.heard = s; $("#heard").textContent = "«" + s + "»"; setCheck(!!s.trim()); };
-  recog.onerror = () => { $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
-    $("#heard").innerHTML = `<div class="hint">${I.mic}<span>Микрофон в браузере не сработал. Нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; };
-  recog.onend = () => { btn.classList.remove("on"); btn.querySelector("span").textContent = "Сказать ещё раз"; recog = null; };
-  try { recog.start(); } catch(e){ recog.onerror(); }
+  const stopIn = ms => { clearTimeout(recPause); recPause = setTimeout(() => { if (recog === r) r.stop(); }, ms); };
+  stopIn(8000); clearTimeout(recMax); recMax = setTimeout(() => { if (recog === r) r.stop(); }, 25000);
+  r.onresult = e => { if (recog !== r || !L || !$("#heard")) return;
+    const res = Array.from(e.results), n = Math.max(1, ...res.map(x => x.length)), alts = [];
+    for (let k = 0; k < n; k++){ const s = joinRes(res, k); if (s && !alts.includes(s)) alts.push(s); }
+    const s = alts[0] || ""; L.state.heard = s; L.state.alts = alts;
+    $("#heard").textContent = s ? "«" + s + "»" : ""; setCheck(!!s.trim());
+    stopIn(3000); };
+  r.onerror = ev => { const er = ev && ev.error; if (er === "no-speech" || er === "aborted") return; if (!$("#heard")) return;
+    $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
+    $("#heard").innerHTML = `<div class="hint">${I.mic}<span>${er === "service-not-allowed" ? "На iPhone включите Siri и Диктовку: Настройки → Siri, Настройки → Основные → Клавиатура → Диктовка. Пока можно так: " : "Микрофон в браузере не сработал. "}нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; };
+  r.onend = () => { clearTimeout(recPause); clearTimeout(recMax); if (recog === r) recog = null;
+    btn.classList.remove("on"); btn.querySelector("span").textContent = "Сказать ещё раз"; };
+  try { r.start(); } catch(e){ recog = null; r.onerror(); r.onend(); }
 }
 
 /* ---------- events ---------- */
