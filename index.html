@@ -41,8 +41,8 @@ svg{display:block}
 .hide{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 /* every pressable answers the finger */
-.btn,.o,.tile,.tab,.step,.scene,.dome,.chipbtn,.play,.mic,.reroll{transition:transform 160ms var(--ease-out),background-color 160ms ease,border-color 160ms ease,color 160ms ease}
-.btn:active,.o:active,.tile:active,.step:active,.scene:active,.dome:active,.chipbtn:active,.play:active,.mic:active,.reroll:active{transform:scale(.97)}
+.btn,.o,.tile,.tab,.step,.scene,.chipbtn,.play,.mic,.reroll{transition:transform 160ms var(--ease-out),background-color 160ms ease,border-color 160ms ease,color 160ms ease}
+.btn:active,.o:active,.tile:active,.step:active,.scene:active,.chipbtn:active,.play:active,.mic:active,.reroll:active{transform:scale(.97)}
 .step:active{transform:translateX(var(--x,0)) scale(.97)}
 
 /* ---------- shell ---------- */
@@ -68,8 +68,8 @@ main::-webkit-scrollbar{display:none}
 
 /* ---------- path: the stair alley ---------- */
 .path{display:flex;flex-direction:column;padding:0 0 10px}
-.flight{display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 0 26px;position:relative}
-.flight::before{content:"";position:absolute;left:9%;right:9%;top:240px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
+.flight{display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 0 56px;position:relative}
+.flight::before{content:"";position:absolute;left:4%;right:4%;top:240px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
 .flight>*{position:relative;z-index:1}
 .flight>.step{z-index:2}
 .sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;background:#fff;box-shadow:var(--shadow)}
@@ -95,16 +95,14 @@ main::-webkit-scrollbar{display:none}
 .step.now small{font-weight:800}
 .step.paint::after{content:"";position:absolute;inset:0;border-radius:16px;background:#fff;animation:paint 700ms var(--ease-out) both;pointer-events:none}
 @keyframes paint{from{clip-path:inset(0 100% 0 0);opacity:1}70%{clip-path:inset(0 0 0 0);opacity:1}to{clip-path:inset(0 0 0 0);opacity:0}}
-.dome{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px 8px;border-radius:var(--r);text-align:center}
-.dome img{width:200px;height:160px;object-fit:contain;mix-blend-mode:multiply}
-.dome .t{font-size:19px;font-weight:800;line-height:1.2;max-width:260px}
-.dome .t small{display:block;font-weight:600;font-size:13px;line-height:1.3;margin-top:2px;color:var(--ink-2)}
-.dome .now{color:var(--aegean);font-weight:800}
-.dome .lk{position:absolute;top:8px;left:calc(50% - 100px);width:38px;height:38px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center}
-.dome .lk svg{width:22px;height:22px}
-.dome.lock .t{color:var(--ink-3)}
-.dome .ok{position:absolute;top:8px;left:calc(50% - 100px);width:38px;height:38px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center}
-.dome .ok svg{width:22px;height:22px}
+.step.boss{flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:14px 14px 24px;text-align:center;border-radius:115px 115px 16px 16px}
+.step.boss.paint::after{border-radius:115px 115px 16px 16px}
+.step.boss .art{display:grid;place-items:center;width:172px;height:172px;border-radius:50%}
+.step.boss .art img{width:164px;height:164px;object-fit:contain;mix-blend-mode:multiply}
+.step.boss .art img.wht{mix-blend-mode:screen}
+.step.boss .art .plate{display:grid;place-items:center;width:172px;height:172px;border-radius:50%;background:#fff}
+.step.boss .t{font-size:19px;font-weight:800;line-height:1.15}
+.step.boss .t small{font-size:12px;margin-top:3px}
 .hero{position:relative;height:440px;overflow:hidden;background:#CFE0F3}
 .hero .l{position:absolute;pointer-events:none;will-change:transform}
 .hero .sea{top:-220px;left:0;right:0;bottom:0;background:url(assets/img/sea.webp) center 30%/cover}
@@ -1113,7 +1111,6 @@ let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
 
 /* path */
-const X = [-58, -18, 22, 58, 22, -18];
 const CONN = `<svg viewBox="0 0 96 30" aria-hidden="true"><rect x="2" y="18" width="30" height="8" rx="2" fill="#DCE6F5"/><rect x="2" y="25" width="30" height="4" rx="1.5" fill="#AFC4E6"/><rect x="33" y="10" width="30" height="8" rx="2" fill="#DCE6F5"/><rect x="33" y="17" width="30" height="4" rx="1.5" fill="#AFC4E6"/><rect x="64" y="2" width="30" height="8" rx="2" fill="#DCE6F5"/><rect x="64" y="9" width="30" height="4" rx="1.5" fill="#AFC4E6"/></svg>`;
 function renderPath(){
   const cur = current();
@@ -1130,16 +1127,20 @@ function renderPath(){
       <div class="sign"><div class="phwrap"><img class="ph" src="${IMG.world(w.id)}" alt="" loading="lazy"></div>
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
-      if (li > 0) h += conn(X[(li-1) % 6], l.boss ? 0 : X[li % 6]);
+      const nl = w.lessons.filter(x => !x.boss).length, xs = i => w.lessons[i].boss ? 0 : Math.round(-50 + 100 * i / Math.max(1, nl - 1));
+      if (li > 0) h += conn(xs(li-1), xs(li));
       const st = isDone(l) ? "done" : (l === cur ? "now" : "lock");
       const open = isOpen(l);
       if (l.boss){
-        h += `<button class="dome ${open ? "" : "lock"}" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'} aria-label="${esc(l.title)}">
-          ${pic(`assets/sketches/boss-${w.id}.webp`, "", "", `<img src="assets/img/domes.webp" alt="">`)}${isDone(l) ? `<span class="ok">${I.check}</span>` : (open ? "" : `<span class="lk">${I.lock}</span>`)}
-          <span class="t">${esc(l.en)}<small class="${l === cur ? "now" : ""}">${l === cur ? "Нажмите, чтобы начать" : esc(l.title) + (isDone(l) ? " · пройдено" : "")}</small></span></button>`;
+        const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : I.door);
+        h += `<button class="step boss ${st} ${JUST === l.id ? "paint" : ""}" style="--x:${xs(li)}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
+          <span class="ic">${ic}</span><span class="art">${st === "now"
+            ? pic(`assets/sketches/boss-${w.id}-white.webp`, "", "wht", `<span class="plate"><img src="assets/sketches/boss-${w.id}.webp" alt=""></span>`)
+            : pic(`assets/sketches/boss-${w.id}.webp`, "", "", `<img src="assets/img/domes.webp" alt="">`)}</span>
+          <span class="t">${esc(l.en)}<small>${l === cur ? "Нажмите, чтобы начать" : esc(l.title)}</small></span></button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
-        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${X[li % 6]}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
+        h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${xs(li)}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
           <span class="ic">${ic}</span><span class="t">${esc(l.en)}<small>${l === cur ? "Нажмите, чтобы начать" : esc(l.title)}</small></span></button>`;
       }
     });
@@ -1147,7 +1148,7 @@ function renderPath(){
   });
   h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div>`;
   $("#main").innerHTML = h;
-  const target = $(".paint") || $(".step.now") || ($(".dome .now") && $(".dome .now").closest(".dome"));
+  const target = $(".paint") || $(".step.now");
   requestAnimationFrame(() => {
     const m = $("#main");
     if (target && Object.keys(S.done).length){ m.scrollTop += target.getBoundingClientRect().top - m.getBoundingClientRect().top - m.clientHeight * 0.5; }
