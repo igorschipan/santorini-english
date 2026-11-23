@@ -1282,6 +1282,16 @@ You play ${role}. Speak with a clearly noticeable ${accent} accent and the words
 Rules: one line at a time, then wait for my answer. Don't correct me during the dialogue. Bring one small surprise in the middle. If I say "slower, please", slow down.
 After about 10 lines, stop and give me in Russian: my 3 main mistakes with the correct English, 1 useful phrase to use at work today, and a score from 1 to 10.`;
 }
+/* passed lesson: talk to the teacher right away or redo the lesson */
+function doneSheet(l){
+  $("#overlay").innerHTML = `<div class="import" data-ov-bg><div class="card" role="dialog" aria-modal="true" aria-labelledby="dsh"><h3 id="dsh">${esc(l.en)}</h3>
+    <p class="lead" style="margin:2px 0 14px">${esc(l.title)}. Урок пройден: можно сразу разыграть сцену голосом в ChatGPT или пройти урок заново.</p>
+    <button class="btn" data-copy-lesson="${l.id}">${I.copy}Скопировать задание для ChatGPT</button>
+    <a class="btn ghost" style="margin-top:10px" href="https://chatgpt.com/" target="_blank" rel="noopener">${I.ext}Открыть ChatGPT</a>
+    <button class="btn ghost" style="margin-top:10px" data-redo="${l.id}">Пройти урок заново</button>
+    <button class="btn ghost" style="margin-top:10px" data-ov-close>Закрыть</button></div></div>`;
+}
+document.addEventListener("click", e => { if (e.target.matches && e.target.matches("[data-ov-bg]")) $("#overlay").innerHTML = ""; });
 function lessonPrompt(l){
   const cat = l.world.id, p = persona(cat), sp = TALK.speeds.find(x => x.id === p.speedRoll);
   return talkPrompt({ en: l.talk }, cat, p.accent, sp, p.mood);
@@ -1680,7 +1690,9 @@ document.addEventListener("click", async e => {
   const b = e.target.closest("button, a"); if (!b) return;
   const d = b.dataset;
   if (d.tab){ TAB = d.tab; RESET_ASK = false; LINK_NOTE = ""; render(); if (TAB !== "path") $("#main").scrollTop = 0; return; }
-  if (d.go){ const l = LESSONS.find(x => x.id === d.go); if (isOpen(l)) startLesson(l.id); return; }
+  if (d.go){ const l = LESSONS.find(x => x.id === d.go); if (!isOpen(l)) return; if (isDone(l) && l.talk && !b.classList.contains("cta")) return doneSheet(l); startLesson(l.id); return; }
+  if (d.redo){ $("#overlay").innerHTML = ""; startLesson(d.redo); return; }
+  if ("ovClose" in d){ $("#overlay").innerHTML = ""; return; }
   if ("review" in d){ if (!S.mistakes.some(m => !m.fixed)){ quit(); TAB = "mist"; render(); return; } startLesson("review"); return; }
   if ("copy" in d){ const ok = await copyText(talkPrompt(TK.scene, TK.cat, TK.accent, speedOf(), TK.mood)); b.innerHTML = I.check + (ok ? "Скопировано" : "Выделите текст выше и скопируйте"); return; }
   if (d.copyLesson){ const ok = await copyText(lessonPrompt(LESSONS.find(l => l.id === d.copyLesson))); b.innerHTML = I.check + (ok ? "Скопировано. Откройте ChatGPT" : "Не удалось скопировать"); return; }
