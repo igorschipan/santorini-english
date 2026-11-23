@@ -72,7 +72,8 @@ main::-webkit-scrollbar{display:none}
 .flight::before{content:"";position:absolute;left:9%;right:9%;top:240px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
 .flight>*{position:relative;z-index:1}
 .sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;background:#fff;box-shadow:var(--shadow)}
-.sign .ph{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--sea);transform-origin:center;will-change:transform}
+.sign .phwrap{position:relative;overflow:hidden;aspect-ratio:3/2}
+.sign .ph{position:absolute;left:0;right:0;top:-12px;width:100%;height:calc(100% + 24px);object-fit:cover;background:var(--sea);will-change:transform}
 .sign .tx{display:flex;align-items:center;gap:12px;padding:12px 14px}
 .sign .n{width:38px;height:38px;border-radius:12px;background:var(--aegean);display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
 .sign h2{font-size:22px;font-weight:800;line-height:1.05}
@@ -103,17 +104,16 @@ main::-webkit-scrollbar{display:none}
 .dome.lock .t{color:var(--ink-3)}
 .dome .ok{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--aegean);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-lo)}
 .dome .ok svg{width:18px;height:18px}
-.hero{position:sticky;top:0;z-index:0;height:min(440px,58vh);overflow:hidden;background:#CFE0F3}
+.hero{position:relative;height:440px;overflow:hidden;background:#CFE0F3}
 .hero .l{position:absolute;pointer-events:none;will-change:transform}
-.hero .sea{inset:0;background:url(assets/img/sea.webp) center 30%/cover}
-.hero .stairs{left:-4%;bottom:-2px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
+.hero .sea{top:-220px;left:0;right:0;bottom:0;background:url(assets/img/sea.webp) center 30%/cover}
+.hero .stairs{left:-4%;bottom:26px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
 .hero .plant{right:-18px;top:-10px;width:46%;max-width:220px}
 .hero .domes{left:50%;top:46px;width:150px;margin-left:-75px;mix-blend-mode:multiply;opacity:.95}
 .hero .wm{position:absolute;left:0;right:0;top:148px;text-align:center}
 .hero .wm i{display:block;width:210px;height:80px;margin:0 auto;background:url(assets/img/logo-word.webp) center/contain no-repeat}
 .hero .wm span{display:block;font-weight:800;letter-spacing:.32em;font-size:13px;color:var(--aegean);margin-top:2px;text-transform:uppercase}
-.over{position:relative;z-index:1;background:var(--wash);border-radius:26px 26px 0 0;margin-top:-26px;padding-top:14px;box-shadow:0 -10px 24px -14px rgba(12,42,85,.35)}
-.cta{position:relative;z-index:2;margin:0 14px;width:calc(100% - 28px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
+.cta{position:relative;z-index:2;margin:-40px 14px 0;width:calc(100% - 28px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
 .cta div{flex:1;min-width:0}
 .cta b{display:block;font-size:17px;line-height:1.2}
 .cta small{display:block;font-size:13px;color:var(--ink-2)}
@@ -1090,22 +1090,19 @@ function parallax(){
   if (RM.matches) return;
   const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
   const hero = $(".hero");
-  if (hero && y < 700){
+  if (hero && y < 600){
     const hy = Math.min(y, hero.offsetHeight);
-    hero.querySelector(".stairs").style.transform = `translateY(${(-hy*0.35).toFixed(1)}px)`;
-    hero.querySelector(".plant").style.transform = `translateY(${(-hy*0.22).toFixed(1)}px)`;
-    hero.querySelector(".domes").style.transform = `translateY(${(-hy*0.12).toFixed(1)}px)`;
-    hero.querySelector(".wm").style.transform = `translateY(${(-hy*0.12).toFixed(1)}px)`;
-    hero.querySelector(".sea").style.transform = `scale(${(1 + hy*0.0003).toFixed(4)})`;
+    hero.querySelector(".sea").style.transform = `translateY(${(hy*0.45).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(hy*0.15).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(hy*0.06).toFixed(1)}px)`;
   }
-  /* world photos: drift while the card is entering or leaving, settle to the full uncropped photo once the whole card is in view */
-  const vt = mt, vb = mt + h;
+  /* world photos drift inside their cards: low on screen shows the bottom of the photo, high shows the top; at most 12px hidden at either edge */
   document.querySelectorAll(".sign .ph").forEach(el => {
-    const r = el.getBoundingClientRect(); if (r.bottom < vt || r.top > vb) return;
-    let t = 0;
-    if (r.bottom > vb) t = Math.min(1, (r.bottom - vb) / r.height);
-    else if (r.top < vt) t = -Math.min(1, (vt - r.top) / r.height);
-    el.style.transform = t ? `translateY(${(t*5).toFixed(2)}%) scale(${(1 + Math.abs(t)*0.12).toFixed(3)})` : "";
+    const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt || r.top > mt + h) return;
+    const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
+    el.style.transform = `translateY(${(-c*24).toFixed(1)}px)`;
   });
 }
 let pRAF = 0;
@@ -1119,14 +1116,14 @@ function renderPath(){
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
-    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div><div class="over">
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div>
     ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}`;
   if (!S.xp && !Object.keys(S.done).length)
     h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
-      <div class="sign"><img class="ph" src="${IMG.world(w.id)}" alt="" loading="lazy">
+      <div class="sign"><div class="phwrap"><img class="ph" src="${IMG.world(w.id)}" alt="" loading="lazy"></div>
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
       if (li > 0) h += conn(X[(li-1) % 6], l.boss ? 0 : X[li % 6]);
@@ -1144,7 +1141,7 @@ function renderPath(){
     });
     h += `</section>`;
   });
-  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div></div>`;
+  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div>`;
   $("#main").innerHTML = h;
   const target = $(".paint") || $(".step.now") || ($(".dome .now") && $(".dome .now").closest(".dome"));
   requestAnimationFrame(() => {
