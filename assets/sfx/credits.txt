@@ -1,0 +1,5 @@
+bad-1.mp3: "error sound" by KorGround is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/.
+ok-13.mp3: "success_low.wav" by grunz is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/.
+ok-14.mp3: "Powerup/success.wav" by GabrielAraujo is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.
+ok-15.mp3: "Tada Fanfare A" by plasterbrain is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.
+bad-15.mp3: "8-bit Deny/Error sound" by philRacoIndie is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.
