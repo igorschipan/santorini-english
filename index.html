@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Santorini English">
 <title>Santorini English</title>
 <link rel="icon" href="assets/img/icon.png">
-<link rel="apple-touch-icon" href="assets/img/icon.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,6 +29,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--wash);color:var(--ink)}
+@media (min-width:600px){body{background:#EAF0F7 url(assets/img/sea.webp) center/cover fixed}body::before{content:"";position:fixed;inset:0;background:rgba(252,252,250,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}#app{box-shadow:0 0 0 1px var(--pebble),0 30px 80px -30px rgba(12,42,85,.35)}}
 body{font:17px/1.42 var(--font);-webkit-font-smoothing:antialiased;overscroll-behavior:none;font-variant-numeric:tabular-nums}
 ::selection{background:var(--sea-2);color:var(--ink)}
 input,textarea,select{caret-color:var(--aegean);font:inherit}
@@ -46,18 +47,15 @@ svg{display:block}
 
 /* ---------- shell ---------- */
 #app{position:fixed;inset:0;display:flex;flex-direction:column;max-width:560px;margin:0 auto;background:var(--wash)}
-.top{position:relative;height:calc(var(--safe-t) + 122px);overflow:hidden;flex:none;background:#BFD3EC}
-.top .sky{position:absolute;inset:0;background:url(assets/img/sea.webp) center 62%/cover;transform:scale(1.06)}
-.top .fade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(252,252,250,.0) 0%,rgba(252,252,250,.10) 40%,rgba(252,252,250,.92) 100%)}
-.top .plant{position:absolute;right:-26px;top:-18px;width:120px;pointer-events:none;filter:drop-shadow(-4px 8px 10px rgba(12,42,85,.18))}
-.top .logo{position:absolute;left:16px;top:calc(var(--safe-t) + 12px);width:132px;height:48px;background:url(assets/img/logo-word.webp) left center/contain no-repeat}
-.top .bar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:6px}
-.rank{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:3px 10px 3px 3px;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);margin-right:2px}
-.rank img,.rank .badge{width:28px;height:28px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;flex:none}
+.top{position:relative;flex:none;display:flex;align-items:center;gap:6px;padding:calc(var(--safe-t) + 8px) 12px 6px;background:var(--wash)}
+.top .logo{width:92px;height:34px;flex:none;background:url(assets/img/logo-word.webp) left center/contain no-repeat;margin-right:auto}
+.rank{min-width:0;display:flex;align-items:center;gap:6px;padding:2px 10px 2px 2px;border-radius:999px;background:var(--plaster)}
+.rank img,.rank .badge{width:30px;height:30px;object-fit:contain;flex:none}
 .rank .badge svg,.ranks .badge svg{width:100%;height:100%}
-.rank b{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chip{display:flex;align-items:center;gap:4px;font-weight:800;font-size:15px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 0 rgba(12,42,85,.06)}
-.chip svg{width:19px;height:19px}
+.rank b{font-size:14px;font-weight:800;white-space:nowrap}
+@media (max-width:420px){.rank b{display:none}.rank{padding:2px}}
+.chip{display:flex;align-items:center;gap:4px;font-weight:800;font-size:15px;padding:6px 8px;border-radius:999px;background:var(--plaster)}
+.chip svg{width:18px;height:18px}
 .chip.streak{color:var(--terra)} .chip.hearts{color:var(--bloom)} .chip.xp{color:var(--aegean)} .chip.off{color:var(--ink-3)}
 .meander{height:12px;flex:none;background:var(--wash) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 11h4V1h12v8H8V5h4M16 11h8' fill='none' stroke='%231550A8' stroke-opacity='.38' stroke-width='1.3' stroke-linecap='square'/%3E%3C/svg%3E") repeat-x left center/24px 12px}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -69,12 +67,12 @@ main::-webkit-scrollbar{display:none}
 .tab .dot{position:absolute;top:0;left:50%;margin-left:6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--terra);color:#fff;font-size:11px;font-weight:800;line-height:18px}
 
 /* ---------- path: the stair alley ---------- */
-.path{display:flex;flex-direction:column-reverse;padding:18px 0 0}
-.flight{display:flex;flex-direction:column-reverse;align-items:center;gap:14px;padding:6px 0 30px;position:relative}
-.flight::before{content:"";position:absolute;left:9%;right:9%;top:150px;bottom:6px;border-radius:120px 120px 26px 26px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
+.path{display:flex;flex-direction:column;padding:0 0 10px}
+.flight{display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 0 26px;position:relative}
+.flight::before{content:"";position:absolute;left:9%;right:9%;top:170px;bottom:6px;border-radius:26px 26px 120px 120px;background:#F4F4F1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");z-index:0}
 .flight>*{position:relative;z-index:1}
-.sign{align-self:stretch;margin:4px 14px 0;border-radius:var(--r);overflow:hidden;position:relative;height:132px;background:var(--sea);box-shadow:var(--shadow)}
-.sign .ph{position:absolute;left:0;right:0;top:-24px;bottom:-24px;background-size:cover;background-position:center;will-change:transform}
+.sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;aspect-ratio:16/10;max-height:300px;background:var(--sea);box-shadow:var(--shadow)}
+.sign .ph{position:absolute;left:0;right:0;top:-36px;bottom:-36px;background-size:cover;background-position:center;will-change:transform}
 .sign .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,42,85,.78) 0%,rgba(12,42,85,.18) 55%,rgba(12,42,85,0) 100%)}
 .sign .tx{position:absolute;left:16px;right:16px;bottom:12px;color:#fff;display:flex;align-items:flex-end;gap:12px}
 .sign .n{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-weight:800;color:var(--aegean);flex:none}
@@ -82,12 +80,13 @@ main::-webkit-scrollbar{display:none}
 .sign p{margin:2px 0 0;font-size:14px;opacity:.9}
 .sign .count{margin-left:auto;font-weight:800;font-size:15px;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
 .step{position:relative;width:min(64%,230px);min-height:70px;display:flex;align-items:center;gap:12px;padding:10px 14px 20px;text-align:left;border-radius:16px 16px 14px 14px;
-  background:linear-gradient(to top,var(--riser) 12px,var(--tread) 12px);color:var(--ink-2);transform:translateX(var(--x,0))}
+  background:linear-gradient(to top,#E3E9F1 12px,#FBFBF9 12px);color:var(--ink-3);transform:translateX(var(--x,0));outline:1.5px dashed var(--sea-2);outline-offset:-1.5px}
 .conn{width:96px;height:30px;margin:-8px 0;transform:translateX(var(--x,0)) scaleX(var(--f,1))}
-.step .ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.6);color:var(--terra)}
+.step .ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--sea);color:var(--aegean)}
 .step .ic svg{width:22px;height:22px}
 .step .t{font-size:15px;font-weight:700;line-height:1.2}
 .step .t small{display:block;font-size:12px;font-weight:600;margin-top:2px}
+.step.done,.step.now{outline:0}
 .step.done{background:linear-gradient(to top,#D8E1EC 12px,#fff 12px);color:var(--ink);box-shadow:var(--shadow)}
 .step.done .ic{background:var(--sea);color:var(--aegean)}
 .step.now{background:linear-gradient(to top,var(--aegean-deep) 12px,var(--aegean) 12px);color:#fff;box-shadow:0 14px 26px -12px rgba(13,58,126,.7)}
@@ -105,11 +104,28 @@ main::-webkit-scrollbar{display:none}
 .dome.lock .t{color:var(--ink-3)}
 .dome .ok{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--aegean);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-lo)}
 .dome .ok svg{width:18px;height:18px}
-.start{position:relative;margin-top:-6px;text-align:center}
-.start img{width:100%;height:180px;object-fit:cover;object-position:center 30%;-webkit-mask-image:linear-gradient(to top,#000 70%,transparent);mask-image:linear-gradient(to top,#000 70%,transparent)}
-.start span{position:absolute;left:0;right:0;bottom:14px;font-size:13px;font-weight:800;color:#fff;text-shadow:0 1px 6px rgba(12,42,85,.6)}
+.hero{position:relative;height:460px;overflow:hidden;background:#CFE0F3}
+.hero .l{position:absolute;pointer-events:none;will-change:transform}
+.hero .sea{inset:-60px 0 0 0;background:url(assets/img/sea.webp) center 30%/cover}
+.hero .stairs{left:-4%;bottom:-6px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
+.hero .plant{right:-18px;top:-10px;width:46%;max-width:220px}
+.hero .domes{left:50%;top:46px;width:150px;margin-left:-75px;mix-blend-mode:multiply;opacity:.95}
+.hero .wm{position:absolute;left:0;right:0;top:148px;text-align:center}
+.hero .wm i{display:block;width:210px;height:80px;margin:0 auto;background:url(assets/img/logo-word.webp) center/contain no-repeat}
+.hero .wm span{display:block;font-weight:800;letter-spacing:.32em;font-size:13px;color:var(--aegean);margin-top:2px;text-transform:uppercase}
+.hero .cta{position:absolute;left:auto;right:14px;bottom:14px;width:min(78%,330px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
+.hero .cta div{flex:1;min-width:0}
+.hero .cta b{display:block;font-size:17px;line-height:1.2}
+.hero .cta small{display:block;font-size:13px;color:var(--ink-2)}
+.hero .cta .btn{width:auto;min-height:46px;padding:8px 16px;font-size:15px;flex:none}
+.finale{margin:6px 14px 20px;padding:22px 16px;border-radius:var(--r);background:#fff;box-shadow:var(--shadow-lo);text-align:center}
+.finale img{width:120px;height:120px;object-fit:contain;margin:0 auto 6px}
+.finale b{display:block;font-size:18px} .finale span{font-size:14px;color:var(--ink-2)}
 .hello{margin:0 14px 18px;padding:14px 16px;border-radius:var(--r);background:#fff;box-shadow:var(--shadow-lo);display:flex;gap:12px;align-items:center}
 .hello p{margin:0;font-size:15px;color:var(--ink-2)} .hello b{color:var(--ink)}
+.hello{flex-wrap:wrap}.hello-pic{width:100%;max-height:150px;object-fit:contain;margin-bottom:4px}
+.winpic{position:relative;margin:6px auto 22px;max-width:320px}.winpic img{width:100%;height:auto;max-height:210px;object-fit:contain}.winpic .bigstamp{top:auto;left:auto;right:-4px;bottom:-6px;transform:rotate(-8deg);animation-name:stamp2;background:rgba(252,252,250,.9)}
+@keyframes stamp2{from{transform:rotate(-8deg) scale(1.3);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:1}}
 
 /* ---------- panels ---------- */
 .pane{padding:20px 16px 28px}
@@ -135,11 +151,11 @@ main::-webkit-scrollbar{display:none}
 .stamp{flex:none;font-size:11px;font-weight:900;letter-spacing:.08em;padding:4px 7px;border:2px solid currentColor;border-radius:7px;transform:rotate(-6deg);margin-top:4px;text-transform:uppercase}
 .stamp.todo{color:var(--terra)} .stamp.fixed{color:var(--aegean)}
 .seg{display:flex;background:var(--plaster);border-radius:14px;padding:4px;gap:4px;margin-bottom:16px}
-.seg button{flex:1;min-height:40px;border-radius:10px;font-weight:700;font-size:15px;color:var(--ink-2)}
+.seg button{flex:1;min-height:44px;border-radius:10px;font-weight:700;font-size:15px;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:var(--shadow-lo)}
 .cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:2px 16px 6px}
 .cats::-webkit-scrollbar{display:none}
-.chipbtn{flex:none;min-height:40px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--pebble);background:#fff;font-weight:700;font-size:15px;color:var(--ink-2)}
+.chipbtn{flex:none;min-height:44px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--pebble);background:#fff;font-weight:700;font-size:15px;color:var(--ink-2)}
 .chipbtn[aria-pressed="true"]{background:var(--aegean);border-color:var(--aegean);color:#fff}
 .scene{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;padding:13px 14px;border-radius:16px;background:#fff;box-shadow:var(--shadow-lo);margin-bottom:10px;min-height:56px}
 .scene .t{font-weight:700;font-size:16px;line-height:1.3}
@@ -148,13 +164,14 @@ main::-webkit-scrollbar{display:none}
 .tag{display:inline-block;font-size:11px;font-weight:800;color:var(--bloom);background:var(--bloom-tint);border-radius:6px;padding:2px 6px;margin-bottom:3px}
 .scene[aria-pressed="true"]{box-shadow:inset 0 0 0 2.5px var(--aegean),var(--shadow-lo)}
 .persona{display:grid;gap:10px}
+.talkav{width:104px;height:104px;border-radius:28px;background:#fff;box-shadow:var(--shadow-lo);flex:none;overflow:hidden}.talkav img{width:100%;height:100%;object-fit:contain}
 .prow{display:flex;align-items:center;gap:10px}
 .prow .k{width:96px;flex:none;font-size:14px;color:var(--ink-2)}
 .prow .v{flex:1;font-weight:700}
-.reroll{width:40px;height:40px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center;flex:none}
+.reroll{width:44px;height:44px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center;flex:none}
 .reroll svg{width:20px;height:20px}
 .speeds{display:flex;gap:6px;flex-wrap:wrap}
-.speeds .chipbtn{min-height:36px;padding:6px 11px;font-size:14px}
+.speeds .chipbtn{min-height:44px;padding:6px 11px;font-size:14px}
 .prompt{white-space:pre-wrap;font-size:14px;line-height:1.45;background:var(--plaster);border-radius:14px;padding:14px;color:var(--ink);max-height:200px;overflow:auto;margin:12px 0}
 .banner{position:relative;height:150px;border-radius:var(--r);overflow:hidden;margin:-4px 0 16px;background:var(--sea) center/cover}
 .banner .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,42,85,.75),rgba(12,42,85,0) 65%)}
@@ -164,12 +181,12 @@ ol.how{margin:0 0 6px;padding-left:22px;color:var(--ink-2)} ol.how li{margin:4px
 .stat div{flex:1;padding:0 8px;border-left:1px solid var(--pebble)}
 .stat div:first-child{border-left:0;padding-left:0}
 .stat b{display:block;font-size:22px;font-weight:800}
-.stat span{font-size:13px;color:var(--ink-2)}
+.stat span{font-size:12px;color:var(--ink-2);white-space:nowrap}
 .bar{height:12px;border-radius:6px;background:var(--plaster-2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--aegean);border-radius:6px;transition:width 300ms var(--ease-out)}
 .ranks{list-style:none;margin:6px 0 0;padding:0}
 .ranks li{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--pebble);font-size:15px}
-.ranks li img,.ranks li .badge{width:44px;height:44px;object-fit:contain}
+.ranks li img,.ranks li .badge{width:46px;height:46px;object-fit:contain}
 .ranks li span:last-child{margin-left:auto}
 .ranks li.me{font-weight:800;color:var(--aegean)}
 .ranks li.next{opacity:.6}
@@ -209,10 +226,11 @@ select.in{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(-
 .play.slow{width:58px;height:58px;border-radius:18px;background:var(--sea);color:var(--aegean);box-shadow:none;font-weight:800;font-size:14px}
 .bubble{display:flex;gap:10px;align-items:flex-end;margin-bottom:18px}
 .av{flex:none;width:64px;height:64px;border-radius:20px;background:#fff;color:var(--terra);display:grid;place-items:center;font-weight:900;overflow:hidden;box-shadow:var(--shadow-lo)}
-.av img{width:100%;height:100%;object-fit:cover}
+.av img{width:100%;height:100%;object-fit:contain}
 .say{position:relative;flex:1;background:#fff;border-radius:18px 18px 18px 6px;padding:12px 14px;box-shadow:var(--shadow);font-size:19px;font-weight:700}
 .say small{display:block;margin-top:6px;font-size:13px;font-weight:500;color:var(--ink-2)}
-.say .mini{position:absolute;right:-6px;top:-16px;width:40px;height:40px;border-radius:12px;background:var(--aegean);color:#fff;display:grid;place-items:center}
+.say{padding-right:54px!important}
+.say .mini{position:absolute;right:6px;top:8px;width:44px;height:44px;border-radius:12px;background:var(--aegean);color:#fff;display:grid;place-items:center}
 .say .mini svg{width:20px;height:20px}
 .who{font-size:14px;font-weight:700;color:var(--terra);margin:0 0 4px 74px}
 .note{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:17px;line-height:1.5;margin-bottom:14px}
@@ -254,7 +272,7 @@ textarea.in:focus{outline:none;border-color:var(--aegean)}
 .sheet.bad .btn{background:var(--terra)}
 /* end screen */
 .end{position:relative;flex:1;overflow-y:auto;overflow-x:hidden;padding:calc(var(--safe-t) + 30px) 16px 24px;text-align:center}
-.end .plant{position:absolute;right:-30px;top:-20px;width:150px;pointer-events:none;animation:sway 500ms var(--ease-out) both}
+.end .plant{position:absolute;right:0;top:-20px;width:150px;pointer-events:none;animation:sway 500ms var(--ease-out) both}
 @keyframes sway{from{transform:translateY(-30px) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
 .slabwrap{position:relative}
 .slab{position:relative;width:220px;height:86px;margin:20px auto 34px;border-radius:22px;background:var(--plaster-2);overflow:hidden;box-shadow:var(--shadow)}
@@ -278,7 +296,7 @@ textarea.in:focus{outline:none;border-color:var(--aegean)}
 </head>
 <body>
 <div id="app">
-  <header class="top" id="top"><div class="sky" id="sky"></div><div class="fade"></div><img class="plant" src="assets/img/bougainvillea.webp" alt=""><div class="logo" role="img" aria-label="Santorini"></div><div class="bar" id="bar"></div></header>
+  <header class="top" id="top"><div class="logo" role="img" aria-label="Santorini"></div><div id="bar" style="display:contents"></div></header>
   <div class="meander" aria-hidden="true"></div>
   <main id="main"></main>
   <nav class="tabs" id="tabs" aria-label="Разделы"></nav>
@@ -964,6 +982,7 @@ const I = {
 /* ---------- data ---------- */
 const LESSONS = [];
 WORLDS.forEach((w, wi) => w.lessons.forEach((l, li) => { l.world = w; l.wi = wi; l.li = li; LESSONS.push(l); }));
+const RANK_EN = ["Trainee","Floor manager","Senior manager","Legend"];
 const RANKS = [["Стажёр",0],["Менеджер зала",400],["Старший менеджер",1200],["Легенда Санторини",2500]];
 const PAGES_URL = "https://igorschipan.github.io/santorini-english/";
 const IMG = { world: w => `assets/codex/world-${w}.webp`, rank: i => `assets/ranks/rank-${i+1}.webp`, av: n => `assets/avatars/${n}.webp`, dish: n => `assets/menu/${n}.webp` };
@@ -1055,7 +1074,7 @@ function renderTop(){
   tickHearts();
   const r = rankOf(S.xp);
   $("#bar").innerHTML = `
-    <div class="rank">${badge(r)}<b>${RANKS[r][0]}</b></div>
+    <div class="rank" aria-label="Звание: ${RANKS[r][0]}">${badge(r)}<b>${RANK_EN[r]}</b></div>
     <div class="chip streak ${S.streak ? "" : "off"}" aria-label="Дней подряд: ${S.streak}">${I.sun}${S.streak}</div>
     <div class="chip hearts" aria-label="Сердечек: ${S.hearts} из 5">${I.heart}${S.hearts}</div>
     <div class="chip xp" aria-label="Опыт: ${S.xp}">${I.star}${S.xp}</div>`;
@@ -1067,15 +1086,24 @@ function renderTabs(){
 }
 function render(){ renderTop(); renderTabs(); ({path:renderPath, mist:renderMist, talk:renderTalk, me:renderMe})[TAB](); parallax(); }
 
-/* gentle parallax: header sea and world photos drift slower than the page */
+/* parallax: layers of the path cover drift at different speeds; world photos drift inside their cards */
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
 function parallax(){
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const m = $("#main"), mt = m.getBoundingClientRect().top, h = m.clientHeight;
+  if (RM.matches) return;
+  const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
+  const hero = $(".hero");
+  if (hero && y < 600){
+    hero.querySelector(".sea").style.transform = `translateY(${(y*0.45).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
+  }
   document.querySelectorAll(".sign .ph").forEach(el => {
-    const r = el.parentNode.getBoundingClientRect(); const c = (r.top - mt + r.height/2) / h - .5;
-    el.style.transform = `translateY(${(-c*28).toFixed(1)}px)`;
+    const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt - 50 || r.top > mt + h + 50) return;
+    const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
+    el.style.transform = `translateY(${(-c*60).toFixed(1)}px)`;
   });
-  $("#sky").style.transform = `scale(1.06) translateY(${Math.max(-10, Math.min(10, (m.scrollTop % 600) / 60 - 5)).toFixed(1)}px)`;
 }
 let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
@@ -1087,13 +1115,15 @@ function renderPath(){
   const cur = current();
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? 1 : -1}">${CONN}</div>`;
   let h = `<div class="path">`;
+  h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
+    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}</div>`;
   if (!S.xp && !Object.keys(S.done).length)
-    h += `<div class="hello"><p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
-  h += `<div class="start">${pic("assets/img/stairs.webp","")}<span>Пристань · начало пути</span></div>`;
+    h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
-      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)})"></div><div class="shade"></div>
+      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)});background-position:${({guests:"center 55%",team:"center 85%",suppliers:"center 70%",owner:"center 70%"})[w.id]}"></div><div class="shade"></div>
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
       if (li > 0) h += conn(X[(li-1) % 4], l.boss ? 0 : X[li % 4]);
@@ -1101,7 +1131,7 @@ function renderPath(){
       const open = isOpen(l);
       if (l.boss){
         h += `<button class="dome ${open ? "" : "lock"}" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'} aria-label="${esc(l.title)}">
-          ${pic("assets/img/domes.webp","")}${isDone(l) ? `<span class="ok">${I.check}</span>` : ""}
+          ${pic(`assets/sketches/boss-${w.id}.webp`, "", "", `<img src="assets/img/domes.webp" alt="">`)}${isDone(l) ? `<span class="ok">${I.check}</span>` : ""}
           <span class="t">${esc(l.en)}<small class="${l === cur ? "now" : ""}">${l === cur ? "Нажмите, чтобы начать" : esc(l.title) + (isDone(l) ? " · пройдено" : "")}</small></span></button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
@@ -1111,12 +1141,12 @@ function renderPath(){
     });
     h += `</section>`;
   });
-  h += `</div>`;
+  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div>`;
   $("#main").innerHTML = h;
   const target = $(".paint") || $(".step.now") || ($(".dome .now") && $(".dome .now").closest(".dome"));
   requestAnimationFrame(() => {
     const m = $("#main");
-    if (target){ m.scrollTop += target.getBoundingClientRect().top - m.getBoundingClientRect().top - m.clientHeight * 0.5; }
+    if (target && Object.keys(S.done).length){ m.scrollTop += target.getBoundingClientRect().top - m.getBoundingClientRect().top - m.clientHeight * 0.5; }
     else m.scrollTop = 0;
     parallax();
   });
@@ -1139,10 +1169,12 @@ function renderMist(){
 
 /* talk with the ChatGPT teacher: scene + random accent, speed and mood */
 const pickOne = a => a[Math.floor(Math.random()*a.length)];
-const GUESTS = ["guest-anna","guest-james"];
+const GUESTS = ["guest-anna","guest-james","guest-yuki","guest-raj","guest-klaus","guest-pierre"];
+const ACCENT_FACE = { Australian:"guest-anna", "British (London)":"guest-james", Scottish:"guest-james", Irish:"guest-james", Japanese:"guest-yuki", Indian:"guest-raj", German:"guest-klaus", Dutch:"guest-klaus", French:"guest-pierre", Italian:"guest-pierre" };
+function faceFor(cat, accent){ if (cat === "team") return "waiter-made"; if (cat === "suppliers") return "supplier-ketut"; if (cat === "owner") return TK.who || "owner-mikalis"; return ACCENT_FACE[accent] || TK.face || (TK.face = pickOne(GUESTS)); }
 let TK = { cat:"guests", scene:null, accent:null, speed:"rand", mood:null };
 function persona(cat){ return { accent: pickOne(TALK.accents[cat]), mood: pickOne(TALK.moods), speedRoll: pickOne(TALK.speeds).id }; }
-function rollPersona(){ const p = persona(TK.cat); TK.accent = p.accent; TK.mood = p.mood; TK.roll = p.speedRoll; }
+function rollPersona(){ const p = persona(TK.cat); TK.accent = p.accent; TK.mood = p.mood; TK.roll = p.speedRoll; TK.face = pickOne(GUESTS); TK.who = pickOne(["owner-mikalis","manager-lia"]); }
 function speedOf(){ return TALK.speeds.find(x => x.id === (TK.speed === "rand" ? TK.roll : TK.speed)); }
 function talkPrompt(sc, cat, accent, speed, mood){
   const role = TALK.cats.find(c => c.id === cat).role;
@@ -1166,7 +1198,7 @@ function renderTalk(){
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
-    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:10px"><div class="av">${pic(IMG.av(({guests:"guest-anna",reviews:"guest-james",team:"waiter-made",suppliers:"supplier-ketut",owner:"owner-mikalis"})[TK.cat]), "", "", "")}</div><h3 style="margin:0">Собеседник</h3></div>
+    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:12px"><div class="talkav">${pic(IMG.av(faceFor(TK.cat, TK.accent)), "", "", "")}</div><div><h3 style="margin:0">Собеседник</h3><p class="lead" style="font-size:14px;margin:2px 0 0">Каждый раз новый человек</p></div></div>
       <div class="persona">
         <div class="prow"><span class="k">Акцент</span><span class="v">${esc(TK.accent)}</span><button class="reroll" data-roll="accent" aria-label="Другой акцент">${I.dice}</button></div>
         <div class="prow"><span class="k">Настроение</span><span class="v">${esc(TK.mood)}</span><button class="reroll" data-roll="mood" aria-label="Другое настроение">${I.dice}</button></div>
@@ -1224,10 +1256,10 @@ function renderMe(){
     <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <div class="stat"><div><b>${S.xp}</b><span>опыта</span></div><div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div>
       <div><b>${done}/${LESSONS.length}</b><span>уроков</span></div><div><b>${acc}%</b><span>верных</span></div></div>
-    <div class="card"><h3>Звания</h3><ul class="ranks">${RANKS.map((x,i) => `<li class="${i===r?"me":(i===r+1?"next":"")}">${badge(i)}<span>${x[0]}</span><span>${x[1]}</span></li>`).join("")}</ul></div>
+    <div class="card"><h3>Звания</h3><ul class="ranks">${RANKS.map((x,i) => `<li class="${i===r?"me":(i===r+1?"next":"")}">${badge(i)}<span><b style="display:block">${RANK_EN[i] === "Legend" ? "Legend of Santorini" : RANK_EN[i]}</b><small style="font-size:13px;color:var(--ink-2)">${x[0]}</small></span><span>${x[1]}</span></li>`).join("")}</ul></div>
     <div class="card"><h3>Перенос прогресса</h3>
       <p class="lead" style="font-size:15px;margin:0 0 12px">Ссылка с вашим прогрессом. Откройте её на новом телефоне или в новой версии приложения, и прогресс перенесётся.</p>
-      <button class="btn ghost" data-export>${I.link}Скопировать ссылку с прогрессом</button>${LINK_NOTE ? `<div class="note-ok">${LINK_NOTE}</div>` : ""}
+      <button class="btn ghost" data-export>${I.link}Ссылка с прогрессом</button>${LINK_NOTE ? `<div class="note-ok">${LINK_NOTE}</div>` : ""}
       <p class="lead" style="font-size:15px;margin:16px 0 8px">Если ссылки нет: выберите последний урок, который уже прошли.</p>
       <label class="sr" for="lastdone">Последний пройденный урок</label>
       <select class="in" id="lastdone"><option value="">Выберите урок</option>${LESSONS.map((l,i) => `<option value="${i}">${l.world.name}: ${esc(l.title)}</option>`).join("")}</select>
@@ -1248,7 +1280,7 @@ function renderMe(){
 /* ---------- lesson engine ---------- */
 let L = null;
 function others(lesson, en){ return shuffle(lesson.p.map(p => p[0]).filter(x => x !== en)); }
-const DISHES = MENU.filter(d => d.i);
+const DISHES = MENU.filter(d => d.i && d.d && d.n !== "Extras");
 function dishTasks(n, T){
   shuffle(DISHES).slice(0, n).forEach((d, k) => {
     const same = shuffle(DISHES.filter(x => x !== d && x.c === d.c)), any = shuffle(DISHES.filter(x => x !== d));
@@ -1264,7 +1296,8 @@ function buildMenu(){
   T.splice(3, 0, { type:"listen", en:"I recommend our " + a[0].n + ".", ru:"Рекомендую наше блюдо " + a[0].n + ".", opts: shuffle(a.map(x => "I recommend our " + x.n + ".")) });
   T.splice(7, 0, { type:"order", en:"Would you like to try the " + a[1].n + "?", ru:"Хотите попробовать " + a[1].n + "?", extra:[] });
   T.push({ type:"type", en:"The " + a[2].n + " is very popular.", ru:a[2].n + " очень популярно у гостей." });
-  T.push({ type:"speak", en:"I recommend our " + a[0].n + ". " + a[0].d + ".", ru:"Порекомендуйте блюдо гостю" });
+  const clause = a[0].d.split(/[,(.;]/)[0].trim().split(" ").slice(0, 9).join(" ");
+  T.push({ type:"speak", en:"I recommend our " + a[0].n + ". " + clause.charAt(0).toUpperCase() + clause.slice(1) + ".", ru:"Порекомендуйте блюдо гостю" });
   return T;
 }
 function build(lesson){
@@ -1329,7 +1362,7 @@ function showTask(){
   if (t.type === "match"){
     const L1 = shuffle(t.pairs.map((p,i) => ({ s:p[0], i }))), L2 = shuffle(t.pairs.map((p,i) => ({ s:p[1], i })));
     L.state = { left:null, right:null, left_done:0 };
-    frame(`${k}<div class="q">Слова урока</div><div class="match">
+    frame(`${k}<div class="match">
       <div class="opts">${L1.map(x => `<button class="o" data-ml="${x.i}">${esc(x.s)}</button>`).join("")}</div>
       <div class="opts">${L2.map(x => `<button class="o" data-mr="${x.i}">${esc(x.s)}</button>`).join("")}</div></div>`, false);
     $(".lfoot").innerHTML = `<p style="margin:0;text-align:center;color:var(--ink-2);font-size:15px">Нажмите слово слева и его перевод справа</p>`;
@@ -1466,13 +1499,13 @@ function endLesson(passed){
   const newMist = L.wrongs.length;
   const mins = Math.max(1, Math.round((Date.now() - L.t0) / 60000));
   $("#lesson").innerHTML = `<div class="end">${passed ? `<img class="plant" src="assets/img/bougainvillea.webp" alt="">` : ""}
-    ${passed ? `<div class="slabwrap">${petals()}<div class="slab"><span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div></div>
+    ${passed ? `<div class="slabwrap">${petals()}${lesson && lesson.boss ? `<div class="winpic">${pic("assets/sketches/boss-win.webp","")}<span class="bigstamp">Победа</span></div>` : `<div class="winpic">${pic(L.review ? "assets/codex/all-fixed.webp" : "assets/sketches/welcome.webp","")}<span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div>`}</div>
       <h1>${L.review ? "Ошибки повторены" : (lesson.boss ? "Босс <em>побеждён!</em>" : "Ступенька <em>пройдена</em>")}</h1>
       <p class="sub">${L.review ? "<small>Исправленные фразы получили штамп.</small>" : esc(lesson.en) + "<small>" + esc(lesson.title) + "</small>"}</p>`
-    : `<div class="slab" style="background:var(--terra-tint)"></div><h1>Сердечки закончились</h1>
+    : `<div class="winpic">${pic("assets/sketches/no-hearts.webp","")}</div><h1>Сердечки закончились</h1>
       <p class="lead">Повторите ошибки: каждый верный ответ возвращает сердечко. Или вернитесь позже: сердечко восстанавливается каждые 30 минут.</p>`}
-    <div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с первого раза</span></div>
-      <div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div><div><b>${mins} мин</b><span>заняло</span></div></div>
+    ${passed ? `<div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с 1-го раза</span></div>
+      <div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div><div><b>${mins} мин</b><span>заняло</span></div></div>` : ""}
     ${newMist && !L.review ? `<div class="card"><b>${newMist} ${plural(newMist,"фраза ушла","фразы ушли","фраз ушло")} в «Мои ошибки»</b><p class="lead" style="font-size:15px;margin:4px 0 0">${newMist === 1 ? "Она вернётся" : "Они вернутся"} в повторении.</p></div>` : ""}
     ${passed && !L.review ? `<div class="card"><b>Поговорить с учителем</b><p class="lead" style="font-size:15px;margin:4px 0 12px">Разыграйте эту сцену голосом в ChatGPT.</p>
       <button class="btn ghost" data-copy-lesson="${lesson.id}">${I.copy}Скопировать задание</button></div>` : ""}
@@ -1525,7 +1558,7 @@ document.addEventListener("click", async e => {
   if (d.copyLesson){ const ok = await copyText(lessonPrompt(LESSONS.find(l => l.id === d.copyLesson))); b.innerHTML = I.check + (ok ? "Скопировано. Откройте ChatGPT" : "Не удалось скопировать"); return; }
   if (d.cat){ TK.cat = d.cat; TK.scene = null; TK.accent = null; renderTalk(); return; }
   if (d.scene != null && !L){ TK.scene = TALK.scenes.filter(x => x.c === TK.cat)[Number(d.scene)]; rollPersona(); renderTalk(); return; }
-  if (d.roll){ const p = persona(TK.cat); if (d.roll !== "mood") TK.accent = p.accent; if (d.roll !== "accent") TK.mood = p.mood; if (d.roll === "all") TK.roll = p.speedRoll; renderTalk(); return; }
+  if (d.roll){ const p = persona(TK.cat); if (d.roll !== "mood"){ TK.accent = p.accent; TK.face = pickOne(GUESTS); TK.who = pickOne(["owner-mikalis","manager-lia"]); } if (d.roll !== "accent") TK.mood = p.mood; if (d.roll === "all") TK.roll = p.speedRoll; renderTalk(); return; }
   if (d.speed){ TK.speed = d.speed; if (d.speed === "rand") TK.roll = pickOne(TALK.speeds).id; renderTalk(); return; }
   if ("export" in d){ const url = appUrl() + "#import=" + b64e(packState()); const ok = await copyText(url); LINK_NOTE = ok ? "Ссылка скопирована. Отправьте её себе и откройте на нужном телефоне." : "Не удалось скопировать: " + url; renderMe(); return; }
   if ("restore" in d){ const v = $("#lastdone").value; if (v === "") return; const n = Number(v);

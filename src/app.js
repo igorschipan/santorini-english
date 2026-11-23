@@ -23,6 +23,7 @@ const I = {
 /* ---------- data ---------- */
 const LESSONS = [];
 WORLDS.forEach((w, wi) => w.lessons.forEach((l, li) => { l.world = w; l.wi = wi; l.li = li; LESSONS.push(l); }));
+const RANK_EN = ["Trainee","Floor manager","Senior manager","Legend"];
 const RANKS = [["Стажёр",0],["Менеджер зала",400],["Старший менеджер",1200],["Легенда Санторини",2500]];
 const PAGES_URL = "__PAGES_URL__";
 const IMG = { world: w => `assets/codex/world-${w}.webp`, rank: i => `assets/ranks/rank-${i+1}.webp`, av: n => `assets/avatars/${n}.webp`, dish: n => `assets/menu/${n}.webp` };
@@ -114,7 +115,7 @@ function renderTop(){
   tickHearts();
   const r = rankOf(S.xp);
   $("#bar").innerHTML = `
-    <div class="rank">${badge(r)}<b>${RANKS[r][0]}</b></div>
+    <div class="rank" aria-label="Звание: ${RANKS[r][0]}">${badge(r)}<b>${RANK_EN[r]}</b></div>
     <div class="chip streak ${S.streak ? "" : "off"}" aria-label="Дней подряд: ${S.streak}">${I.sun}${S.streak}</div>
     <div class="chip hearts" aria-label="Сердечек: ${S.hearts} из 5">${I.heart}${S.hearts}</div>
     <div class="chip xp" aria-label="Опыт: ${S.xp}">${I.star}${S.xp}</div>`;
@@ -126,15 +127,24 @@ function renderTabs(){
 }
 function render(){ renderTop(); renderTabs(); ({path:renderPath, mist:renderMist, talk:renderTalk, me:renderMe})[TAB](); parallax(); }
 
-/* gentle parallax: header sea and world photos drift slower than the page */
+/* parallax: layers of the path cover drift at different speeds; world photos drift inside their cards */
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
 function parallax(){
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const m = $("#main"), mt = m.getBoundingClientRect().top, h = m.clientHeight;
+  if (RM.matches) return;
+  const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
+  const hero = $(".hero");
+  if (hero && y < 600){
+    hero.querySelector(".sea").style.transform = `translateY(${(y*0.45).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
+  }
   document.querySelectorAll(".sign .ph").forEach(el => {
-    const r = el.parentNode.getBoundingClientRect(); const c = (r.top - mt + r.height/2) / h - .5;
-    el.style.transform = `translateY(${(-c*28).toFixed(1)}px)`;
+    const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt - 50 || r.top > mt + h + 50) return;
+    const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
+    el.style.transform = `translateY(${(-c*60).toFixed(1)}px)`;
   });
-  $("#sky").style.transform = `scale(1.06) translateY(${Math.max(-10, Math.min(10, (m.scrollTop % 600) / 60 - 5)).toFixed(1)}px)`;
 }
 let pRAF = 0;
 $("#main").addEventListener("scroll", () => { if (!pRAF) pRAF = requestAnimationFrame(() => { pRAF = 0; parallax(); }); }, { passive:true });
@@ -146,13 +156,15 @@ function renderPath(){
   const cur = current();
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? 1 : -1}">${CONN}</div>`;
   let h = `<div class="path">`;
+  h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
+    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}</div>`;
   if (!S.xp && !Object.keys(S.done).length)
-    h += `<div class="hello"><p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
-  h += `<div class="start">${pic("assets/img/stairs.webp","")}<span>Пристань · начало пути</span></div>`;
+    h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
-      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)})"></div><div class="shade"></div>
+      <div class="sign"><div class="ph" style="background-image:url(${IMG.world(w.id)});background-position:${({guests:"center 55%",team:"center 85%",suppliers:"center 70%",owner:"center 70%"})[w.id]}"></div><div class="shade"></div>
         <div class="tx"><div class="n">${wi+1}</div><div><h2>${w.en}</h2><p>${w.name}</p></div><div class="count">${n}/${w.lessons.length}</div></div></div>`;
     w.lessons.forEach((l, li) => {
       if (li > 0) h += conn(X[(li-1) % 4], l.boss ? 0 : X[li % 4]);
@@ -160,7 +172,7 @@ function renderPath(){
       const open = isOpen(l);
       if (l.boss){
         h += `<button class="dome ${open ? "" : "lock"}" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'} aria-label="${esc(l.title)}">
-          ${pic("assets/img/domes.webp","")}${isDone(l) ? `<span class="ok">${I.check}</span>` : ""}
+          ${pic(`assets/sketches/boss-${w.id}.webp`, "", "", `<img src="assets/img/domes.webp" alt="">`)}${isDone(l) ? `<span class="ok">${I.check}</span>` : ""}
           <span class="t">${esc(l.en)}<small class="${l === cur ? "now" : ""}">${l === cur ? "Нажмите, чтобы начать" : esc(l.title) + (isDone(l) ? " · пройдено" : "")}</small></span></button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
@@ -170,12 +182,12 @@ function renderPath(){
     });
     h += `</section>`;
   });
-  h += `</div>`;
+  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div>`;
   $("#main").innerHTML = h;
   const target = $(".paint") || $(".step.now") || ($(".dome .now") && $(".dome .now").closest(".dome"));
   requestAnimationFrame(() => {
     const m = $("#main");
-    if (target){ m.scrollTop += target.getBoundingClientRect().top - m.getBoundingClientRect().top - m.clientHeight * 0.5; }
+    if (target && Object.keys(S.done).length){ m.scrollTop += target.getBoundingClientRect().top - m.getBoundingClientRect().top - m.clientHeight * 0.5; }
     else m.scrollTop = 0;
     parallax();
   });
@@ -198,10 +210,12 @@ function renderMist(){
 
 /* talk with the ChatGPT teacher: scene + random accent, speed and mood */
 const pickOne = a => a[Math.floor(Math.random()*a.length)];
-const GUESTS = ["guest-anna","guest-james"];
+const GUESTS = ["guest-anna","guest-james","guest-yuki","guest-raj","guest-klaus","guest-pierre"];
+const ACCENT_FACE = { Australian:"guest-anna", "British (London)":"guest-james", Scottish:"guest-james", Irish:"guest-james", Japanese:"guest-yuki", Indian:"guest-raj", German:"guest-klaus", Dutch:"guest-klaus", French:"guest-pierre", Italian:"guest-pierre" };
+function faceFor(cat, accent){ if (cat === "team") return "waiter-made"; if (cat === "suppliers") return "supplier-ketut"; if (cat === "owner") return TK.who || "owner-mikalis"; return ACCENT_FACE[accent] || TK.face || (TK.face = pickOne(GUESTS)); }
 let TK = { cat:"guests", scene:null, accent:null, speed:"rand", mood:null };
 function persona(cat){ return { accent: pickOne(TALK.accents[cat]), mood: pickOne(TALK.moods), speedRoll: pickOne(TALK.speeds).id }; }
-function rollPersona(){ const p = persona(TK.cat); TK.accent = p.accent; TK.mood = p.mood; TK.roll = p.speedRoll; }
+function rollPersona(){ const p = persona(TK.cat); TK.accent = p.accent; TK.mood = p.mood; TK.roll = p.speedRoll; TK.face = pickOne(GUESTS); TK.who = pickOne(["owner-mikalis","manager-lia"]); }
 function speedOf(){ return TALK.speeds.find(x => x.id === (TK.speed === "rand" ? TK.roll : TK.speed)); }
 function talkPrompt(sc, cat, accent, speed, mood){
   const role = TALK.cats.find(c => c.id === cat).role;
@@ -225,7 +239,7 @@ function renderTalk(){
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
-    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:10px"><div class="av">${pic(IMG.av(({guests:"guest-anna",reviews:"guest-james",team:"waiter-made",suppliers:"supplier-ketut",owner:"owner-mikalis"})[TK.cat]), "", "", "")}</div><h3 style="margin:0">Собеседник</h3></div>
+    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:12px"><div class="talkav">${pic(IMG.av(faceFor(TK.cat, TK.accent)), "", "", "")}</div><div><h3 style="margin:0">Собеседник</h3><p class="lead" style="font-size:14px;margin:2px 0 0">Каждый раз новый человек</p></div></div>
       <div class="persona">
         <div class="prow"><span class="k">Акцент</span><span class="v">${esc(TK.accent)}</span><button class="reroll" data-roll="accent" aria-label="Другой акцент">${I.dice}</button></div>
         <div class="prow"><span class="k">Настроение</span><span class="v">${esc(TK.mood)}</span><button class="reroll" data-roll="mood" aria-label="Другое настроение">${I.dice}</button></div>
@@ -283,10 +297,10 @@ function renderMe(){
     <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <div class="stat"><div><b>${S.xp}</b><span>опыта</span></div><div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div>
       <div><b>${done}/${LESSONS.length}</b><span>уроков</span></div><div><b>${acc}%</b><span>верных</span></div></div>
-    <div class="card"><h3>Звания</h3><ul class="ranks">${RANKS.map((x,i) => `<li class="${i===r?"me":(i===r+1?"next":"")}">${badge(i)}<span>${x[0]}</span><span>${x[1]}</span></li>`).join("")}</ul></div>
+    <div class="card"><h3>Звания</h3><ul class="ranks">${RANKS.map((x,i) => `<li class="${i===r?"me":(i===r+1?"next":"")}">${badge(i)}<span><b style="display:block">${RANK_EN[i] === "Legend" ? "Legend of Santorini" : RANK_EN[i]}</b><small style="font-size:13px;color:var(--ink-2)">${x[0]}</small></span><span>${x[1]}</span></li>`).join("")}</ul></div>
     <div class="card"><h3>Перенос прогресса</h3>
       <p class="lead" style="font-size:15px;margin:0 0 12px">Ссылка с вашим прогрессом. Откройте её на новом телефоне или в новой версии приложения, и прогресс перенесётся.</p>
-      <button class="btn ghost" data-export>${I.link}Скопировать ссылку с прогрессом</button>${LINK_NOTE ? `<div class="note-ok">${LINK_NOTE}</div>` : ""}
+      <button class="btn ghost" data-export>${I.link}Ссылка с прогрессом</button>${LINK_NOTE ? `<div class="note-ok">${LINK_NOTE}</div>` : ""}
       <p class="lead" style="font-size:15px;margin:16px 0 8px">Если ссылки нет: выберите последний урок, который уже прошли.</p>
       <label class="sr" for="lastdone">Последний пройденный урок</label>
       <select class="in" id="lastdone"><option value="">Выберите урок</option>${LESSONS.map((l,i) => `<option value="${i}">${l.world.name}: ${esc(l.title)}</option>`).join("")}</select>
@@ -307,7 +321,7 @@ function renderMe(){
 /* ---------- lesson engine ---------- */
 let L = null;
 function others(lesson, en){ return shuffle(lesson.p.map(p => p[0]).filter(x => x !== en)); }
-const DISHES = MENU.filter(d => d.i);
+const DISHES = MENU.filter(d => d.i && d.d && d.n !== "Extras");
 function dishTasks(n, T){
   shuffle(DISHES).slice(0, n).forEach((d, k) => {
     const same = shuffle(DISHES.filter(x => x !== d && x.c === d.c)), any = shuffle(DISHES.filter(x => x !== d));
@@ -323,7 +337,8 @@ function buildMenu(){
   T.splice(3, 0, { type:"listen", en:"I recommend our " + a[0].n + ".", ru:"Рекомендую наше блюдо " + a[0].n + ".", opts: shuffle(a.map(x => "I recommend our " + x.n + ".")) });
   T.splice(7, 0, { type:"order", en:"Would you like to try the " + a[1].n + "?", ru:"Хотите попробовать " + a[1].n + "?", extra:[] });
   T.push({ type:"type", en:"The " + a[2].n + " is very popular.", ru:a[2].n + " очень популярно у гостей." });
-  T.push({ type:"speak", en:"I recommend our " + a[0].n + ". " + a[0].d + ".", ru:"Порекомендуйте блюдо гостю" });
+  const clause = a[0].d.split(/[,(.;]/)[0].trim().split(" ").slice(0, 9).join(" ");
+  T.push({ type:"speak", en:"I recommend our " + a[0].n + ". " + clause.charAt(0).toUpperCase() + clause.slice(1) + ".", ru:"Порекомендуйте блюдо гостю" });
   return T;
 }
 function build(lesson){
@@ -388,7 +403,7 @@ function showTask(){
   if (t.type === "match"){
     const L1 = shuffle(t.pairs.map((p,i) => ({ s:p[0], i }))), L2 = shuffle(t.pairs.map((p,i) => ({ s:p[1], i })));
     L.state = { left:null, right:null, left_done:0 };
-    frame(`${k}<div class="q">Слова урока</div><div class="match">
+    frame(`${k}<div class="match">
       <div class="opts">${L1.map(x => `<button class="o" data-ml="${x.i}">${esc(x.s)}</button>`).join("")}</div>
       <div class="opts">${L2.map(x => `<button class="o" data-mr="${x.i}">${esc(x.s)}</button>`).join("")}</div></div>`, false);
     $(".lfoot").innerHTML = `<p style="margin:0;text-align:center;color:var(--ink-2);font-size:15px">Нажмите слово слева и его перевод справа</p>`;
@@ -525,13 +540,13 @@ function endLesson(passed){
   const newMist = L.wrongs.length;
   const mins = Math.max(1, Math.round((Date.now() - L.t0) / 60000));
   $("#lesson").innerHTML = `<div class="end">${passed ? `<img class="plant" src="assets/img/bougainvillea.webp" alt="">` : ""}
-    ${passed ? `<div class="slabwrap">${petals()}<div class="slab"><span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div></div>
+    ${passed ? `<div class="slabwrap">${petals()}${lesson && lesson.boss ? `<div class="winpic">${pic("assets/sketches/boss-win.webp","")}<span class="bigstamp">Победа</span></div>` : `<div class="winpic">${pic(L.review ? "assets/codex/all-fixed.webp" : "assets/sketches/welcome.webp","")}<span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div>`}</div>
       <h1>${L.review ? "Ошибки повторены" : (lesson.boss ? "Босс <em>побеждён!</em>" : "Ступенька <em>пройдена</em>")}</h1>
       <p class="sub">${L.review ? "<small>Исправленные фразы получили штамп.</small>" : esc(lesson.en) + "<small>" + esc(lesson.title) + "</small>"}</p>`
-    : `<div class="slab" style="background:var(--terra-tint)"></div><h1>Сердечки закончились</h1>
+    : `<div class="winpic">${pic("assets/sketches/no-hearts.webp","")}</div><h1>Сердечки закончились</h1>
       <p class="lead">Повторите ошибки: каждый верный ответ возвращает сердечко. Или вернитесь позже: сердечко восстанавливается каждые 30 минут.</p>`}
-    <div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с первого раза</span></div>
-      <div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div><div><b>${mins} мин</b><span>заняло</span></div></div>
+    ${passed ? `<div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с 1-го раза</span></div>
+      <div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div><div><b>${mins} мин</b><span>заняло</span></div></div>` : ""}
     ${newMist && !L.review ? `<div class="card"><b>${newMist} ${plural(newMist,"фраза ушла","фразы ушли","фраз ушло")} в «Мои ошибки»</b><p class="lead" style="font-size:15px;margin:4px 0 0">${newMist === 1 ? "Она вернётся" : "Они вернутся"} в повторении.</p></div>` : ""}
     ${passed && !L.review ? `<div class="card"><b>Поговорить с учителем</b><p class="lead" style="font-size:15px;margin:4px 0 12px">Разыграйте эту сцену голосом в ChatGPT.</p>
       <button class="btn ghost" data-copy-lesson="${lesson.id}">${I.copy}Скопировать задание</button></div>` : ""}
@@ -584,7 +599,7 @@ document.addEventListener("click", async e => {
   if (d.copyLesson){ const ok = await copyText(lessonPrompt(LESSONS.find(l => l.id === d.copyLesson))); b.innerHTML = I.check + (ok ? "Скопировано. Откройте ChatGPT" : "Не удалось скопировать"); return; }
   if (d.cat){ TK.cat = d.cat; TK.scene = null; TK.accent = null; renderTalk(); return; }
   if (d.scene != null && !L){ TK.scene = TALK.scenes.filter(x => x.c === TK.cat)[Number(d.scene)]; rollPersona(); renderTalk(); return; }
-  if (d.roll){ const p = persona(TK.cat); if (d.roll !== "mood") TK.accent = p.accent; if (d.roll !== "accent") TK.mood = p.mood; if (d.roll === "all") TK.roll = p.speedRoll; renderTalk(); return; }
+  if (d.roll){ const p = persona(TK.cat); if (d.roll !== "mood"){ TK.accent = p.accent; TK.face = pickOne(GUESTS); TK.who = pickOne(["owner-mikalis","manager-lia"]); } if (d.roll !== "accent") TK.mood = p.mood; if (d.roll === "all") TK.roll = p.speedRoll; renderTalk(); return; }
   if (d.speed){ TK.speed = d.speed; if (d.speed === "rand") TK.roll = pickOne(TALK.speeds).id; renderTalk(); return; }
   if ("export" in d){ const url = appUrl() + "#import=" + b64e(packState()); const ok = await copyText(url); LINK_NOTE = ok ? "Ссылка скопирована. Отправьте её себе и откройте на нужном телефоне." : "Не удалось скопировать: " + url; renderMe(); return; }
   if ("restore" in d){ const v = $("#lastdone").value; if (v === "") return; const n = Number(v);
