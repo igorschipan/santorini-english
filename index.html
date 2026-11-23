@@ -155,6 +155,8 @@ main::-webkit-scrollbar{display:none}
 .seg{display:flex;background:var(--plaster);border-radius:14px;padding:4px;gap:4px;margin-bottom:16px}
 .seg button{flex:1;min-height:44px;border-radius:10px;font-weight:700;font-size:15px;color:var(--ink-2)}
 .seg2{display:grid;grid-template-columns:1fr 1fr}
+.vol{display:flex;align-items:center;gap:10px;margin:6px 0 0;font-size:13px;color:var(--ink-2)}
+.vol input{flex:1;min-height:44px;accent-color:var(--aegean)}
 .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:var(--shadow-lo)}
 .cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:2px 16px 6px}
 .cats::-webkit-scrollbar{display:none}
@@ -1111,7 +1113,9 @@ async function voiceURL(acc, h){
 }
 function vhash(s){ let h = 0x811c9dc5; for (const b of new TextEncoder().encode(s)){ h ^= b; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); }
 const SFX_OPT = { ok:[["n","Ноты"],["13","№13"],["14","№14"],["15","№15"]], bad:[["n","Ноты"],["1","№1"],["15","№15"]] };
-const sfxSrc = (k, v) => "assets/sfx/" + k + (v && v !== "n" ? "-" + v : "") + ".mp3";
+const sfxKey = (k, v) => k + (v && v !== "n" ? "-" + v : "");
+const sfxLvl = key => { const v = (S.set.sv || {})[key]; return v == null ? 4 : v; };
+const sfxSrc = (k, v) => { const key = sfxKey(k, v), l = sfxLvl(key); return "assets/sfx/" + key + (l < 4 ? "-v" + (4 - l) : "") + ".mp3"; };
 const VA = new Audio(), SFX = { ok: new Audio(sfxSrc("ok", S.set.sok)), bad: new Audio(sfxSrc("bad", S.set.sbad)) };
 VA.preload = "auto"; SFX.ok.preload = SFX.bad.preload = "auto";
 let PRIMING = false, UNLOCKED = false;
@@ -1369,9 +1373,11 @@ function renderMe(){
     <div class="card"><h3>Звуки ответа</h3>
       <p class="lead" style="font-size:15px;margin:8px 0 4px">Верный ответ</p>
       <div class="seg" style="margin:0 0 4px" role="group" aria-label="Звук верного ответа">${SFX_OPT.ok.map(([v,t]) => `<button data-sfx-ok="${v}" aria-pressed="${(S.set.sok||"n")===v}">${t}</button>`).join("")}</div>
+      <label class="vol"><span>Тише</span><input type="range" min="0" max="4" step="1" value="${sfxLvl(sfxKey("ok", S.set.sok))}" data-sfx-vol="ok" aria-label="Громкость звука верного ответа"><span>Громче</span></label>
       <p class="lead" style="font-size:15px;margin:12px 0 4px">Ошибка</p>
       <div class="seg" style="margin:0 0 4px" role="group" aria-label="Звук ошибки">${SFX_OPT.bad.map(([v,t]) => `<button data-sfx-bad="${v}" aria-pressed="${(S.set.sbad||"n")===v}">${t}</button>`).join("")}</div>
-      <p style="font-size:12px;color:var(--ink-2);margin:10px 0 0">Нажмите, чтобы послушать. Звуки с Freesound. Верный ответ: №13 «success_low.wav», автор grunz, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №14 GabrielAraujo и №15 plasterbrain, CC0. Ошибка: №1 «error sound», автор KorGround, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №15 philRacoIndie, CC0.</p>
+      <label class="vol"><span>Тише</span><input type="range" min="0" max="4" step="1" value="${sfxLvl(sfxKey("bad", S.set.sbad))}" data-sfx-vol="bad" aria-label="Громкость звука ошибки"><span>Громче</span></label>
+      <p style="font-size:12px;color:var(--ink-2);margin:10px 0 0">Нажмите, чтобы послушать. Громкость своя у каждого звука, самая громкая всё равно тише голоса. Звуки с Freesound. Верный ответ: №13 «success_low.wav», автор grunz, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №14 GabrielAraujo и №15 plasterbrain, CC0. Ошибка: №1 «error sound», автор KorGround, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №15 philRacoIndie, CC0.</p>
     </div>
     <div class="card"><h3>Сброс</h3><p class="lead" style="font-size:15px;margin:0 0 12px">Удалит опыт, серию, пройденные уроки и ошибки.</p>
       ${RESET_ASK ? `<div class="row"><button class="btn terra" data-reset-yes>Да, сбросить</button><button class="btn ghost" data-reset-no>Отмена</button></div>` : `<button class="btn ghost" data-reset>Начать заново</button>`}
@@ -1723,6 +1729,12 @@ document.addEventListener("click", async e => {
   }
 });
 document.addEventListener("input", e => { if (e.target.id === "tin") setCheck(e.target.value.trim().length > 1); });
+document.addEventListener("change", e => {
+  const k = e.target.dataset && e.target.dataset.sfxVol; if (!k) return;
+  const key = sfxKey(k, k === "ok" ? S.set.sok : S.set.sbad);
+  S.set.sv = S.set.sv || {}; S.set.sv[key] = Number(e.target.value); save();
+  SFX[k].src = sfxSrc(k, k === "ok" ? S.set.sok : S.set.sbad); sfx(k === "ok");
+});
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !L){ tickHearts(); checkStreak(); save(); render(); } });
 checkImport();
 render();
