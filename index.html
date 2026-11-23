@@ -103,20 +103,20 @@ main::-webkit-scrollbar{display:none}
 .dome.lock .t{color:var(--ink-3)}
 .dome .ok{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--aegean);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-lo)}
 .dome .ok svg{width:18px;height:18px}
-.hero{position:relative;height:460px;overflow:hidden;background:#CFE0F3}
+.hero{position:relative;height:440px;overflow:hidden;background:#CFE0F3}
 .hero .l{position:absolute;pointer-events:none;will-change:transform}
-.hero .sea{inset:-60px 0 0 0;background:url(assets/img/sea.webp) center 30%/cover}
-.hero .stairs{left:-4%;bottom:-6px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
+.hero .sea{top:-220px;left:0;right:0;bottom:0;background:url(assets/img/sea.webp) center 30%/cover}
+.hero .stairs{left:-4%;bottom:26px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
 .hero .plant{right:-18px;top:-10px;width:46%;max-width:220px}
 .hero .domes{left:50%;top:46px;width:150px;margin-left:-75px;mix-blend-mode:multiply;opacity:.95}
 .hero .wm{position:absolute;left:0;right:0;top:148px;text-align:center}
 .hero .wm i{display:block;width:210px;height:80px;margin:0 auto;background:url(assets/img/logo-word.webp) center/contain no-repeat}
 .hero .wm span{display:block;font-weight:800;letter-spacing:.32em;font-size:13px;color:var(--aegean);margin-top:2px;text-transform:uppercase}
-.hero .cta{position:absolute;left:auto;right:14px;bottom:14px;width:min(78%,330px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
-.hero .cta div{flex:1;min-width:0}
-.hero .cta b{display:block;font-size:17px;line-height:1.2}
-.hero .cta small{display:block;font-size:13px;color:var(--ink-2)}
-.hero .cta .btn{width:auto;min-height:46px;padding:8px 16px;font-size:15px;flex:none}
+.cta{position:relative;z-index:2;margin:-40px 14px 0;width:calc(100% - 28px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
+.cta div{flex:1;min-width:0}
+.cta b{display:block;font-size:17px;line-height:1.2}
+.cta small{display:block;font-size:13px;color:var(--ink-2)}
+.cta .btn{width:auto;min-height:46px;padding:8px 16px;font-size:15px;flex:none}
 .finale{margin:6px 14px 20px;padding:22px 16px;border-radius:var(--r);background:#fff;box-shadow:var(--shadow-lo);text-align:center}
 .finale img{width:120px;height:120px;object-fit:contain;margin:0 auto 6px}
 .finale b{display:block;font-size:18px} .finale span{font-size:14px;color:var(--ink-2)}
@@ -1090,11 +1090,12 @@ function parallax(){
   const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
   const hero = $(".hero");
   if (hero && y < 600){
-    hero.querySelector(".sea").style.transform = `translateY(${(y*0.45).toFixed(1)}px)`;
-    hero.querySelector(".domes").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
-    hero.querySelector(".wm").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
-    hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
-    hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
+    const hy = Math.min(y, hero.offsetHeight);
+    hero.querySelector(".sea").style.transform = `translateY(${(hy*0.45).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(hy*0.15).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(hy*0.06).toFixed(1)}px)`;
   }
 }
 let pRAF = 0;
@@ -1108,8 +1109,8 @@ function renderPath(){
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
-    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
-    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}</div>`;
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div>
+    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}`;
   if (!S.xp && !Object.keys(S.done).length)
     h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
   WORLDS.forEach((w, wi) => {

@@ -134,11 +134,12 @@ function parallax(){
   const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
   const hero = $(".hero");
   if (hero && y < 600){
-    hero.querySelector(".sea").style.transform = `translateY(${(y*0.45).toFixed(1)}px)`;
-    hero.querySelector(".domes").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
-    hero.querySelector(".wm").style.transform = `translateY(${(y*0.3).toFixed(1)}px)`;
-    hero.querySelector(".plant").style.transform = `translateY(${(y*0.15).toFixed(1)}px)`;
-    hero.querySelector(".stairs").style.transform = `translateY(${(-y*0.08).toFixed(1)}px)`;
+    const hy = Math.min(y, hero.offsetHeight);
+    hero.querySelector(".sea").style.transform = `translateY(${(hy*0.45).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(hy*0.15).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(hy*0.06).toFixed(1)}px)`;
   }
 }
 let pRAF = 0;
@@ -152,8 +153,8 @@ function renderPath(){
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
-    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt="">
-    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}</div>`;
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div>
+    ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}`;
   if (!S.xp && !Object.keys(S.done).length)
     h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
   WORLDS.forEach((w, wi) => {
