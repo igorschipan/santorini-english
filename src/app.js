@@ -128,6 +128,7 @@ function render(){ renderTop(); renderTabs(); ({path:renderPath, mist:renderMist
 
 /* gentle parallax: header sea and world photos drift slower than the page */
 function parallax(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const m = $("#main"), mt = m.getBoundingClientRect().top, h = m.clientHeight;
   document.querySelectorAll(".sign .ph").forEach(el => {
     const r = el.parentNode.getBoundingClientRect(); const c = (r.top - mt + r.height/2) / h - .5;
@@ -222,7 +223,7 @@ function renderTalk(){
     <div class="banner" style="background-image:url(assets/codex/talk.webp)"><div class="shade"></div><h1>Разговор с учителем</h1></div>
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
-    ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}"><span class="t">${esc(x.t)}</span>${x.rv ? `<span class="rv"><b>По реальному отзыву.</b> ${esc(x.rv)}</span>` : ""}</button>`).join("")}
+    ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
     <div class="card" style="margin-top:16px"><h3>Собеседник</h3>
       <div class="persona">
         <div class="prow"><span class="k">Акцент</span><span class="v">${esc(TK.accent)}</span><button class="reroll" data-roll="accent" aria-label="Другой акцент">${I.dice}</button></div>
@@ -524,7 +525,7 @@ function endLesson(passed){
   $("#lesson").innerHTML = `<div class="end">${passed ? `<img class="plant" src="assets/img/bougainvillea.webp" alt="">` : ""}
     ${passed ? `<div class="slabwrap">${petals()}<div class="slab"><span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div></div>
       <h1>${L.review ? "Ошибки повторены" : (lesson.boss ? "Босс <em>побеждён!</em>" : "Ступенька <em>пройдена</em>")}</h1>
-      <p class="lead">${L.review ? "Исправленные фразы получили штамп." : esc(lesson.en) + " · " + esc(lesson.title)}</p>`
+      <p class="sub">${L.review ? "<small>Исправленные фразы получили штамп.</small>" : esc(lesson.en) + "<small>" + esc(lesson.title) + "</small>"}</p>`
     : `<div class="slab" style="background:var(--terra-tint)"></div><h1>Сердечки закончились</h1>
       <p class="lead">Повторите ошибки: каждый верный ответ возвращает сердечко. Или вернитесь позже: сердечко восстанавливается каждые 30 минут.</p>`}
     <div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с первого раза</span></div>
@@ -542,7 +543,7 @@ function countUp(){
   const el = document.querySelector("[data-count]"); if (!el) return;
   const to = Number(el.dataset.count), reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce || !to){ el.textContent = "+" + to; return; }
-  const t0 = performance.now() + 900, dur = 700;
+  const t0 = performance.now() + 450, dur = 600;
   const step = now => { const p = Math.min(1, Math.max(0, (now - t0) / dur)); const e = 1 - Math.pow(1 - p, 3);
     el.textContent = "+" + Math.round(to * e); if (p < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
