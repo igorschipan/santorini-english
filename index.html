@@ -1110,7 +1110,9 @@ async function voiceURL(acc, h){
   VURL.set(key, url); return url;
 }
 function vhash(s){ let h = 0x811c9dc5; for (const b of new TextEncoder().encode(s)){ h ^= b; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); }
-const VA = new Audio(), SFX = { ok: new Audio("assets/sfx/ok.mp3"), bad: new Audio("assets/sfx/bad.mp3") };
+const SFX_OPT = { ok:[["n","Ноты"],["13","№13"],["14","№14"],["15","№15"]], bad:[["n","Ноты"],["1","№1"],["15","№15"]] };
+const sfxSrc = (k, v) => "assets/sfx/" + k + (v && v !== "n" ? "-" + v : "") + ".mp3";
+const VA = new Audio(), SFX = { ok: new Audio(sfxSrc("ok", S.set.sok)), bad: new Audio(sfxSrc("bad", S.set.sbad)) };
 VA.preload = "auto"; SFX.ok.preload = SFX.bad.preload = "auto";
 let PRIMING = false, UNLOCKED = false;
 function prime(a){ const p = a.play(); if (p) p.then(() => { if (a !== VA || PRIMING){ a.pause(); a.currentTime = 0; } a.muted = false; if (a === VA) PRIMING = false; }).catch(() => { a.muted = false; }); }
@@ -1363,6 +1365,13 @@ function renderMe(){
       <div class="seg" style="margin:8px 0 4px" role="group" aria-label="Скорость">
         <button data-rate="0.75" aria-pressed="${S.set.rate==0.75}">Медленно</button><button data-rate="0.9" aria-pressed="${S.set.rate==0.9}">Обычно</button><button data-rate="1.05" aria-pressed="${S.set.rate==1.05}">Быстро</button></div>
       <button class="btn ghost" style="margin-top:8px" data-test-voice>${I.play}Проверить голос</button>
+    </div>
+    <div class="card"><h3>Звуки ответа</h3>
+      <p class="lead" style="font-size:15px;margin:8px 0 4px">Верный ответ</p>
+      <div class="seg" style="margin:0 0 4px" role="group" aria-label="Звук верного ответа">${SFX_OPT.ok.map(([v,t]) => `<button data-sfx-ok="${v}" aria-pressed="${(S.set.sok||"n")===v}">${t}</button>`).join("")}</div>
+      <p class="lead" style="font-size:15px;margin:12px 0 4px">Ошибка</p>
+      <div class="seg" style="margin:0 0 4px" role="group" aria-label="Звук ошибки">${SFX_OPT.bad.map(([v,t]) => `<button data-sfx-bad="${v}" aria-pressed="${(S.set.sbad||"n")===v}">${t}</button>`).join("")}</div>
+      <p style="font-size:12px;color:var(--ink-2);margin:10px 0 0">Нажмите, чтобы послушать. Звуки с Freesound. Верный ответ: №13 «success_low.wav», автор grunz, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №14 GabrielAraujo и №15 plasterbrain, CC0. Ошибка: №1 «error sound», автор KorGround, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>; №15 philRacoIndie, CC0.</p>
     </div>
     <div class="card"><h3>Сброс</h3><p class="lead" style="font-size:15px;margin:0 0 12px">Удалит опыт, серию, пройденные уроки и ошибки.</p>
       ${RESET_ASK ? `<div class="row"><button class="btn terra" data-reset-yes>Да, сбросить</button><button class="btn ghost" data-reset-no>Отмена</button></div>` : `<button class="btn ghost" data-reset>Начать заново</button>`}
@@ -1680,10 +1689,12 @@ document.addEventListener("click", async e => {
   if ("impNo" in d){ $("#overlay").innerHTML = ""; return; }
   if (d.accent){ S.set.accent = d.accent; pickVoice(); save(); renderMe(); return; }
   if (d.rate){ S.set.rate = Number(d.rate); save(); renderMe(); return; }
+  if (d.sfxOk){ S.set.sok = d.sfxOk; SFX.ok.src = sfxSrc("ok", d.sfxOk); save(); renderMe(); sfx(true); return; }
+  if (d.sfxBad){ S.set.sbad = d.sfxBad; SFX.bad.src = sfxSrc("bad", d.sfxBad); save(); renderMe(); sfx(false); return; }
   if ("testVoice" in d){ say("Good evening! Welcome to Santorini."); return; }
   if ("reset" in d){ RESET_ASK = true; renderMe(); return; }
   if ("resetNo" in d){ RESET_ASK = false; renderMe(); return; }
-  if ("resetYes" in d){ S = fresh(); save(); RESET_ASK = false; TAB = "path"; render(); return; }
+  if ("resetYes" in d){ S = fresh(); save(); SFX.ok.src = sfxSrc("ok"); SFX.bad.src = sfxSrc("bad"); RESET_ASK = false; TAB = "path"; render(); return; }
   if (!L) return;
   const t = L.tasks && L.tasks[L.i];
   if ("quit" in d || "done" in d) return quit();
