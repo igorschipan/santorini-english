@@ -1664,9 +1664,19 @@ function joinRes(res, k){ let acc = "";
     const na = norm(acc), nt = norm(t);
     if (!na || nt.startsWith(na)) acc = t; else if (!na.endsWith(nt)) acc += " " + t; });
   return acc.trim(); }
+/* iPhone: a playing or primed <audio> keeps the sound system in playback mode and recognition ends at once.
+   Before listening: silence every sound and switch the page to recording; after listening: back to normal playback. */
+function micSession(on){ try { if (navigator.audioSession) navigator.audioSession.type = on ? "play-and-record" : "auto"; } catch(e){} }
+function silenceAll(){ stopVoice(); [SFX.ok, SFX.bad, VA].forEach(a => { try { a.pause(); a.currentTime = 0; } catch(e){} }); }
+function micFail(msg){ if (!$("#heard")) return;
+  $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
+  $("#heard").innerHTML = `<div class="hint">${I.mic}<span>${msg}нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; }
+let micTries = 0;
 function toggleMic(btn){
   if (recog){ recog.stop(); return; }
+  silenceAll(); micSession(true);
   const r = recog = new REC(); r.lang = "en-US"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = true;
+  const t0 = Date.now(); let got = false, failed = false;
   L.state.alts = []; L.state.heard = "";
   btn.classList.add("on"); btn.querySelector("span").textContent = "Говорите…";
   const stopIn = ms => { clearTimeout(recPause); recPause = setTimeout(() => { if (recog === r) r.stop(); }, ms); };
@@ -1675,14 +1685,19 @@ function toggleMic(btn){
     const res = Array.from(e.results), n = Math.max(1, ...res.map(x => x.length)), alts = [];
     for (let k = 0; k < n; k++){ const s = joinRes(res, k); if (s && !alts.includes(s)) alts.push(s); }
     const s = alts[0] || ""; L.state.heard = s; L.state.alts = alts;
+    if (s) got = true;
     $("#heard").textContent = s ? "«" + s + "»" : ""; setCheck(!!s.trim());
     stopIn(3000); };
-  r.onerror = ev => { const er = ev && ev.error; if (er === "no-speech" || er === "aborted") return; if (!$("#heard")) return;
-    $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
-    $("#heard").innerHTML = `<div class="hint">${I.mic}<span>${er === "service-not-allowed" ? "На iPhone включите Siri и Диктовку: Настройки → Siri, Настройки → Основные → Клавиатура → Диктовка. Пока можно так: " : "Микрофон в браузере не сработал. "}нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; };
-  r.onend = () => { clearTimeout(recPause); clearTimeout(recMax); if (recog === r) recog = null;
-    btn.classList.remove("on"); btn.querySelector("span").textContent = "Сказать ещё раз"; };
-  try { r.start(); } catch(e){ recog = null; r.onerror(); r.onend(); }
+  r.onerror = ev => { const er = ev && ev.error; if (er === "no-speech" || er === "aborted") return; failed = true;
+    micFail(er === "service-not-allowed" ? "На iPhone включите Siri и Диктовку: Настройки → Siri, Настройки → Основные → Клавиатура → Диктовка. Пока можно так: " : "Микрофон в браузере не сработал. Пока можно так: "); };
+  r.onend = () => { clearTimeout(recPause); clearTimeout(recMax); if (recog === r) recog = null; micSession(false);
+    btn.classList.remove("on"); btn.querySelector("span").textContent = "Сказать ещё раз";
+    /* ended by itself in under 1.5 s with nothing heard: the phone did not give the microphone */
+    if (!got && !failed && Date.now() - t0 < 1500){ micTries++;
+      if (micTries >= 2){ micTries = 0; micFail("Микрофон не включился. Пока можно так: "); }
+      else if ($("#heard")) $("#heard").textContent = "Микрофон не включился, нажмите ещё раз"; }
+    else if (got) micTries = 0; };
+  try { r.start(); } catch(e){ recog = null; failed = true; micSession(false); micFail("Микрофон в браузере не сработал. Пока можно так: "); r.onend(); }
 }
 
 /* ---------- events ---------- */
