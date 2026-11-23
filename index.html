@@ -74,7 +74,7 @@ main::-webkit-scrollbar{display:none}
 .flight>.step{z-index:2}
 .sign{align-self:stretch;margin:0 14px 4px;border-radius:var(--r);overflow:hidden;position:relative;background:#fff;box-shadow:var(--shadow)}
 .sign .phwrap{position:relative;overflow:hidden;aspect-ratio:3/2}
-.sign .ph{position:absolute;left:0;right:0;top:-12px;width:100%;height:calc(100% + 24px);object-fit:cover;background:var(--sea);will-change:transform}
+.sign .ph{position:absolute;left:0;right:0;top:-20px;width:100%;height:calc(100% + 40px);object-fit:cover;background:var(--sea);will-change:transform}
 .sign .tx{display:flex;align-items:center;gap:12px;padding:12px 14px}
 .sign .n{width:38px;height:38px;border-radius:12px;background:var(--aegean);display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
 .sign h2{font-size:22px;font-weight:800;line-height:1.05}
@@ -96,15 +96,15 @@ main::-webkit-scrollbar{display:none}
 .step.paint::after{content:"";position:absolute;inset:0;border-radius:16px;background:#fff;animation:paint 700ms var(--ease-out) both;pointer-events:none}
 @keyframes paint{from{clip-path:inset(0 100% 0 0);opacity:1}70%{clip-path:inset(0 0 0 0);opacity:1}to{clip-path:inset(0 0 0 0);opacity:0}}
 .dome{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px 8px;border-radius:var(--r);text-align:center}
-.dome img{width:150px;height:120px;object-fit:contain;mix-blend-mode:multiply}
-.dome .t{font-size:15px;font-weight:800;max-width:230px}
-.dome .t small{display:block;font-weight:600;font-size:13px;color:var(--ink-2)}
+.dome img{width:200px;height:160px;object-fit:contain;mix-blend-mode:multiply}
+.dome .t{font-size:19px;font-weight:800;line-height:1.2;max-width:260px}
+.dome .t small{display:block;font-weight:600;font-size:13px;line-height:1.3;margin-top:2px;color:var(--ink-2)}
 .dome .now{color:var(--aegean);font-weight:800}
-.dome .lk{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--sea);color:var(--aegean);display:grid;place-items:center}
-.dome .lk svg{width:16px;height:16px}
+.dome .lk{position:absolute;top:8px;left:calc(50% - 100px);width:38px;height:38px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center}
+.dome .lk svg{width:22px;height:22px}
 .dome.lock .t{color:var(--ink-3)}
-.dome .ok{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--aegean);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-lo)}
-.dome .ok svg{width:18px;height:18px}
+.dome .ok{position:absolute;top:8px;left:calc(50% - 100px);width:38px;height:38px;border-radius:12px;background:var(--sea);color:var(--aegean);display:grid;place-items:center}
+.dome .ok svg{width:22px;height:22px}
 .hero{position:relative;height:440px;overflow:hidden;background:#CFE0F3}
 .hero .l{position:absolute;pointer-events:none;will-change:transform}
 .hero .sea{top:-220px;left:0;right:0;bottom:0;background:url(assets/img/sea.webp) center 30%/cover}
@@ -1102,11 +1102,11 @@ function parallax(){
     hero.querySelector(".plant").style.transform = `translateY(${(hy*0.15).toFixed(1)}px)`;
     hero.querySelector(".stairs").style.transform = `translateY(${(hy*0.06).toFixed(1)}px)`;
   }
-  /* world photos drift inside their cards: low on screen shows the bottom of the photo, high shows the top; at most 12px hidden at either edge */
+  /* world photos drift inside their cards: low on screen shows the bottom of the photo, high shows the top; at most 20px hidden at either edge */
   document.querySelectorAll(".sign .ph").forEach(el => {
     const r = el.parentNode.getBoundingClientRect(); if (r.bottom < mt || r.top > mt + h) return;
     const c = Math.max(-.5, Math.min(.5, (r.top - mt + r.height/2) / h - .5));
-    el.style.transform = `translateY(${(-c*24).toFixed(1)}px)`;
+    el.style.transform = `translateY(${(-c*40).toFixed(1)}px)`;
   });
 }
 let pRAF = 0;
