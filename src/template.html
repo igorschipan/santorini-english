@@ -103,16 +103,17 @@ main::-webkit-scrollbar{display:none}
 .dome.lock .t{color:var(--ink-3)}
 .dome .ok{position:absolute;top:8px;right:28px;width:30px;height:30px;border-radius:50%;background:var(--aegean);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-lo)}
 .dome .ok svg{width:18px;height:18px}
-.hero{position:relative;height:440px;overflow:hidden;background:#CFE0F3}
+.hero{position:sticky;top:0;z-index:0;height:min(440px,58vh);overflow:hidden;background:#CFE0F3}
 .hero .l{position:absolute;pointer-events:none;will-change:transform}
-.hero .sea{top:-220px;left:0;right:0;bottom:0;background:url(assets/img/sea.webp) center 30%/cover}
-.hero .stairs{left:-4%;bottom:26px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
+.hero .sea{inset:0;background:url(assets/img/sea.webp) center 30%/cover}
+.hero .stairs{left:-4%;bottom:-2px;width:84%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 98%);mask-image:linear-gradient(90deg,#000 72%,transparent 98%)}
 .hero .plant{right:-18px;top:-10px;width:46%;max-width:220px}
 .hero .domes{left:50%;top:46px;width:150px;margin-left:-75px;mix-blend-mode:multiply;opacity:.95}
 .hero .wm{position:absolute;left:0;right:0;top:148px;text-align:center}
 .hero .wm i{display:block;width:210px;height:80px;margin:0 auto;background:url(assets/img/logo-word.webp) center/contain no-repeat}
 .hero .wm span{display:block;font-weight:800;letter-spacing:.32em;font-size:13px;color:var(--aegean);margin-top:2px;text-transform:uppercase}
-.cta{position:relative;z-index:2;margin:-40px 14px 0;width:calc(100% - 28px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
+.over{position:relative;z-index:1;background:var(--wash);border-radius:26px 26px 0 0;margin-top:-26px;padding-top:14px;box-shadow:0 -10px 24px -14px rgba(12,42,85,.35)}
+.cta{position:relative;z-index:2;margin:0 14px;width:calc(100% - 28px);display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:20px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--shadow);text-align:left}
 .cta div{flex:1;min-width:0}
 .cta b{display:block;font-size:17px;line-height:1.2}
 .cta small{display:block;font-size:13px;color:var(--ink-2)}

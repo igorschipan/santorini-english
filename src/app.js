@@ -133,13 +133,13 @@ function parallax(){
   if (RM.matches) return;
   const m = $("#main"), y = m.scrollTop, mt = m.getBoundingClientRect().top, h = m.clientHeight;
   const hero = $(".hero");
-  if (hero && y < 600){
+  if (hero && y < 700){
     const hy = Math.min(y, hero.offsetHeight);
-    hero.querySelector(".sea").style.transform = `translateY(${(hy*0.45).toFixed(1)}px)`;
-    hero.querySelector(".domes").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
-    hero.querySelector(".wm").style.transform = `translateY(${(hy*0.3).toFixed(1)}px)`;
-    hero.querySelector(".plant").style.transform = `translateY(${(hy*0.15).toFixed(1)}px)`;
-    hero.querySelector(".stairs").style.transform = `translateY(${(hy*0.06).toFixed(1)}px)`;
+    hero.querySelector(".stairs").style.transform = `translateY(${(-hy*0.35).toFixed(1)}px)`;
+    hero.querySelector(".plant").style.transform = `translateY(${(-hy*0.22).toFixed(1)}px)`;
+    hero.querySelector(".domes").style.transform = `translateY(${(-hy*0.12).toFixed(1)}px)`;
+    hero.querySelector(".wm").style.transform = `translateY(${(-hy*0.12).toFixed(1)}px)`;
+    hero.querySelector(".sea").style.transform = `scale(${(1 + hy*0.0003).toFixed(4)})`;
   }
 }
 let pRAF = 0;
@@ -153,7 +153,7 @@ function renderPath(){
   const conn = (a, b) => `<div class="conn" style="--x:${(a+b)/2}px;--f:${b >= a ? -1 : 1}">${CONN}</div>`;
   let h = `<div class="path">`;
   h += `<div class="hero"><div class="l sea"></div><img class="l domes" src="assets/img/domes.webp" alt=""><div class="l wm"><i role="img" aria-label="Santorini"></i><span>English</span></div>
-    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div>
+    <img class="l plant" src="assets/img/bougainvillea.webp" alt=""><img class="l stairs" src="assets/img/stairs.webp" alt=""></div><div class="over">
     ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}`;
   if (!S.xp && !Object.keys(S.done).length)
     h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
@@ -178,7 +178,7 @@ function renderPath(){
     });
     h += `</section>`;
   });
-  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div>`;
+  h += `<div class="finale"><img src="${IMG.rank(3)}" alt=""><b>Legend of Santorini</b><span>${LESSONS.every(isDone) ? "Все уроки пройдены. Браво!" : `Легенда Санторини: осталось ${LESSONS.filter(l => !isDone(l)).length} ${plural(LESSONS.filter(l => !isDone(l)).length,"урок","урока","уроков")}`}</span></div></div></div>`;
   $("#main").innerHTML = h;
   const target = $(".paint") || $(".step.now") || ($(".dome .now") && $(".dome .now").closest(".dome"));
   requestAnimationFrame(() => {
