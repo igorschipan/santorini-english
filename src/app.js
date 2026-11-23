@@ -224,7 +224,7 @@ function renderTalk(){
     <p class="lead">Живая практика голосом в вашем ChatGPT. Каждый раз собеседник другой: акцент, скорость и настроение меняются.</p>
     <div class="cats" role="group" aria-label="Тема">${TALK.cats.map(c => `<button class="chipbtn" data-cat="${c.id}" aria-pressed="${c.id===TK.cat}">${c.name}</button>`).join("")}</div>
     ${list.map((x,i) => `<button class="scene" data-scene="${i}" aria-pressed="${x===TK.scene}">${x.rv ? `<span class="tag">Real review</span>` : ""}<span class="t">${esc(x.en[0].toUpperCase() + x.en.slice(1))}</span><span class="ru">${esc(x.t)}</span>${x.rv ? `<span class="rv">${esc(x.rv)}</span>` : ""}</button>`).join("")}
-    <div class="card" style="margin-top:16px"><h3>Собеседник</h3>
+    <div class="card" style="margin-top:16px"><div class="prow" style="margin-bottom:10px"><div class="av">${pic(IMG.av(({guests:"guest-anna",reviews:"guest-james",team:"waiter-made",suppliers:"supplier-ketut",owner:"owner-nikos"})[TK.cat]), "", "", "")}</div><h3 style="margin:0">Собеседник</h3></div>
       <div class="persona">
         <div class="prow"><span class="k">Акцент</span><span class="v">${esc(TK.accent)}</span><button class="reroll" data-roll="accent" aria-label="Другой акцент">${I.dice}</button></div>
         <div class="prow"><span class="k">Настроение</span><span class="v">${esc(TK.mood)}</span><button class="reroll" data-roll="mood" aria-label="Другое настроение">${I.dice}</button></div>
