@@ -1472,6 +1472,7 @@ function frame(inner, canCheck){
 }
 function setCheck(on){ const b = $("[data-check]"); if (b) b.disabled = !on; }
 function showTask(){
+  killMic();
   const t = L.tasks[L.i]; L.pick = null; L.state = {};
   hideSheet();
   const k = `<div class="kind">${KIND[t.type]}</div>`;
@@ -1654,7 +1655,7 @@ function noHearts(){
   $("#lesson").classList.remove("hide");
   endLesson(false);
 }
-function quit(){ stopVoice(); hideSheet(); $("#lesson").classList.add("hide"); $("#lesson").innerHTML = ""; L = null; render(); }
+function quit(){ killMic(); stopVoice(); hideSheet(); $("#lesson").classList.add("hide"); $("#lesson").innerHTML = ""; L = null; render(); }
 
 /* speech recognition (when the browser has it) */
 let recog = null, recPause = 0, recMax = 0;
@@ -1671,16 +1672,23 @@ function silenceAll(){ stopVoice(); [SFX.ok, SFX.bad, VA].forEach(a => { try { a
 function micFail(msg){ if (!$("#heard")) return;
   $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
   $("#heard").innerHTML = `<div class="hint">${I.mic}<span>${msg}нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; }
-let micTries = 0;
+let micTries = 0, recStop = null;
+/* Safari can keep the microphone busy after recognition "ended": always release it hard.
+   Also used when the task changes, the lesson closes or Safari goes to the background. */
+function killMic(){ const r = recog; if (!r) return; r._killed = true; recog = null; try { r.abort(); } catch(e){} if (r.onend) r.onend(); }
 function toggleMic(btn){
-  if (recog){ recog.stop(); return; }
+  if (recog){ if (recStop) recStop(); return; }
   silenceAll(); micSession(true);
   const r = recog = new REC(); r.lang = "en-US"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = true;
-  const t0 = Date.now(); let got = false, failed = false;
+  const t0 = Date.now(); let got = false, failed = false, ended = false, stopT = 0;
+  /* polite stop first; if the phone does not finish within 1.5 s, cut the microphone off */
+  const finish = () => { if (recog !== r) return; try { r.stop(); } catch(e){}
+    clearTimeout(stopT); stopT = setTimeout(() => { try { r.abort(); } catch(e){} if (!ended) r.onend(); }, 1500); };
+  recStop = finish;
   L.state.alts = []; L.state.heard = "";
   btn.classList.add("on"); btn.querySelector("span").textContent = "Говорите…";
-  const stopIn = ms => { clearTimeout(recPause); recPause = setTimeout(() => { if (recog === r) r.stop(); }, ms); };
-  stopIn(8000); clearTimeout(recMax); recMax = setTimeout(() => { if (recog === r) r.stop(); }, 25000);
+  const stopIn = ms => { clearTimeout(recPause); recPause = setTimeout(finish, ms); };
+  stopIn(8000); clearTimeout(recMax); recMax = setTimeout(finish, 25000);
   r.onresult = e => { if (recog !== r || !L || !$("#heard")) return;
     const res = Array.from(e.results), n = Math.max(1, ...res.map(x => x.length)), alts = [];
     for (let k = 0; k < n; k++){ const s = joinRes(res, k); if (s && !alts.includes(s)) alts.push(s); }
@@ -1690,8 +1698,11 @@ function toggleMic(btn){
     stopIn(3000); };
   r.onerror = ev => { const er = ev && ev.error; if (er === "no-speech" || er === "aborted") return; failed = true;
     micFail(er === "service-not-allowed" ? "На iPhone включите Siri и Диктовку: Настройки → Siri, Настройки → Основные → Клавиатура → Диктовка. Пока можно так: " : "Микрофон в браузере не сработал. Пока можно так: "); };
-  r.onend = () => { clearTimeout(recPause); clearTimeout(recMax); if (recog === r) recog = null; micSession(false);
+  r.onend = () => { if (ended) return; ended = true;
+    clearTimeout(recPause); clearTimeout(recMax); clearTimeout(stopT); if (recog === r) recog = null; if (recStop === finish) recStop = null; micSession(false);
+    setTimeout(() => { try { r.abort(); } catch(e){} }, 0);
     btn.classList.remove("on"); btn.querySelector("span").textContent = "Сказать ещё раз";
+    if (r._killed) return;
     /* ended by itself in under 1.5 s with nothing heard: the phone did not give the microphone */
     if (!got && !failed && Date.now() - t0 < 1500){ micTries++;
       if (micTries >= 2){ micTries = 0; micFail("Микрофон не включился. Пока можно так: "); }
@@ -1762,6 +1773,7 @@ document.addEventListener("change", e => {
   S.set.sv = S.set.sv || {}; S.set.sv[key] = Number(e.target.value); save();
   SFX[k].src = sfxSrc(k, k === "ok" ? S.set.sok : S.set.sbad); sfx(k === "ok");
 });
+document.addEventListener("visibilitychange", () => { if (document.hidden) killMic(); });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !L){ tickHearts(); checkStreak(); save(); render(); } });
 checkImport();
 render();
