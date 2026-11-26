@@ -234,6 +234,38 @@ select.in{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(-
 .say{padding-right:54px!important}
 .say .mini{position:absolute;right:6px;top:8px;width:44px;height:44px;border-radius:12px;background:var(--aegean);color:#fff;display:grid;place-items:center}
 .say .mini svg{width:20px;height:20px}
+/* boss battle */
+.kicker{margin:0 0 4px;font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--bloom);display:flex;align-items:center;justify-content:center;gap:6px}
+.kicker svg{width:18px;height:18px}
+.daily{margin-top:16px}.daily .hello-pic{max-height:110px}
+.bintro .rules{list-style:none;margin:16px 0 20px;padding:0;text-align:left}
+.bintro .rules li{padding:10px 0;border-top:1px solid var(--pebble);font-size:15px;line-height:1.4;color:var(--ink-2)}
+.bintro .rules li:last-child{border-bottom:1px solid var(--pebble)}
+.bintro .rules b{color:var(--ink)}
+.pat{display:flex;gap:3px;align-items:center;padding:8px 10px;border-radius:999px;background:var(--plaster)}
+.pat i{width:7px;height:16px;border-radius:3px;background:var(--aegean);transition:background-color 200ms ease}
+.pat i.off{background:var(--sea-2)}
+.pat.low i:not(.off){background:var(--bloom)}
+.pat.hit{animation:shake 260ms var(--ease-out)}
+.tmrrow{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:13px;font-weight:700;color:var(--ink-2)}
+.tmrrow b{min-width:22px;text-align:right;font-size:15px;color:var(--aegean)}
+.tmr{position:relative;flex:1;height:8px;border-radius:4px;background:var(--plaster-2);overflow:hidden}
+.tmr i{position:absolute;left:0;top:0;bottom:0;width:var(--w,100%);background:var(--aegean);border-radius:4px;transition:width 100ms linear}
+.tmrrow.rush span,.tmrrow.low b{color:var(--bloom)}
+.tmrrow.low .tmr i,.tmrrow.rush .tmr i{background:var(--bloom)}
+.bb{display:flex;gap:8px;margin:-6px 0 16px}
+.bb button{flex:1;min-height:44px;padding:6px 10px;border-radius:14px;background:var(--sea);color:var(--aegean);font-weight:700;font-size:14px;line-height:1.2}
+.bb button small{display:block;margin-top:2px;font-weight:500;font-size:12px;color:var(--ink-2)}
+.bb button:disabled{opacity:.55}
+.say .ear{display:block;color:var(--ink-2);font-size:16px;font-weight:600;padding:10px 0}
+.o.meh{border-color:var(--aegean);border-style:dashed}
+.sheet .pnote{font-size:14px;font-weight:700;color:var(--aegean-deep);margin:-6px 0 12px}
+.sheet.bad .pnote{color:var(--terra)}
+.stars{display:flex;justify-content:center;gap:4px;margin:10px 0 0;color:var(--aegean)}
+.stars svg{width:34px;height:34px}
+.step.boss .st{display:flex;justify-content:center;gap:2px;color:var(--aegean)}
+.step.boss.now .st{color:#fff}
+.step.boss .st svg{width:18px;height:18px}
 .who{font-size:14px;font-weight:700;color:var(--aegean);margin:0 0 4px 74px}
 .note{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:17px;line-height:1.5;margin-bottom:14px}
 .note .lbl{font-size:14px;font-weight:700;color:var(--ink-2);margin-bottom:4px}
@@ -1103,10 +1135,16 @@ function voff(acc){
   if (!VOFF[acc]){ const l = VLEN[acc].split(",").map(Number), o = [0]; for (let i = 0; i < l.length; i++) o.push(o[i] + l[i]); VOFF[acc] = o; }
   return VOFF[acc];
 }
+/* extra recordings for boss battles: assets/voice/boss-<accent>.bin, same format as the main files */
+const VH2 = "4bdf15b7 eea8f071 32b3f28a 399a115b e2725b92 b7fd3a34 eab199e4 36cf9899 d27904f5 8e553e41 74027e9f 67286c71 dd85a657 1c55dce7 bdbf5bf0 bef086ed e6ef5696 4cfd5078 aabd0868 b50aaefe 495bfbce e9c3f10a 506dff3e 6c6e2525 64ff7b9f 32694bc3 f4b48d8c 67343942 190b2f9f e92df9e1 45d2fa39 03285dfc 1af8295a".split(" ").filter(x => /^[0-9a-f]{8}$/.test(x)), VLEN2 = {"us": "9117,15957,17037,16197,17157,15597,16077,16077,42717,34557,29997,13917,21597,2997,3237,3237,2877,3597,3837,3597,2637,3837,3237,2397,3237,2397,2877,2397,3837,2997,3477,3717,3357", "gb": "10077,19437,18957,18957,20157,17877,19437,17397,40197,34797,31677,16197,24597,2877,3237,3237,2757,3117,4077,3477,3237,4917,2997,2757,3597,2757,2637,2637,4437,2757,3717,3357,3357", "in": "9957,21597,23157,22437,22557,19677,23037,18357,43197,38757,32397,18717,25557,2877,3117,3357,2877,3477,4197,3597,3357,4677,2877,2517,3117,2397,2277,2757,3957,2757,3477,3477,3357", "au": "9357,17877,18597,17997,18957,16557,19437,16797,38757,31677,25917,14637,22077,2517,2757,3117,2757,3117,3477,3117,2877,4437,2877,2277,3477,2517,2517,2037,4077,2637,3477,3237,3117"}, VPOS2 = new Map(VH2.map((h, i) => [h, i])), VOFF2 = {};
+function voff2(acc){
+  if (!VOFF2[acc]){ const l = VLEN2[acc].split(",").map(Number), o = [0]; for (let i = 0; i < l.length; i++) o.push(o[i] + l[i]); VOFF2[acc] = o; }
+  return VOFF2[acc];
+}
 async function voiceURL(acc, h){
   const key = acc + h; if (VURL.has(key)) return VURL.get(key);
-  const o = voff(acc), i = VPOS.get(h), a = o[i], b = o[i + 1] - 1;
-  const r = await fetch("assets/voice/" + acc + ".bin", { headers: { Range: "bytes=" + a + "-" + b } });
+  const two = !VPOS.has(h), o = two ? voff2(acc) : voff(acc), i = two ? VPOS2.get(h) : VPOS.get(h), a = o[i], b = o[i + 1] - 1;
+  const r = await fetch("assets/voice/" + (two ? "boss-" : "") + acc + ".bin", { headers: { Range: "bytes=" + a + "-" + b } });
   if (r.status !== 206) throw new Error("no range");
   const url = URL.createObjectURL(new Blob([await r.arrayBuffer()], { type: "audio/mpeg" }));
   VURL.set(key, url); return url;
@@ -1129,27 +1167,28 @@ document.addEventListener("touchend", unlockAudio, true); document.addEventListe
 let SAYID = 0;
 function stopVoice(){ SAYID++; if ("speechSynthesis" in window) speechSynthesis.cancel(); PRIMING = false; try { VA.pause(); } catch(e){} }
 function sfx(ok){ stopVoice(); const a = ok ? SFX.ok : SFX.bad; try { a.muted = false; a.currentTime = 0; const p = a.play(); if (p) p.catch(() => {}); } catch(e){} }
-function say(text, slow){
+function say(text, slow, o){
   stopVoice();
-  const h = vhash(text), id = SAYID;
-  if (VPOS.has(h)){
-    voiceURL(VDIR[S.set.accent] || "us", h).then(url => {
+  const h = vhash(text), id = SAYID, acc = (o && o.acc) || S.set.accent;
+  if (VPOS.has(h) || VPOS2.has(h)){
+    voiceURL(VDIR[acc] || "us", h).then(url => {
       if (id !== SAYID) return;
-      const r = slow ? 0.7 : (S.set.rate || 0.9) / 0.9;
+      const r = slow ? 0.7 : (S.set.rate || 0.9) / 0.9 * (o && o.fast ? 1.12 : 1);
       VA.muted = false; VA.src = url;
       VA.preservesPitch = VA.webkitPreservesPitch = true; VA.defaultPlaybackRate = VA.playbackRate = r;
-      const p = VA.play(); if (p) p.catch(() => { if (id === SAYID) sayDevice(text, slow); });
-    }).catch(() => { if (id === SAYID) sayDevice(text, slow); });
+      const p = VA.play(); if (p) p.catch(() => { if (id === SAYID) sayDevice(text, slow, o); });
+    }).catch(() => { if (id === SAYID) sayDevice(text, slow, o); });
     return;
   }
-  sayDevice(text, slow);
+  sayDevice(text, slow, o);
 }
-function sayDevice(text, slow){
+function sayDevice(text, slow, o){
   if (!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = S.set.accent; if (VOICE) u.voice = VOICE;
-  u.rate = slow ? 0.6 : S.set.rate;
+  u.lang = (o && o.acc) || S.set.accent; if (VOICE && !(o && o.acc)) u.voice = VOICE;
+  u.rate = slow ? 0.6 : S.set.rate * (o && o.fast ? 1.12 : 1);
+  u.onend = () => { if (typeof voiceDone === "function") voiceDone(); };
   speechSynthesis.speak(u);
 }
 const REC = window.SpeechRecognition || window.webkitSpeechRecognition || null;
@@ -1214,6 +1253,8 @@ function renderPath(){
     ${cur ? `<button class="cta" data-go="${cur.id}"><div><small>${esc(cur.world.en)} · ${esc(cur.world.name)}</small><b>${esc(cur.en)}</b><small>${esc(cur.title)}</small></div><span class="btn">${isDone(LESSONS[0]) ? "Продолжить" : "Начать"}</span></button>` : ""}`;
   if (!S.xp && !Object.keys(S.done).length)
     h += `<div class="hello" style="margin-top:16px">${pic("assets/sketches/welcome.webp","","hello-pic")}<p><b>Уже занимались в прошлой версии?</b> Прогресс можно перенести в «Профиле».</p><button class="btn small" data-tab="me">Перенести</button></div>`;
+  const db = dailyBoss();
+  if (db) h += `<div class="hello daily">${pic(`assets/sketches/boss-${db.l.world.id}.webp`, "", "hello-pic")}<p><b>Трудный гость дня: ${esc(db.l.en)}</b><br>${db.won ? "Сегодня побеждён. Завтра придёт новый гость." : "Та же битва в новом порядке. За победу +60 звёзд."}</p>${db.won ? "" : `<button class="btn small" data-daily="${db.l.id}">В бой</button>`}</div>`;
   WORLDS.forEach((w, wi) => {
     const n = w.lessons.filter(isDone).length;
     h += `<section class="flight" aria-label="${w.name}">
@@ -1230,7 +1271,8 @@ function renderPath(){
           <span class="ic">${ic}</span><span class="art">${st === "now"
             ? pic(`assets/sketches/boss-${w.id}-white.webp`, "", "wht", `<span class="plate"><img src="assets/sketches/boss-${w.id}.webp" alt=""></span>`)
             : pic(`assets/sketches/boss-${w.id}.webp`, "", "", `<img src="assets/img/domes.webp" alt="">`)}</span>
-          <span class="t">${esc(l.en)}<small>${l === cur ? "Нажмите, чтобы начать" : esc(l.title)}</small></span></button>`;
+          <span class="t">${esc(l.en)}<small>${bossLock(l.id) ? "Реванш после повторения ошибок" : (l === cur ? "Нажмите, чтобы начать" : esc(l.title))}</small></span>
+          ${isDone(l) && S.done[l.id].stars ? `<span class="st" role="img" aria-label="${S.done[l.id].stars} из 3 звёзд">${starsHtml(S.done[l.id].stars, S.done[l.id].crown, S.done[l.id].flawless)}</span>` : ""}</button>`;
       } else {
         const ic = st === "lock" ? I.lock : (isDone(l) ? I.check : (l.menu ? I.plate : I.door));
         h += `<button class="step ${st} ${l.menu ? "menu" : ""} ${JUST === l.id ? "paint" : ""}" style="--x:${xs(li)}px" data-go="${l.id}" ${open ? "" : 'aria-disabled="true"'}>
@@ -1286,6 +1328,7 @@ After about 10 lines, stop and give me in Russian: my 3 main mistakes with the c
 function doneSheet(l){
   $("#overlay").innerHTML = `<div class="import" data-ov-bg><div class="card" role="dialog" aria-modal="true" aria-labelledby="dsh"><h3 id="dsh">${esc(l.en)}</h3>
     <p class="lead" style="margin:2px 0 14px">${esc(l.title)}. Урок пройден: можно сразу разыграть сцену голосом в ChatGPT или пройти урок заново.</p>
+    ${l.boss ? `<div class="stars" style="justify-content:flex-start;margin:-4px 0 14px">${starsHtml((S.done[l.id] || {}).stars || 0, (S.done[l.id] || {}).crown, (S.done[l.id] || {}).flawless)}</div>` : ""}
     <button class="btn" data-copy-lesson="${l.id}">${I.copy}Скопировать задание для ChatGPT</button>
     <a class="btn ghost" style="margin-top:10px" href="https://chatgpt.com/" target="_blank" rel="noopener">${I.ext}Открыть ChatGPT</a>
     <button class="btn ghost" style="margin-top:10px" data-redo="${l.id}">Пройти урок заново</button>
@@ -1417,8 +1460,203 @@ function buildMenu(){
   T.push({ type:"speak", en:"I recommend our " + a[0].n + ". " + clause.charAt(0).toUpperCase() + clause.slice(1) + ".", ru:"Порекомендуйте блюдо гостю" });
   return T;
 }
+/* ---------- boss battle ---------- */
+/* per boss reply: soft = counted but not ideal (dry: costs patience; sorry: costs patience only right after another apology), trap = near-miss wrong answers */
+const BOSSX = {
+  g5: [
+    { soft:"Those tables are taken. There is one nearby.", kind:"dry", trap:["I'm sorry, those tables is taken. I can offer you one nearby with a good view.", "Sorry, those tables are taken. You can wait or go somewhere else."] },
+    { soft:"I'm sorry, I'm not sure. I'll check with the chef.", kind:"sorry", trap:["I check with the chef and come back to you.", "Yes, it's very fresh. It's from the sea."] },
+    { soft:"Okay. I'll bring another bottle.", kind:"dry", trap:["I'm so sorry. I bring you a cold bottle right away.", "I'm sorry, but our wine is always this temperature."] },
+    { soft:"I'm sorry, the owner isn't here tonight. I'm the manager.", kind:"sorry", trap:["The owner not here tonight, but I'm the manager. How can I help?", "The owner isn't here tonight. What do you want?"] },
+    { soft:"Thanks. Bye.", kind:"dry", trap:["Thank you! We hope see you again soon.", "Thank you! We hope to seeing you again soon."] }
+  ],
+  t5: [
+    { soft:"Hi. Start in the kitchen.", kind:"dry", trap:["Welcome, Komang! Let me to show you around.", "Welcome, Komang! Let me showing you around."] },
+    { soft:"Staff room. Behind the kitchen.", kind:"dry", trap:["There's a staff room behind the kitchen. I show you.", "There are a staff room behind the kitchen. I'll show you."] },
+    { soft:"I'm so sorry. I'll talk to him later.", kind:"sorry", trap:["I'm sorry. That's not okay. I'll talk to him in front of the guests.", "I'm sorry. That's not okay. I talk to him after the shift."] },
+    { soft:"Watch me. Then you do it.", kind:"dry", trap:["No problem. Watch me once, then you tries.", "No problem. Look me once, then you try."] },
+    { soft:"Okay, no problem.", kind:"dry", trap:["You're welcome. You did a great work!", "You welcome. You did a great job!"] }
+  ],
+  s5: [
+    { soft:"Bring a sample.", kind:"dry", trap:["Great. Can you bring us sample first?", "Great. Can you bring to us a sample first?"] },
+    { soft:"Sorry, ten is too late for us. We need it before nine.", kind:"sorry", trap:["We need it after nine. Is that possible?", "We need it before nine. Is it possible it?"] },
+    { soft:"Okay. Same day?", kind:"dry", trap:["Good. And you will replacing it the same day?", "Good. And you'll replace it the next week?"] },
+    { soft:"Sorry, that's too much for us. Can you do better?", kind:"sorry", trap:["Our current supplier is 85,000. Can you do more better?", "Our current supplier is 85,000. You can do better?"] },
+    { soft:"Fine. I'll tell the owner.", kind:"dry", trap:["Sounds good. I confirm with the owner today.", "Sounds good. I'll confirm with owner today."] }
+  ],
+  o5: [
+    { soft:"It was good. We reached our goal.", kind:"dry", trap:["We reach our goal. Revenue went up by twelve percent, and our rating is 4.7.", "We reached our goal. Revenue went up on twelve percent, and our rating is 4.7."] },
+    { soft:"I'm sorry, lunch is still slow. I'll fix it.", kind:"sorry", trap:["Lunch is still slow. I have a plan to improving it next month.", "Lunch is still slow, but it's the staff's fault."] },
+    { soft:"More responsibility.", kind:"dry", trap:["I'd like to take more responsibilities, for example the supplier contracts.", "I like to take more responsibility, for example the supplier contracts."] },
+    { soft:"Sorry to ask, but I think I've earned a raise.", kind:"sorry", trap:["I think I've earn a raise. Can we discuss ten percent?", "I think I've earned a raise. Can we discuss about ten percent?"] },
+    { soft:"Okay. Monday.", kind:"dry", trap:["Of course. Thank you for your trusting.", "Of course. Thanks you for your trust."] }
+  ]
+};
+/* difficulty grows world by world: patience points (a mistake costs 2) and seconds per answer */
+const BOSS_CFG = [{ p:8, t:20 }, { p:7, t:17 }, { p:6, t:15 }, { p:6, t:13 }];
+const BOSS_WHO = { guests:"Критик", team:"Команг", suppliers:"Поставщик", owner:"Микалис" };
+const TIMED = ["reply","listen","ru2en","gap","fix"];
+/* story twists per boss (wave 2) */
+const BOSS_STORY = {
+  g5: {
+    rule: "Критик может передумать, а может намекнуть на секрет. Слушайте внимательно. В конце он напишет рецензию.",
+    probe: { s:"Today is a special day for me.", sr:"Сегодня для меня особенный день.", ok:"Oh, how lovely! Are you celebrating something tonight?", soft:"Okay. Here is the menu.", kind:"dry",
+      trap:["Oh, how lovely! Are you celebrate something tonight?", "Special? Okay. What do you want to eat?"], why:"Гость намекает. Спроси, и узнаешь его секрет." },
+    secret: { s:"Yes, it's my wife's birthday. She's coming at eight.", sr:"Да, у жены день рождения. Она придёт в восемь.", ok:"Happy birthday to her! I'll bring a small dessert from us.", soft:"Okay. I'll tell the chef.", kind:"dry",
+      trap:["Happy birthday to her! I bring a small dessert from us.", "Happy birthday to her! Dessert is on the menu."], why:"Поздравить и сделать маленький подарок от ресторана." },
+    twist: { s:"Actually, it's windy by the window. Can I sit inside?", sr:"Вообще-то у окна дует. Можно мне сесть внутри?", ok:"Of course. I'll find you a quiet table inside.", soft:"Fine. Inside, then.", kind:"dry",
+      trap:["I'm sorry, all our window tables are taken.", "Of course. I'll find you a table by the window."], why:"Гость передумал: теперь он хочет внутрь, про окно уже не нужно." }
+  },
+  t5: {
+    rule: "Здесь тон важен вдвойне: сухой ответ стоит две полоски. Один ответ — своими словами, без вариантов.",
+    dryCost: 2,
+    own: { s:"Can I ask you something? What do I do if a guest is angry?", sr:"Можно спросить? Что делать, если гость злится?", ok:"Stay calm, say sorry, and call me if you need help.",
+      keys:[["calm","relax","quiet"],["sorry","apologise","apologize"],["call","help","manager"]], need:2, hint:"Нужно 2 из 3: сохранять спокойствие, извиниться, позвать менеджера." }
+  },
+  s5: {
+    rule: "Запомните заказ поставщика: в конце его нужно передать на кухню. И проверяйте суммы на слух.",
+    memo: { s:"So, for tomorrow: fifteen kilos of tuna without heads, eight kilos of snapper, cleaned, and five kilos of frozen squid.",
+      sr:"Итак, на завтра: 15 кг тунца без голов, 8 кг луциана, почищенного, и 5 кг замороженного кальмара.",
+      ok:"Tuna 15 kg, no heads · Snapper 8 kg, cleaned · Squid 5 kg, frozen",
+      bad:["Tuna 15 kg, no heads · Snapper 5 kg, cleaned · Squid 8 kg, frozen", "Tuna 50 kg, no heads · Snapper 8 kg, cleaned · Squid 5 kg, frozen", "Tuna 15 kg, with heads · Snapper 8 kg, cleaned · Squid 5 kg, fresh"] },
+    bill: [
+      { s:"Here's the bill for the samples: ten kilos of snapper at 75,000. That's 800,000.", sr:"Вот счёт за образцы: 10 кг луциана по 75 000. Итого 800 000.",
+        ok:"I think there's a mistake. Ten kilos at 75,000 is 750,000.", soft:"That's wrong. It's 750,000.", kind:"dry",
+        trap:["Okay, 800,000. I'll pay now.", "I think there's a mistake. Ten kilos at 75,000 is 700,000."], why:"Посчитать на слух: 10 × 75 000 = 750 000, и вежливо сказать об ошибке." },
+      { s:"Oh. But the price went up to 80,000.", sr:"А, но цена выросла до 80 000.",
+        ok:"Our deal was 75,000 for snapper. Can you check the proposal?", soft:"Sorry, but we agreed on 75,000.", kind:"sorry",
+        trap:["Okay, 80,000 is fine.", "Our deal was 85,000 for snapper. Can you check the proposal?"], why:"Сослаться на договорённость и попросить проверить." }
+    ]
+  },
+  o5: {
+    rule: "Два ответа своими словами, без вариантов. Финальный напор здесь жёстче всех.",
+    rush: { k: 0.5, n: 4 },
+    own: {
+      0: { keys:[["goal","reached"],["revenue","twelve","percent"],["rating","four seven","four point seven"]], need:2, hint:"Нужно 2 из 3: цель достигнута, выручка выросла на 12%, рейтинг 4,7." },
+      3: { keys:[["raise","salary","more money"],["ten","percent"],["earned","deserve","worked","work"]], need:2, hint:"Нужно 2 из 3: попросить повышение, назвать цифру, сказать, что заслужили." }
+    }
+  }
+};
+const FREE = ["match","listen","ru2en","gap","order","fix","type"];
+function buildBoss(lesson, daily){
+  const prev = lesson.world.lessons.filter(x => !x.boss && x.p);
+  const ps = shuffle([...shuffle(lesson.p).slice(0,3), ...shuffle(prev.flatMap(x => x.p)).slice(0,3)]);
+  const pool = { p: [...lesson.p, ...prev.flatMap(x => x.p)] };
+  const X = BOSSX[lesson.id] || [], ST = BOSS_STORY[lesson.id] || {};
+  const reps = lesson.r.map((r, i) => Object.assign({}, r, X[i] || {}));
+  const T = [], mk = (type, o) => T.push(Object.assign({type}, o));
+  const R = i => (ST.own && ST.own[i]) ? mk("own", Object.assign({}, reps[i], ST.own[i])) : mk("reply", reps[i]);
+  const seenW = new Set(), words = shuffle([...lesson.w, ...prev.flatMap(x => x.w || [])]).filter(w => !seenW.has(w[0]) && seenW.add(w[0]));
+  const keys = [...new Set(pool.p.map(p => p[2]))].filter(k => k !== ps[2][2]);
+  mk("match", { pairs: words.slice(0,5) });
+  mk("listen", { en: ps[0][0], ru: ps[0][1], opts: shuffle([ps[0][0], ...others(pool, ps[0][0]).slice(0,2)]) });
+  R(0);
+  if (ST.probe) mk("reply", Object.assign({ probe:true }, ST.probe));
+  if (ST.memo) mk("memo", ST.memo);
+  mk("ru2en", { en: ps[1][0], ru: ps[1][1], opts: shuffle([ps[1][0], ...others(pool, ps[1][0]).slice(0,2)]) });
+  mk("gap", { en: ps[2][0], ru: ps[2][1], key: ps[2][2], opts: shuffle([ps[2][2], ...shuffle(keys).slice(0,2)]) });
+  R(1);
+  mk("fix", lesson.f[0]);
+  if (ST.twist) mk("reply", ST.twist);
+  R(2);
+  if (!ST.probe) mk("read", lesson.rd);
+  if (ST.bill) ST.bill.forEach(b => mk("reply", b));
+  mk("order", { en: ps[3][0], ru: ps[3][1], extra: shuffle(norm(ps[4][0]).split(" ").filter(w => !norm(ps[3][0]).split(" ").includes(w))).slice(0,2) });
+  if (!ST.bill){ const ro = reps.find(r => r.ok.split(" ").length <= 12) || reps[0]; mk("order", { en: ro.ok, ru: "Ответ на: «" + ro.sr + "»", extra: [] }); }
+  const pf = shuffle(prev.filter(x => x.f && x.f.length))[0];
+  if (pf) mk("fix", pf.f[0]);
+  if (ST.own && ST.own.s) mk("own", ST.own);
+  R(3);
+  if (ST.memo) mk("recall", { ok: ST.memo.ok, bad: ST.memo.bad, why: ST.memo.sr });
+  mk("type", { en: ps[4][0], ru: ps[4][1] });
+  R(4);
+  mk("speak", { en: ps[5][0], ru: ps[5][1] });
+  mk("speak", { en: reps[3].ok, ru: "Ответ критику / собеседнику" });
+  if (ST.probe) mk("review", {});
+  if (lesson.dishes) dishTasks(lesson.dishes, T);
+  /* daily guest: the same battle in a new order (story tasks keep their places) */
+  if (daily){ const idx = T.map((t, i) => FREE.includes(t.type) ? i : -1).filter(i => i >= 0), fr = shuffle(idx.map(i => T[i])); idx.forEach((i, k) => T[i] = fr[k]); }
+  /* final rush: the last timed tasks get less time */
+  const rush = ST.rush || { k: 0.65, n: 3 };
+  T.filter(t => TIMED.includes(t.type)).slice(-rush.n).forEach(t => t.rush = rush.k);
+  return T;
+}
+/* free answer: how many key groups the answer covers */
+function keyHits(said, t){ const hay = " " + toks(said).join(" ") + " ";
+  return t.keys.filter(g => g.some(a => hay.includes(" " + toks(a).join(" ") + " "))).length; }
+/* critic's review, written from how the battle went */
+function reviewData(){
+  const B = L.boss, f = B.p / B.max, n = f >= .75 ? 5 : (f >= .4 ? 4 : 3);
+  const RU = { 5:"пять звёзд", 4:"четыре звезды", 3:"три звезды" };
+  const liked = B.secret ? ["The manager noticed it was a special day and brought a dessert for my wife.", "десерт для жены"]
+                         : ["The manager quickly found me a quiet table inside.", "быстро нашли тихий столик внутри"];
+  const other = n === 5 ? 4 : 5, t = `Food blog: "Dinner at Santorini, Bali. ${liked[0]} ${B.lost >= 4 ? "Some answers took a while." : "Every question got a quick, clear answer."} ${n} stars."`;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  return { t, q:"Что написал критик?", ok: cap(RU[n]) + ", отметил: " + liked[1], bad: [cap(RU[other]) + ", отметил: " + liked[1], cap(RU[n]) + ", отметил: вид на море"],
+    why: B.secret ? "Секрет гостя попал в рецензию." : "Узнай секрет гостя, и рецензия будет теплее." };
+}
+/* boss speaks in another accent than yours, a little faster (wave 3) */
+const ACC_RU = { "en-GB":"британским", "en-AU":"австралийским", "en-IN":"индийским", "en-US":"американским" };
+const BOSS_ACC = { guests:"en-GB", team:"en-IN", suppliers:"en-AU", owner:"en-GB" };
+function bossAcc(l){ const want = BOSS_ACC[l.world.id] || "en-GB";
+  return want !== S.set.accent ? want : ["en-GB","en-AU","en-IN","en-US"].find(a => a !== S.set.accent); }
+const bossVoice = () => L && L.boss ? { acc: L.boss.acc, fast: true } : null;
+/* daily hard guest (wave 3) */
+function dailyBoss(){
+  const done = LESSONS.filter(l => l.boss && isDone(l)); if (!done.length) return null;
+  const d = today(); let h = 0; for (const c of d) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return { l: done[h % done.length], won: !!(S.daily && S.daily.day === d && S.daily.done) };
+}
+function bossLock(id){
+  const ens = (S.bossLock || {})[id]; if (!ens) return null;
+  const left = ens.filter(en => S.mistakes.some(m => m.en === en && !m.fixed));
+  if (!left.length){ delete S.bossLock[id]; save(); return null; }
+  return left;
+}
+function lockSheet(l, left){
+  $("#overlay").innerHTML = `<div class="import" data-ov-bg><div class="card" role="dialog" aria-modal="true" aria-labelledby="lsh"><h3 id="lsh">Реванш пока закрыт</h3>
+    <p class="lead" style="margin:2px 0 14px">${esc(BOSS_WHO[l.world.id] || "Босс")} ждёт, пока вы разберёте ошибки прошлой битвы. Осталось ${left.length} ${plural(left.length,"фраза","фразы","фраз")}.</p>
+    <button class="btn" data-review-boss="${l.id}">Повторить ошибки битвы</button>
+    <button class="btn ghost" style="margin-top:10px" data-ov-close>Закрыть</button></div></div>`;
+}
+const STAR = on => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.1l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="${on ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`;
+const CROWN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8l4.2 4L12 5l3.8 7L20 8l-1.8 10H5.8z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+const MEDAL = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h3l1 5-3 1zM16 3h-3l-1 5 3 1z" fill="currentColor"/><circle cx="12" cy="15" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 12.3l.9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3z" fill="currentColor"/></svg>`;
+const starsHtml = (n, crown, medal) => [1,2,3].map(i => STAR(i <= n)).join("") + (crown ? CROWN : "") + (medal ? MEDAL : "");
+function patHtml(){ const B = L.boss; let h = ""; for (let i = 0; i < B.max; i++) h += `<i class="${i < B.p ? "" : "off"}"></i>`;
+  return `<div class="pat ${B.p <= 2 ? "low" : ""}" role="img" aria-label="Терпение: ${B.p} из ${B.max}">${h}</div>`; }
+function patDraw(hit){ const el = $(".pat"); if (!el) return; el.outerHTML = patHtml(); if (hit){ const n = $(".pat"); n.classList.add("hit"); } }
+/* answer timer: starts when the voice line ends (or at once for tasks without voice) */
+function tmrStop(){ if (!L) return; if (L.tm){ clearInterval(L.tm.iv); L.tm = null; } L.tmWait = false; clearTimeout(L.tmFb); }
+function tmrSecs(t){ const s = L.boss.T + (t.type === "fix" ? 3 : 0); return t.rush ? Math.round(s * t.rush) : s; }
+function tmrStart(){ if (!L || !L.tmWait) return; L.tmWait = false; clearTimeout(L.tmFb);
+  const total = tmrSecs(L.tasks[L.i]) * 1000; L.tm = { end: Date.now() + total, total, iv: setInterval(tmrTick, 100) }; tmrTick(); }
+function tmrTick(){ if (!L || !L.tm) return;
+  const left = L.tm.end - Date.now(), el = $("#tmr");
+  if (el){ el.style.setProperty("--w", Math.max(0, left / L.tm.total * 100) + "%"); const row = el.closest(".tmrrow"); row.classList.toggle("low", left < 5000);
+    const b = row.querySelector("b"); if (b) b.textContent = Math.max(0, Math.ceil(left / 1000)); }
+  if (left <= 0){ tmrStop(); L.timedOut = true; finishTask(L.tasks[L.i], false, ""); } }
+function tmrAdd(ms){ if (L && L.tm){ L.tm.end += ms; L.tm.total += ms; } }
+function tmrPause(on){ if (!L || !L.tm) return;
+  if (on){ if (L.tm.paused == null){ L.tm.paused = L.tm.end - Date.now(); clearInterval(L.tm.iv); } }
+  else if (L.tm.paused != null){ L.tm.end = Date.now() + L.tm.paused; L.tm.paused = null; L.tm.iv = setInterval(tmrTick, 100); } }
+function voiceDone(){ if (L && L.tmWait) tmrStart(); }
+VA.addEventListener("ended", voiceDone);
+function bubbleHtml(t){
+  const B = L.boss, hidden = B && !L.state.shown;
+  const txt = hidden ? `<span class="ear">Слушайте внимательно</span>` : `${esc(t.s)}<small>${esc(t.sr)}</small>`;
+  return `<div class="av">${pic(IMG.av(whoPic()), "", "", whoInitial())}</div><div class="say">${txt}<button class="mini" data-say aria-label="Прослушать">${I.play}</button></div>`;
+}
+function bossBtns(memo){
+  const B = L.boss;
+  if (memo) return `<div class="bb"><button data-slowmemo>Медленнее<small>сколько угодно</small></button></div>`;
+  if (B.hard) return `<div class="bb"><button disabled>Медленнее<small>без подсказок</small></button><button disabled>Показать текст<small>без подсказок</small></button></div>`;
+  return `<div class="bb"><button data-again ${B.again ? "disabled" : ""}>Медленнее<small>${B.again ? "уже было" : "1 раз за битву"}</small></button>
+    <button data-reveal ${L.state.shown || B.p <= 1 ? "disabled" : ""}>Показать текст<small>${L.state.shown ? "открыт" : (B.p <= 1 ? "мало терпения" : "−1 терпения")}</small></button></div>`;
+}
 function build(lesson){
   if (lesson.menu) return buildMenu();
+  if (lesson.boss) return buildBoss(lesson);
   const ps = shuffle(lesson.p), T = [];
   const mk = (type, o) => T.push(Object.assign({type}, o));
   const reps = lesson.r;
@@ -1442,38 +1680,64 @@ function build(lesson){
   if (lesson.boss) mk("speak", { en: reps[3].ok, ru: "Ответ критику / собеседнику" });
   return T;
 }
-function buildReview(){
-  const items = shuffle(S.mistakes.filter(m => !m.fixed)).slice(0, 8);
+function buildReview(only){
+  const items = shuffle(S.mistakes.filter(m => !m.fixed && (!only || only.includes(m.en)))).slice(0, 8);
   const pool = LESSONS.flatMap(l => (l.p || []).map(p => p[0]));
   return items.map((m, i) => (i % 2 && m.en.split(" ").length <= 9)
     ? { type:"order", en:m.en, ru:m.ru, extra:[], mref:m }
     : { type:"ru2en", en:m.en, ru:m.ru, opts: shuffle([m.en, m.wrong || shuffle(pool)[0], shuffle(pool.filter(x => x !== m.en))[0]]), mref:m });
 }
-function startLesson(id){
-  const review = id === "review";
+function startLesson(id, only, opt){
+  const review = id === "review", daily = !!(opt && opt.daily);
   const lesson = review ? null : LESSONS.find(l => l.id === id);
   tickHearts();
-  if (!review && S.hearts <= 0) return noHearts();
-  const tasks = review ? buildReview() : build(lesson);
+  if (lesson && lesson.boss){ const left = !daily && bossLock(lesson.id); if (left){ if (L) quit(); return lockSheet(lesson, left); } }
+  else if (!review && S.hearts <= 0) return noHearts();
+  const tasks = review ? buildReview(only) : (lesson.boss ? buildBoss(lesson, daily) : build(lesson));
   if (!tasks.length) return;
+  if (L) tmrStop();
   L = { lesson, review, tasks, total: tasks.length, i: 0, solved: 0, first: 0, wrongs: [], seen: new Set(), xp: 0, t0: Date.now(), pick: null, state: {} };
+  if (lesson && lesson.boss){ const c = BOSS_CFG[Math.min(lesson.wi, BOSS_CFG.length - 1)], ST = BOSS_STORY[lesson.id] || {};
+    L.boss = { max: c.p, p: c.p, T: c.t, lost: 0, streak: 0, sorryPrev: false, again: false, dryCost: ST.dryCost || 1, acc: bossAcc(lesson), daily, hard: false, secret: false }; }
   $("#lesson").classList.remove("hide");
+  if (L.boss) return bossIntro();
   showTask();
 }
+function bossIntro(){
+  const B = L.boss, l = L.lesson, who = BOSS_WHO[l.world.id] || "Гость", ST = BOSS_STORY[l.id] || {};
+  $("#lesson").innerHTML = `<div class="end bintro"><div class="winpic">${pic(`assets/sketches/boss-${l.world.id}.webp`, "")}</div>
+    ${B.daily ? `<p class="kicker">Трудный гость дня · +60 звёзд за победу</p>` : ""}
+    <h1>${esc(l.en)}</h1><p class="sub"><small>${esc(l.title)}</small></p>
+    <ul class="rules">
+      <li><b>Терпение.</b> ${B.max} полосок вверху. Ошибка или опоздание забирают две, ${B.dryCost > 1 ? "сухой ответ тоже две, подсказка одну" : "сухой ответ или подсказка — одну"}. Кончатся — ${esc(who.toLowerCase())} уйдёт.</li>
+      <li><b>Время.</b> На ответ ${B.T} секунд, в последних вопросах меньше.</li>
+      <li><b>На слух.</b> ${esc(who)} говорит с ${ACC_RU[B.acc] || "другим"} акцентом и чуть быстрее, текста нет. Один раз можно попросить медленнее, текст открывается за полоску.</li>
+      ${ST.rule ? `<li><b>Сюжет.</b> ${esc(ST.rule)}</li>` : ""}
+      <li><b>Награда.</b> Три верных подряд возвращают полоску. Звёзды за оставшееся терпение, корона за битву без потерь.</li>
+    </ul>
+    <button class="btn" data-fight>В бой</button>
+    <button class="btn ghost" style="margin-top:10px" data-fight="hard">Без ошибок: награда ×2</button>
+    <p class="lead" style="font-size:14px;margin:8px 0 14px">Одна ошибка или опоздание — провал. Подсказок нет. За победу значок на лестнице.</p>
+    <button class="btn ghost" data-quit>Не сейчас</button></div>`;
+}
 const KIND = { match:"Соедините пары", listen:"Что вы услышали?", ru2en:"Как сказать по-английски?", gap:"Вставьте слово", reply:"Что вы ответите?",
-  order:"Соберите фразу", fix:"Какая фраза без ошибки?", read:"Прочитайте", type:"Напишите, что услышали", speak:"Скажите вслух", dish:"Как называется блюдо?", describe:"Как описать это блюдо гостю?" };
+  order:"Соберите фразу", fix:"Какая фраза без ошибки?", read:"Прочитайте", type:"Напишите, что услышали", speak:"Скажите вслух", dish:"Как называется блюдо?", describe:"Как описать это блюдо гостю?",
+  own:"Ответьте своими словами", memo:"Запомните заказ", recall:"Какой заказ передать на кухню?", review:"Рецензия критика" };
+const NOSAY = ["read","recall","review"];
 function frame(inner, canCheck){
   const pct = Math.round(L.solved / L.total * 100);
   $("#lesson").innerHTML = `<div class="lt"><button class="close" data-quit aria-label="Выйти из урока">${I.cross}</button>
       <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
-      ${L.review ? "" : `<div class="chip hearts">${I.heart}${S.hearts}</div>`}</div>
-    <div class="lbody">${inner}</div>
+      ${L.review ? "" : (L.boss ? patHtml() : `<div class="chip hearts">${I.heart}${S.hearts}</div>`)}</div>
+    <div class="lbody">${L.timed ? `<div class="tmrrow ${L.tasks[L.i].rush ? "rush" : ""}"><span>${L.tasks[L.i].rush ? "Финальный напор" : "Время"}</span><div class="tmr"><i id="tmr"></i></div><b>${tmrSecs(L.tasks[L.i])}</b></div>` : ""}${inner}</div>
     <div class="lfoot"><button class="btn" data-check ${canCheck ? "" : "disabled"}>Проверить</button></div>`;
 }
 function setCheck(on){ const b = $("[data-check]"); if (b) b.disabled = !on; }
 function showTask(){
-  killMic();
-  const t = L.tasks[L.i]; L.pick = null; L.state = {};
+  killMic(); tmrStop(); clearTimeout(L.sayT);
+  const t = L.tasks[L.i]; L.pick = null; L.state = {}; L.timedOut = false; L.soft = false; L.note = "";
+  L.timed = !!(L.boss && TIMED.includes(t.type));
+  if (L.timed){ L.tmWait = true; if (["reply","listen"].includes(t.type)) L.tmFb = setTimeout(tmrStart, 9000); }
   hideSheet();
   const k = `<div class="kind">${KIND[t.type]}</div>`;
   const opts = (list) => `<div class="opts">${list.map((o,i) => `<button class="o" data-o="${i}">${esc(o)}</button>`).join("")}</div>`;
@@ -1497,10 +1761,27 @@ function showTask(){
     const line = esc(t.en).replace(new RegExp("\\b" + t.key + "\\b"), "<u id='gapw'>&nbsp;</u>");
     frame(`${k}<div class="gapline">${line}</div><div class="q"><span class="ru">${esc(t.ru)}</span></div>${opts(t.opts)}`, false);
   } else if (t.type === "reply"){
+    L.state.opts = L.boss && t.soft ? shuffle([t.ok, t.soft, ...t.trap]) : shuffle([t.ok, ...t.bad]);
+    frame(`${k}<div class="who">${whoLabel()}</div><div class="bubble" id="bub">${bubbleHtml(t)}</div>${L.boss ? bossBtns() : ""}${opts(L.state.opts)}`, false);
+    say(t.s, false, bossVoice());
+  } else if (t.type === "own"){
+    frame(`${k}<div class="who">${whoLabel()}</div><div class="bubble" id="bub">${bubbleHtml(t)}</div>${bossBtns()}
+      ${REC ? `<button class="mic" data-mic>${I.mic}<span>Нажмите и говорите</span></button><div class="heard" id="heard"></div>` : ""}
+      <label class="sr" for="tin">Ваш ответ</label>
+      <textarea class="in" id="tin" lang="en" placeholder="${REC ? "Или напишите ответ здесь" : "Напишите ответ по-английски"}" autocomplete="off" spellcheck="false"></textarea>`, false);
+    say(t.s, false, bossVoice());
+  } else if (t.type === "memo"){
+    frame(`${k}<div class="who">${whoLabel()}</div><div class="bubble" id="bub">${bubbleHtml(t)}</div>${bossBtns(true)}
+      <p class="lead" style="font-size:15px;margin:0 0 12px">Текста не будет: заказ нужно запомнить. В конце битвы его спросят.</p>`, false);
+    $(".lfoot").innerHTML = `<button class="btn" data-memo>Запомнил</button>`;
+    say(t.s, false, bossVoice());
+  } else if (t.type === "recall"){
     L.state.opts = shuffle([t.ok, ...t.bad]);
-    frame(`${k}<div class="who">${whoLabel()}</div><div class="bubble"><div class="av">${pic(IMG.av(whoPic()), "", "", whoInitial())}</div>
-      <div class="say">${esc(t.s)}<small>${esc(t.sr)}</small><button class="mini" data-say aria-label="Прослушать">${I.play}</button></div></div>${opts(L.state.opts)}`, false);
-    say(t.s);
+    frame(`${k}<p class="lead" style="font-size:15px;margin:0 0 12px">Что поставщик обещал привезти завтра?</p>${opts(L.state.opts)}`, false);
+  } else if (t.type === "review"){
+    Object.assign(t, reviewData());
+    L.state.opts = shuffle([t.ok, ...t.bad]);
+    frame(`${k}<div class="note"><div class="lbl">Рецензия</div>${esc(t.t)}</div><div class="q"><span class="ru">${esc(t.q)}</span></div>${opts(L.state.opts)}`, false);
   } else if (t.type === "order"){
     const words = t.en.split(" ");
     L.state = { bank: shuffle([...words, ...(t.extra||[])]).map((w,i) => ({ w, i, used:false })), line: [] };
@@ -1525,6 +1806,7 @@ function showTask(){
       ${REC ? "" : `<div class="hint">${I.mic}<span>Нажмите в поле, затем значок микрофона на клавиатуре iPhone и скажите фразу. Текст появится сам.</span></div>`}
       <button class="skip" data-skip>Не могу сейчас говорить</button>`, false);
   }
+  if (L.timed && !["reply","listen"].includes(t.type)) tmrStart();
 }
 function whoLabel(){ const l = L.lesson, w = l ? l.world.id : "guests"; if (w === "owner") return l.who === "lia" ? "Лиа, управляющая" : "Микалис, владелец"; return ({guests:"Гость", team:"Сотрудник", suppliers:"Поставщик"})[w]; }
 function whoPic(){ const l = L.lesson; if (!l) return "guest-anna"; if (l.boss && l.world.id === "guests") return "critic";
@@ -1540,13 +1822,16 @@ function drawOrder(){
 function answerOf(t){
   if (["listen","ru2en","dish","describe"].includes(t.type)) return [t.opts[L.pick], t.en];
   if (t.type === "gap") return [t.opts[L.pick], t.key];
-  if (["reply","fix","read"].includes(t.type)) return [L.state.opts[L.pick], t.ok];
+  if (["reply","fix","read","recall","review"].includes(t.type)) return [L.state.opts[L.pick], t.ok];
+  if (t.type === "own") return [L.state.heard || $("#tin").value, t.ok];
   if (t.type === "order") return [L.state.line.map(b => b.w).join(" "), t.en];
   if (t.type === "type") return [$("#tin").value, t.en];
   if (t.type === "speak") return [L.state.heard || $("#tin").value, t.en];
 }
 function check(){
   const t = L.tasks[L.i];
+  if (L.timedOut) return;
+  tmrStop();
   let [got, want] = answerOf(t);
   let ok;
   if (t.type === "type") ok = close(got, want);
@@ -1555,20 +1840,50 @@ function check(){
     [got, ...(L.state.alts || [])].filter(Boolean).forEach(x => { const v = wordScore(x, want); if (v > sc){ sc = v; best = x; } });
     ok = sc >= 0.75; got = best;
   }
+  else if (t.type === "own"){
+    let best = got, sc = -1;
+    [got, $("#tin").value, ...(L.state.alts || [])].filter(Boolean).forEach(x => { const v = keyHits(x, t); if (v > sc){ sc = v; best = x; } });
+    ok = sc >= t.need; got = best;
+  }
   else if (t.type === "order") ok = norm(got) === norm(want);
   else ok = got === want;
   finishTask(t, ok, got);
 }
+function bossScore(t, ok, got, firstTime){
+  const B = L.boss, notes = []; let hit = false;
+  if (!ok){ B.p -= 2; B.lost += 2; B.streak = 0; hit = true; notes.push(B.hard ? "Режим без ошибок: битва проиграна" : "Терпение −2"); if (B.hard) B.p = 0; }
+  else {
+    if (L.soft && t.kind === "dry"){ B.p -= B.dryCost; B.lost += B.dryCost; hit = true; notes.push("Ответ сухой: терпение −" + B.dryCost); }
+    if (t.type === "reply"){
+      const sorry = /^(i'm |i am )?(so )?sorry/i.test(got || "");
+      if (sorry && B.sorryPrev && got !== t.ok){ B.p -= 1; B.lost++; hit = true; notes.push("Второе извинение подряд раздражает: терпение −1"); }
+      B.sorryPrev = sorry;
+    }
+    if (L.soft) B.streak = 0;
+    else if (firstTime){ B.streak++;
+      if (B.streak % 3 === 0){ L.xp += 5; if (B.p < B.max){ B.p++; notes.push("Серия из 3 верных: терпение +1 и 5 звёзд"); } else notes.push("Серия из 3 верных: +5 звёзд"); } }
+  }
+  /* the critic's secret: asked the right question → he tells it, one more reply appears */
+  if (ok && !L.soft && firstTime && t.probe && !B.secret){ B.secret = true; L.xp += 10; notes.push("Вы узнали секрет гостя: +10 звёзд");
+    const sec = (BOSS_STORY[L.lesson.id] || {}).secret; if (sec){ L.tasks.splice(L.i + 1, 0, Object.assign({ type:"reply" }, sec)); L.total++; } }
+  B.p = Math.max(0, Math.min(B.max, B.p));
+  L.note = notes.join(". ");
+  patDraw(hit);
+}
 function finishTask(t, ok, got){
+  tmrStop();
   const firstTime = !L.seen.has(t); L.seen.add(t);
+  if (L.boss && t.type === "reply" && !ok && t.soft && got === t.soft){ ok = true; L.soft = true; }
+  if (L.boss) bossScore(t, ok, got, firstTime);
+  if (L.boss && ["reply","own","memo"].includes(t.type) && !L.state.shown && $("#bub")){ L.state.shown = true; $("#bub").innerHTML = bubbleHtml(t); }
   S.answered++; if (ok) S.right++;
   if (ok){
-    L.solved++; if (firstTime){ L.first++; L.xp += 10; }
+    L.solved++; if (firstTime){ L.first++; L.xp += L.soft ? 5 : 10; }
     if (t.mref){ t.mref.fixed = true; t.mref.fixedAt = Date.now(); if (S.hearts < 5) S.hearts++; }
   } else {
-    if (!L.review){ if (S.hearts >= 5) S.heartsAt = Date.now(); S.hearts = Math.max(0, S.hearts - 1); }
+    if (!L.review && !L.boss){ if (S.hearts >= 5) S.heartsAt = Date.now(); S.hearts = Math.max(0, S.hearts - 1); }
     const en = t.ok || t.en, ru = t.sr ? "Ответ на: " + t.sr : (t.d ? (t.type === "dish" ? "Название блюда" : t.d.n) : (t.ru || t.why || ""));
-    if (en && t.type !== "read" && !t.mref && !S.mistakes.some(m => m.en === en && !m.fixed))
+    if (en && !NOSAY.includes(t.type) && !t.mref && !S.mistakes.some(m => m.en === en && !m.fixed))
       S.mistakes.push({ en, ru, wrong: got && got.length < 120 ? got : "", src: L.lesson ? L.lesson.title : "Повторение", fixed:false });
     if (!L.wrongs.includes(t)){ L.wrongs.push(t); L.tasks.push(t); }
   }
@@ -1577,62 +1892,83 @@ function finishTask(t, ok, got){
   showSheet(t, ok);
 }
 function markOptions(t, ok){
-  if (L.pick == null) return;
-  const btns = document.querySelectorAll("[data-o]");
+  if (L.pick == null && !L.timedOut) return;
+  const btns = document.querySelectorAll("[data-o], .bb button");
   const list = L.state.opts || t.opts, want = t.ok || (t.type === "gap" ? t.key : t.en);
-  btns.forEach((b,i) => { b.disabled = true; if (list[i] === want) b.classList.add("right"); else if (i === L.pick && !ok) b.classList.add("wrong"); });
+  btns.forEach(b => b.disabled = true);
+  document.querySelectorAll("[data-o]").forEach((b,i) => { if (list[i] === want) b.classList.add("right"); else if (i === L.pick && L.soft) b.classList.add("meh"); else if (i === L.pick && !ok) b.classList.add("wrong"); });
 }
 function showSheet(t, ok){
   sfx(ok);
-  const want = t.type === "read" ? t.ok : (t.ok || t.en);
-  const why = t.d ? `<div class="why">${esc(t.type === "dish" ? t.d.d : t.d.n)}</div>` : t.why ? `<div class="why">${esc(t.why)}</div>` : (t.ru && t.type !== "ru2en" ? `<div class="why">${esc(t.ru)}</div>` : `<div class="why"></div>`);
+  const want = NOSAY.includes(t.type) ? t.ok : (t.ok || t.en);
+  const why = t.type === "own" ? `<div class="why">${esc(t.hint)}</div>` : t.d ? `<div class="why">${esc(t.type === "dish" ? t.d.d : t.d.n)}</div>` : t.why ? `<div class="why">${esc(t.why)}</div>` : (t.ru && t.type !== "ru2en" ? `<div class="why">${esc(t.ru)}</div>` : `<div class="why"></div>`);
   const sh = $("#sheet");
   sh.className = "sheet " + (ok ? "ok" : "bad");
+  const note = L.note ? `<div class="pnote">${esc(L.note)}</div>` : "";
   sh.innerHTML = ok
-    ? `<h3>${I.check}${["Верно!","Отлично!","Так и говорят!","Точно!"][Math.floor(Math.random()*4)]}</h3>${t.type === "match" ? "" : `<div class="ans">${esc(want)}</div>`}${why}<button class="btn" data-next>Дальше</button>`
-    : `<h3>${I.cross}Правильно так:</h3><div class="ans">${esc(want)}</div>${why}<button class="btn" data-next>Понятно</button>`;
+    ? (L.soft
+      ? `<h3>${I.check}Засчитано. Лучше так:</h3><div class="ans">${esc(want)}</div>${why}${note}<button class="btn" data-next>Дальше</button>`
+      : `<h3>${I.check}${t.type === "own" ? "Понятно сказано! Ещё вариант:" : ["Верно!","Отлично!","Так и говорят!","Точно!"][Math.floor(Math.random()*4)]}</h3>${t.type === "match" ? "" : `<div class="ans">${esc(want)}</div>`}${why}${note}<button class="btn" data-next>Дальше</button>`)
+    : `<h3>${I.cross}${L.timedOut ? "Не успели. Правильно так:" : (t.type === "own" ? "Не хватило главного. Например:" : "Правильно так:")}</h3><div class="ans">${esc(want)}</div>${why}${note}<button class="btn" data-next>Понятно</button>`;
   requestAnimationFrame(() => sh.classList.add("show"));
-  if (!ok && t.type !== "read" && want) setTimeout(() => say(want), 650);
+  if (!ok && !NOSAY.includes(t.type) && want) L.sayT = setTimeout(() => say(want), 650);
   const f = $(".lfoot"); if (f) f.style.visibility = "hidden";
   setTimeout(() => { const n = sh.querySelector("[data-next]"); if (n) n.focus({preventScroll:true}); }, 60);
 }
 function hideSheet(){ $("#sheet").classList.remove("show"); }
 function next(){
   hideSheet();
-  if (!L.review && S.hearts <= 0){ endLesson(false); return; }
+  if (L.boss ? L.boss.p <= 0 : (!L.review && S.hearts <= 0)){ endLesson(false); return; }
   L.i++;
   if (L.i >= L.tasks.length) return endLesson(true);
   showTask();
 }
 function endLesson(passed){
-  const lesson = L.lesson, acc = Math.round(L.first / L.total * 100);
-  let bonus = 0;
+  tmrStop();
+  const lesson = L.lesson, acc = Math.round(L.first / L.total * 100), B = L.boss;
+  let bonus = 0, stars = 0, crown = false, opened = 0;
   if (passed){
-    bonus = L.review ? 10 : (lesson.boss ? 40 : 20) + (L.wrongs.length === 0 ? 10 : 0);
-    L.xp += bonus; S.xp += L.xp;
+    if (B){ const f = B.p / B.max; stars = f >= .75 ? 3 : (f >= .4 ? 2 : 1); crown = B.lost === 0 && L.wrongs.length === 0; }
+    bonus = L.review ? 10 : (B ? 40 + stars * 10 + (crown ? 20 : 0) + (B.daily && !(dailyBoss() || {}).won ? 60 : 0) : 20 + (L.wrongs.length === 0 ? 10 : 0));
+    L.xp += bonus; if (B && B.hard) L.xp *= 2; S.xp += L.xp;
+    if (B && B.daily) S.daily = { day: today(), done: true, id: lesson.id };
     if (!L.review){
-      const wasDone = !!S.done[lesson.id];
-      S.done[lesson.id] = { best: Math.max(acc, (S.done[lesson.id]||{}).best || 0), at: Date.now() };
+      const wasDone = !!S.done[lesson.id], pr = S.done[lesson.id] || {};
+      S.done[lesson.id] = { best: Math.max(acc, pr.best || 0), at: Date.now() };
+      if (B || pr.stars){ S.done[lesson.id].stars = Math.max(stars, pr.stars || 0); S.done[lesson.id].crown = crown || !!pr.crown; S.done[lesson.id].flawless = (B && B.hard) || !!pr.flawless; }
+      if (B && S.bossLock) delete S.bossLock[lesson.id];
       if (!wasDone) JUST = lesson.id;
     }
     const t = today();
     if (S.lastDay !== t){ S.streak = (S.lastDay && dayDiff(S.lastDay, t) === 1) ? S.streak + 1 : 1; S.lastDay = t; }
+  } else if (B && !B.hard && !B.daily){
+    const ens = [...new Set(L.wrongs.filter(t => !NOSAY.includes(t.type)).map(t => t.ok || t.en).filter(Boolean))];
+    if (ens.length){ S.bossLock = S.bossLock || {}; S.bossLock[lesson.id] = ens; }
   }
+  if (L.review) Object.keys(S.bossLock || {}).forEach(id => { if (!bossLock(id)) opened++; });
   save();
+  const who = B ? (BOSS_WHO[lesson.world.id] || "Босс") : "";
   const newMist = L.wrongs.length;
   const mins = Math.max(1, Math.round((Date.now() - L.t0) / 60000));
   $("#lesson").innerHTML = `<div class="end">${passed ? `<img class="plant" src="assets/img/bougainvillea.webp" alt="">` : ""}
     ${passed ? `<div class="slabwrap">${petals()}${lesson && lesson.boss ? `<div class="winpic">${pic("assets/sketches/boss-win.webp","")}<span class="bigstamp">Победа</span></div>` : `<div class="winpic">${pic(L.review ? "assets/codex/all-fixed.webp" : "assets/sketches/welcome.webp","")}<span class="bigstamp">${L.review ? "Повторено" : "Пройдено"}</span></div>`}</div>
       <h1>${L.review ? "Ошибки повторены" : (lesson.boss ? "Босс <em>побеждён!</em>" : "Ступенька <em>пройдена</em>")}</h1>
+      ${B ? `<div class="stars" role="img" aria-label="${stars} из 3 звёзд${crown ? ", корона" : ""}">${starsHtml(stars, crown)}</div>
+        <p class="lead" style="font-size:15px;margin:6px 0 0">${crown ? "Чистая победа: корона!" : (stars === 3 ? "Почти идеально. Корона — за битву без единой ошибки." : `Терпение в конце: ${B.p} из ${B.max}. Чем больше осталось, тем больше звёзд.`)}</p>
+        ${B.hard ? `<p class="kicker" style="margin-top:8px">${MEDAL} Без ошибок: награда удвоена</p>` : ""}${B.daily ? `<p class="kicker" style="margin-top:8px">Трудный гость дня побеждён</p>` : ""}${B.secret ? `<p class="kicker" style="margin-top:8px">Секрет гостя раскрыт</p>` : ""}` : ""}
       <p class="sub">${L.review ? "<small>Исправленные фразы получили штамп.</small>" : esc(lesson.en) + "<small>" + esc(lesson.title) + "</small>"}</p>`
-    : `<div class="winpic">${pic("assets/sketches/no-hearts.webp","")}</div><h1>Сердечки закончились</h1>
-      <p class="lead">Повторите ошибки: каждый верный ответ возвращает сердечко. Или вернитесь позже: сердечко восстанавливается каждые 30 минут.</p>`}
+    : (B
+      ? `<div class="winpic">${pic("assets/sketches/no-hearts.webp","")}</div><h1>Терпение кончилось</h1>
+      <p class="lead">${esc(who)} не дождался хорошего ответа. ${B.hard ? "В режиме без ошибок можно сразу попробовать снова." : (B.daily ? "Трудного гостя дня можно позвать снова." : "Реванш откроется, когда вы повторите ошибки из этой битвы.")}</p>`
+      : `<div class="winpic">${pic("assets/sketches/no-hearts.webp","")}</div><h1>Сердечки закончились</h1>
+      <p class="lead">Повторите ошибки: каждый верный ответ возвращает сердечко. Или вернитесь позже: сердечко восстанавливается каждые 30 минут.</p>`)}
+    ${opened ? `<div class="card"><b>Реванш открыт</b><p class="lead" style="font-size:15px;margin:4px 0 0">Ошибки битвы исправлены, можно снова сразиться с боссом.</p></div>` : ""}
     ${passed ? `<div class="stat"><div><b data-count="${passed ? L.xp : 0}">+0</b><span>опыта</span></div><div><b>${acc}%</b><span>с 1-го раза</span></div>
       <div><b>${S.streak}</b><span>${plural(S.streak,"день","дня","дней")} подряд</span></div><div><b>${mins} мин</b><span>заняло</span></div></div>` : ""}
     ${newMist && !L.review ? `<div class="card"><b>${newMist} ${plural(newMist,"фраза ушла","фразы ушли","фраз ушло")} в «Мои ошибки»</b><p class="lead" style="font-size:15px;margin:4px 0 0">${newMist === 1 ? "Она вернётся" : "Они вернутся"} в повторении.</p></div>` : ""}
     ${passed && !L.review ? `<div class="card"><b>Поговорить с учителем</b><p class="lead" style="font-size:15px;margin:4px 0 12px">Разыграйте эту сцену голосом в ChatGPT.</p>
       <button class="btn ghost" data-copy-lesson="${lesson.id}">${I.copy}Скопировать задание</button></div>` : ""}
-    ${passed ? "" : `<button class="btn" data-review style="margin-bottom:10px">Повторить ошибки</button>`}
+    ${passed ? "" : (B && (S.bossLock || {})[lesson.id] ? `<button class="btn" data-review-boss="${lesson.id}" style="margin-bottom:10px">Повторить ошибки битвы</button>` : `<button class="btn" data-review style="margin-bottom:10px">Повторить ошибки</button>`)}
     <button class="btn ${passed ? "" : "ghost"}" data-done>${passed ? "Продолжить" : "На путь"}</button>
   </div>`;
   countUp();
@@ -1655,7 +1991,7 @@ function noHearts(){
   $("#lesson").classList.remove("hide");
   endLesson(false);
 }
-function quit(){ killMic(); stopVoice(); hideSheet(); $("#lesson").classList.add("hide"); $("#lesson").innerHTML = ""; L = null; render(); }
+function quit(){ if (L){ tmrStop(); clearTimeout(L.sayT); } killMic(); stopVoice(); hideSheet(); $("#lesson").classList.add("hide"); $("#lesson").innerHTML = ""; L = null; render(); }
 
 /* speech recognition (when the browser has it) */
 let recog = null, recPause = 0, recMax = 0;
@@ -1720,6 +2056,8 @@ document.addEventListener("click", async e => {
   if (d.redo){ $("#overlay").innerHTML = ""; startLesson(d.redo); return; }
   if ("ovClose" in d){ $("#overlay").innerHTML = ""; return; }
   if ("review" in d){ if (!S.mistakes.some(m => !m.fixed)){ quit(); TAB = "mist"; render(); return; } startLesson("review"); return; }
+  if (d.daily){ startLesson(d.daily, null, { daily: true }); return; }
+  if (d.reviewBoss){ $("#overlay").innerHTML = ""; const left = bossLock(d.reviewBoss); if (!left){ if (L) quit(); startLesson(d.reviewBoss); return; } startLesson("review", left); return; }
   if ("copy" in d){ const ok = await copyText(talkPrompt(TK.scene, TK.cat, TK.accent, speedOf(), TK.mood)); b.innerHTML = I.check + (ok ? "Скопировано" : "Выделите текст выше и скопируйте"); return; }
   if (d.copyLesson){ const ok = await copyText(lessonPrompt(LESSONS.find(l => l.id === d.copyLesson))); b.innerHTML = I.check + (ok ? "Скопировано. Откройте ChatGPT" : "Не удалось скопировать"); return; }
   if (d.cat){ TK.cat = d.cat; TK.scene = null; TK.accent = null; renderTalk(); return; }
@@ -1742,9 +2080,16 @@ document.addEventListener("click", async e => {
   if (!L) return;
   const t = L.tasks && L.tasks[L.i];
   if ("quit" in d || "done" in d) return quit();
+  if ("fight" in d){ if (d.fight === "hard") L.boss.hard = true; showTask(); return; }
+  if ("memo" in d){ L.seen.add(t); L.solved++; next(); return; }
+  if ("slowmemo" in d) return say(t.s, true, bossVoice());
   if ("next" in d) return next();
   if ("check" in d) return check();
-  if ("say" in d) return say(t.type === "reply" ? t.s : t.en);
+  if ("say" in d) return t.s ? say(t.s, false, bossVoice()) : say(t.en);
+  if ("again" in d){ if (!L.boss || L.boss.again || L.timedOut) return; L.boss.again = true; tmrAdd(5000); say(t.s, true, bossVoice());
+    document.querySelectorAll("[data-again]").forEach(x => { x.disabled = true; x.querySelector("small").textContent = "уже было"; }); return; }
+  if ("reveal" in d){ if (!L.boss || L.boss.hard || L.state.shown || L.timedOut || L.boss.p <= 1) return; L.state.shown = true; L.boss.p--; L.boss.lost++; patDraw(true);
+    $("#bub").innerHTML = bubbleHtml(t); b.disabled = true; b.querySelector("small").textContent = "открыт"; return; }
   if ("slow" in d) return say(t.en, true);
   if ("skip" in d){ L.seen.add(t); L.solved++; next(); return; }
   if ("mic" in d) return toggleMic(b);
@@ -1773,7 +2118,7 @@ document.addEventListener("change", e => {
   S.set.sv = S.set.sv || {}; S.set.sv[key] = Number(e.target.value); save();
   SFX[k].src = sfxSrc(k, k === "ok" ? S.set.sok : S.set.sbad); sfx(k === "ok");
 });
-document.addEventListener("visibilitychange", () => { if (document.hidden) killMic(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) killMic(); tmrPause(document.hidden); });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !L){ tickHearts(); checkStreak(); save(); render(); } });
 checkImport();
 render();
@@ -1782,7 +2127,7 @@ render();
 <script>
 "use strict";
 /* word dictionary for the popup: word → [British transcription, перевод] */
-const WORDS = {"a":["ə","неопределённый артикль (один, какой-то)"],"about":["əˈbaʊt","о, про; около"],"achieve":["əˈtʃiːv","достигать"],"after":["ˈɑːftə","после"],"again":["əˈɡen","снова, ещё раз"],"agree":["əˈɡriː","соглашаться"],"all":["ɔːl","все, всё"],"allergic":["əˈlɜːdʒɪk","аллергический; с аллергией"],"allergies":["ˈælədʒiz","аллергии"],"allergy":["ˈælədʒi","аллергия"],"almond":["ˈɑːmənd","миндаль"],"already":["ɔːlˈredi","уже"],"also":["ˈɔːlsəʊ","тоже, также"],"alternatives":["ɔːlˈtɜːnətɪvz","варианты, альтернативы"],"always":["ˈɔːlweɪz","всегда"],"american":["əˈmerɪkən","американский; американец"],"an":["ən","неопределённый артикль (перед гласной)"],"and":["ænd","и"],"another":["əˈnʌðə","ещё один; другой"],"any":["ˈeni","любой; какой-нибудь"],"anyone":["ˈenɪwən","кто-нибудь; любой"],"apologise":["əˈpɒlədʒaɪz","извиняться"],"appetizer":["ˈæpɪtaɪzə","закуска"],"arakas":["ˌærəˈkɑːs","аракас: тушёный зелёный горошек (греч.)"],"are":["ɑː","есть, являются (форма be)"],"aren't":["ɑːnt","не являются (are not)"],"argue":["ˈɑːɡjuː","спорить"],"around":["əˈraʊnd","вокруг; около"],"arrive":["əˈraɪv","приезжать, прибывать"],"arrived":["əˈraɪvd","приехал(и), прибыл(и)"],"arrives":["əˈraɪvz","приезжает, прибывает"],"as":["æz","как; так как"],"ask":["ɑːsk","спрашивать; просить"],"asking":["ˈɑːskɪŋ","спрашивая; прося"],"asks":["ɑːsks","спрашивает; просит"],"at":["æt","в, на (место, время)"],"australian":["ɒˈstreɪlɪən","австралийский; австралиец"],"available":["əˈveɪləbəl","доступный, в наличии"],"average":["ˈævrɪdʒ","средний"],"away":["əˈweɪ","прочь; далеко"],"back":["bæk","назад, обратно"],"bacon":["ˈbeɪkən","бекон"],"bad":["bæd","плохой"],"bake":["beɪk","запеканка; запекать"],"baked":["beɪkt","запечённый"],"bakery":["ˈbeɪkəri","пекарня"],"balinese":["ˌbɑːlɪˈniːz","балийский"],"bali":["ˈbɑːli","Бали"],"baklava":["ˈbækləvɑː","баклава"],"balls":["bɔːlz","шарики"],"balsamic":["bɔːlˈsæmɪk","бальзамический (уксус)"],"banana":["bəˈnɑːnə","банан"],"bar":["bɑː","бар"],"barbounia":["bɑːˈbuːnjə","барбуня, султанка (рыба, греч.)"],"bartender":["ˈbɑːtendə","бармен"],"basil":["ˈbæzəl","базилик"],"bass":["bæs","сибас, морской окунь"],"bbq":["ˈbɑːbɪkjuː","барбекю, гриль"],"be":["biː","быть"],"beans":["biːnz","фасоль, бобы"],"because":["bɪˈkɒz","потому что"],"bechamel":["ˈbeɪʃəmel","бешамель (соус)"],"beef":["biːf","говядина"],"been":["biːn","был(о) (форма be)"],"before":["bɪˈfɔː","до, перед; раньше"],"behind":["bɪˈhaɪnd","за, позади"],"being":["ˈbiːɪŋ","будучи; находясь"],"bell":["bel","колокольчик; bell pepper — болгарский перец"],"belly":["ˈbeli","брюшко; pork belly — свиная грудинка"],"berry":["ˈberi","ягодный; ягода"],"best":["best","лучший; лучше всего"],"better":["ˈbetə","лучше"],"bifteki":["bɪfˈteki","бифтеки: греческая котлета"],"big":["bɪɡ","большой"],"bill":["bɪl","счёт"],"birthday":["ˈbɜːθdeɪ","день рождения"],"bit":["bɪt","немного, чуть-чуть"],"blaming":["ˈbleɪmɪŋ","обвиняя, сваливая вину"],"boiled":["bɔɪld","варёный"],"bolognese":["ˌbɒləˈneɪz","болоньезе (мясной соус)"],"booked":["bʊkt","забронировал(и)"],"booking":["ˈbʊkɪŋ","бронь, бронирование"],"boss":["bɒs","начальник, босс"],"bottle":["ˈbɒtəl","бутылка"],"box":["bɒks","коробка"],"boxes":["ˈbɒksɪz","коробки"],"branch":["brɑːntʃ","филиал"],"bread":["bred","хлеб"],"breads":["bredz","лепёшки, хлеб (несколько)"],"breakfast":["ˈbrekfəst","завтрак"],"breast":["brest","грудка"],"brief":["briːf","короткий, краткий"],"briefing":["ˈbriːfɪŋ","инструктаж, планёрка"],"bring":["brɪŋ","приносить"],"brings":["brɪŋz","приносит"],"british":["ˈbrɪtɪʃ","британский"],"bruschetta":["bruːˈsketə","брускетта"],"budget":["ˈbʌdʒɪt","бюджет"],"burger":["ˈbɜːɡə","бургер"],"burnt":["bɜːnt","подгоревший"],"busy":["ˈbɪzi","занятой; людный"],"but":["bʌt","но"],"butter":["ˈbʌtə","сливочное масло"],"by":["baɪ","к (сроку); у, рядом; кем-то"],"bye":["baɪ","пока"],"cabbage":["ˈkæbɪdʒ","капуста"],"cake":["keɪk","торт, пирог"],"calamari":["ˌkæləˈmɑːri","кальмары"],"california":["ˌkælɪˈfɔːnjə","Калифорния"],"call":["kɔːl","звонить; звать"],"calm":["kɑːm","спокойный"],"came":["keɪm","пришёл, пришли"],"can":["kæn","мочь, уметь"],"capers":["ˈkeɪpəz","каперсы"],"card":["kɑːd","карта (банковская)"],"care":["keə","забота; заботиться"],"carrots":["ˈkærəts","морковь"],"cash":["kæʃ","наличные"],"cashier":["kæˈʃɪə","кассир"],"ceremony":["ˈserɪməni","церемония"],"change":["tʃeɪndʒ","сдача; менять"],"changed":["tʃeɪndʒd","изменил(ся)"],"charge":["tʃɑːdʒ","брать плату; сбор"],"chatty":["ˈtʃæti","разговорчивый"],"cheaper":["ˈtʃiːpə","дешевле"],"check":["tʃek","проверять; счёт (амер.)"],"cheddar":["ˈtʃedə","чеддер (сыр)"],"cheese":["tʃiːz","сыр"],"chef":["ʃef","шеф-повар"],"cherry":["ˈtʃeri","вишня, черешня"],"chicken":["ˈtʃɪkən","курица"],"chinese":["tʃaɪˈniːz","китайский"],"chocolate":["ˈtʃɒklət","шоколад"],"choice":["tʃɔɪs","выбор"],"choose":["tʃuːz","выбирать"],"chop":["tʃɒp","котлета на кости; рубить"],"chops":["tʃɒps","котлеты на кости"],"cinnamon":["ˈsɪnəmən","корица"],"classic":["ˈklæsɪk","классический"],"clear":["klɪə","убирать (со стола); ясный"],"clearing":["ˈklɪərɪŋ","убирая (со стола)"],"clearly":["ˈklɪəli","ясно, чётко"],"club":["klʌb","клубный"],"coffee":["ˈkɒfi","кофе"],"cold":["kəʊld","холодный"],"come":["kʌm","приходить"],"comes":["kʌmz","приходит"],"coming":["ˈkʌmɪŋ","приходящий; идёт"],"compare":["kəmˈpeə","сравнивать"],"complain":["kəmˈpleɪn","жаловаться"],"complained":["kəmˈpleɪnd","пожаловался"],"complains":["kəmˈpleɪnz","жалуется"],"complaints":["kəmˈpleɪnts","жалобы"],"confirm":["kənˈfɜːm","подтверждать"],"confused":["kənˈfjuːzd","растерянный, сбитый с толку"],"congratulations":["kənˌɡrætʃəˈleɪʃənz","поздравляю"],"conflict":["ˈkɒnflɪkt","конфликт"],"contains":["kənˈteɪnz","содержит"],"contract":["ˈkɒntrækt","договор, контракт"],"contractions":["kənˈtrækʃənz","сокращения (I'm, don't)"],"contracts":["ˈkɒntrækts","договоры"],"cook":["kʊk","повар; готовить"],"cooked":["kʊkt","приготовленный"],"corn":["kɔːn","кукуруза"],"cost":["kɒst","стоить; стоимость"],"costing":["ˈkɒstɪŋ","стоимостью"],"costs":["kɒsts","стоит; расходы"],"cotta":["ˈkɒtə","котта (panna cotta — панна-котта)"],"could":["kʊd","мог бы"],"course":["kɔːs","курс; блюдо; of course — конечно"],"crab":["kræb","краб"],"crazy":["ˈkreɪzi","безумный"],"cream":["kriːm","сливки, крем"],"creta":["ˈkriːtə","Крит (греч. остров)"],"crepes":["kreɪps","блинчики"],"critic":["ˈkrɪtɪk","критик"],"croutons":["ˈkruːtɒnz","гренки, сухарики"],"crumbed":["krʌmd","в панировке"],"crusty":["ˈkrʌsti","хрустящий"],"cry":["kraɪ","плакать"],"cucumber":["ˈkjuːkʌmbə","огурец"],"curious":["ˈkjʊərɪəs","любопытный"],"current":["ˈkʌrənt","нынешний, текущий"],"custard":["ˈkʌstəd","заварной крем"],"daiquiri":["ˈdaɪkɪri","дайкири (коктейль)"],"damaged":["ˈdæmɪdʒd","повреждённый"],"dark":["dɑːk","тёмный"],"daughter":["ˈdɔːtə","дочь"],"day":["deɪ","день"],"days":["deɪz","дни"],"deal":["diːl","сделка; договорились"],"decide":["dɪˈsaɪd","решать"],"decrease":["dɪˈkriːs","уменьшать(ся); снижение"],"deliver":["dɪˈlɪvə","доставлять"],"delivered":["dɪˈlɪvəd","доставил(и)"],"delivery":["dɪˈlɪvəri","доставка"],"demanding":["dɪˈmɑːndɪŋ","требовательный"],"dessert":["dɪˈzɜːt","десерт"],"did":["dɪd","сделал (прош. от do)"],"didn't":["ˈdɪdənt","не (сделал)"],"different":["ˈdɪfrənt","разный, другой"],"dill":["dɪl","укроп"],"dinner":["ˈdɪnə","ужин"],"dip":["dɪp","соус для макания, дип"],"dips":["dɪps","соусы, дипы"],"disappointed":["ˌdɪsəˈpɔɪntɪd","разочарованный"],"discount":["ˈdɪskaʊnt","скидка"],"discuss":["dɪˈskʌs","обсуждать"],"dish":["dɪʃ","блюдо"],"dishes":["ˈdɪʃɪz","блюда"],"do":["duː","делать"],"dolmades":["dɒlˈmɑːðes","долмадес: голубцы (греч.)"],"don't":["dəʊnt","не (do not)"],"doughnuts":["ˈdəʊnʌts","пончики"],"dressing":["ˈdresɪŋ","заправка"],"drink":["drɪŋk","напиток; пить"],"drinks":["drɪŋks","напитки"],"driver":["ˈdraɪvə","водитель"],"during":["ˈdjʊərɪŋ","во время"],"dutch":["dʌtʃ","голландский"],"earlier":["ˈɜːlɪə","раньше"],"early":["ˈɜːli","рано; ранний"],"earned":["ɜːnd","заработал"],"easy":["ˈiːzi","лёгкий, простой"],"eclair":["ɪˈkleə","эклер"],"egg":["eɡ","яйцо"],"eggplant":["ˈeɡplɑːnt","баклажан"],"eggs":["eɡz","яйца"],"eight":["eɪt","восемь"],"either":["ˈaɪðə","либо; любой из двух"],"ekmek":["ekˈmek","экмек (греческий десерт)"],"eleven":["ɪˈlevən","одиннадцать"],"enjoy":["ɪnˈdʒɔɪ","наслаждаться; приятного"],"especially":["ɪˈspeʃli","особенно"],"evening":["ˈiːvnɪŋ","вечер"],"event":["ɪˈvent","мероприятие"],"every":["ˈevri","каждый"],"everybody":["ˈevrɪbɒdi","все"],"everything":["ˈevrɪθɪŋ","всё"],"example":["ɪɡˈzɑːmpəl","пример"],"excuse":["ɪkˈskjuːz","извинять; excuse me — извините"],"expat":["ˈekspæt","экспат, живущий за границей"],"expensive":["ɪkˈspensɪv","дорогой"],"explain":["ɪkˈspleɪn","объяснять"],"extra":["ˈekstrə","дополнительный"],"extras":["ˈekstrəz","дополнительно, добавки"],"fakies":["fæˈkjes","факес: суп из чечевицы (греч.)"],"falafel":["fəˈlæfəl","фалафель"],"family":["ˈfæmli","семья; семейный"],"fasolakia":["ˌfæsəˈlɑːkjə","фасолакья: тушёная стручковая фасоль (греч.)"],"fast":["fɑːst","быстрый; быстро"],"faster":["ˈfɑːstə","быстрее"],"fault":["fɔːlt","вина"],"fava":["ˈfɑːvə","фава: пюре из жёлтого гороха"],"fee":["fiː","сбор, плата"],"felt":["felt","почувствовал; казался"],"feta":["ˈfetə","фета (сыр)"],"fifteen":["ˌfɪfˈtiːn","пятнадцать"],"filled":["fɪld","наполненный"],"fillers":["ˈfɪləz","слова-паразиты (um, well)"],"fillet":["ˈfɪlɪt","филе"],"filling":["ˈfɪlɪŋ","начинка"],"filo":["ˈfiːləʊ","фило (тонкое тесто)"],"find":["faɪnd","находить"],"firm":["fɜːm","твёрдый, уверенный"],"first":["fɜːst","первый"],"fish":["fɪʃ","рыба"],"fits":["fɪts","подходит"],"five":["faɪv","пять"],"fix":["fɪks","исправлять, чинить"],"follow":["ˈfɒləʊ","следовать, идти за"],"food":["fuːd","еда"],"for":["fɔː","для; на (время)"],"forget":["fəˈɡet","забывать"],"forty":["ˈfɔːti","сорок"],"four":["fɔː","четыре"],"fournou":["ˈfuːrnuː","«из печи» (греч.)"],"free":["friː","свободный; бесплатный"],"french":["frentʃ","французский"],"fresh":["freʃ","свежий"],"fresher":["ˈfreʃə","свежее"],"friday":["ˈfraɪdeɪ","пятница"],"fried":["fraɪd","жареный"],"friendlier":["ˈfrendliə","дружелюбнее"],"friendly":["ˈfrendli","дружелюбный"],"fries":["fraɪz","картофель фри"],"fritter":["ˈfrɪtə","оладья"],"fritters":["ˈfrɪtəz","оладьи"],"from":["frɒm","из, от"],"front":["frʌnt","перед; in front — впереди"],"frozen":["ˈfrəʊzən","замороженный"],"fruit":["fruːt","фрукты"],"fully":["ˈfʊli","полностью"],"further":["ˈfɜːðə","дальше; подробнее"],"galaktoboureko":["ˌɡæləktəˈbuːrekəʊ","галактобуреко: пирог с манным кремом (греч.)"],"garlic":["ˈɡɑːlɪk","чеснок"],"gemista":["ˌjemɪˈstɑː","гемиста: фаршированные овощи (греч.)"],"general":["ˈdʒenrəl","общий"],"german":["ˈdʒɜːmən","немецкий"],"get":["ɡet","получать; становиться"],"giga":["ˈɡiːɡə","гига: большая порция"],"give":["ɡɪv","давать"],"go":["ɡəʊ","идти, ехать"],"goal":["ɡəʊl","цель"],"goes":["ɡəʊz","идёт"],"going":["ˈɡəʊɪŋ","идущий; собираться"],"good":["ɡʊd","хороший"],"google":["ˈɡuːɡəl","Google"],"got":["ɡɒt","получил"],"great":["ɡreɪt","отличный"],"greek":["ɡriːk","греческий"],"green":["ɡriːn","зелёный"],"grill":["ɡrɪl","гриль"],"grilled":["ɡrɪld","на гриле"],"group":["ɡruːp","группа, компания"],"guest":["ɡest","гость"],"guests":["ɡests","гости"],"gyros":["ˈjiːrɒs","гирос (мясо с вертела)"],"had":["hæd","имел (прош. от have)"],"half":["hɑːf","половина"],"halloumi":["həˈluːmi","халуми (сыр)"],"happen":["ˈhæpən","случаться"],"happens":["ˈhæpənz","случается"],"happy":["ˈhæpi","счастливый, довольный"],"hard":["hɑːd","трудный"],"has":["hæz","имеет"],"have":["hæv","иметь"],"he":["hiː","он"],"hello":["həˈləʊ","здравствуйте"],"help":["help","помогать; помощь"],"herbs":["hɜːbz","травы"],"here":["hɪə","здесь, сюда"],"here's":["hɪəz","вот (here is)"],"hi":["haɪ","привет"],"high":["haɪ","высокий"],"higher":["ˈhaɪə","выше"],"him":["hɪm","его, ему"],"hire":["ˈhaɪə","нанимать"],"his":["hɪz","его"],"hit":["hɪt","удача; hit or miss — то так, то сяк"],"hmm":["hm","хм"],"homemade":["ˌhəʊmˈmeɪd","домашний"],"honey":["ˈhʌni","мёд"],"hope":["həʊp","надеяться"],"hotel":["həʊˈtel","отель"],"hour":["ˈaʊə","час"],"hours":["ˈaʊəz","часы"],"how":["haʊ","как"],"however":["ˌhaʊˈevə","как угодно; однако"],"hummus":["ˈhʊməs","хумус"],"hundred":["ˈhʌndrəd","сто"],"hurry":["ˈhʌri","спешить"],"i":["aɪ","я"],"i'd":["aɪd","я бы (I would)"],"i'll":["aɪl","я (сделаю) (I will)"],"i'm":["aɪm","я (I am)"],"i've":["aɪv","я (уже) (I have)"],"ice":["aɪs","лёд; ice cream — мороженое"],"idea":["aɪˈdɪə","идея"],"if":["ɪf","если"],"important":["ɪmˈpɔːtənt","важный"],"impressed":["ɪmˈprest","впечатлённый"],"improve":["ɪmˈpruːv","улучшать"],"in":["ɪn","в"],"increase":["ɪnˈkriːs","увеличивать(ся); рост"],"indian":["ˈɪndɪən","индийский"],"inside":["ˌɪnˈsaɪd","внутри"],"instead":["ɪnˈsted","вместо"],"introduce":["ˌɪntrəˈdjuːs","представлять, знакомить"],"invite":["ɪnˈvaɪt","приглашать"],"invoice":["ˈɪnvɔɪs","счёт-фактура, накладная"],"irish":["ˈaɪrɪʃ","ирландский"],"irritated":["ˈɪrɪteɪtɪd","раздражённый"],"is":["ɪz","есть, является"],"isn't":["ˈɪzənt","не является (is not)"],"it":["ɪt","это; оно"],"it's":["ɪts","это (it is)"],"italian":["ɪˈtæljən","итальянский"],"japanese":["ˌdʒæpəˈniːz","японский"],"javanese":["ˌdʒɑːvəˈniːz","яванский"],"job":["dʒɒb","работа"],"just":["dʒʌst","просто; только что"],"kalamata":["ˌkæləˈmɑːtə","каламата (сорт оливок)"],"kavourosalata":["kæˌvuːrəʊsəˈlɑːtə","кавуросалата: крабовый салат (греч.)"],"kebab":["kəˈbæb","кебаб"],"keep":["kiːp","держать; сохранять"],"ketut":["kəˈtʊt","Кетут (имя)"],"kg":["ˈkɪləɡræm","килограмм"],"kids":["kɪdz","дети"],"kilo":["ˈkiːləʊ","килограмм"],"kilos":["ˈkiːləʊz","килограммы"],"kima":["kɪˈmɑː","кима: фарш (греч.)"],"kitchen":["ˈkɪtʃən","кухня"],"know":["nəʊ","знать"],"kolokythokeftedes":["ˌkɒləˌkiːθəʊkefˈteðes","колокифокефтедес: кабачковые оладьи (греч.)"],"komang":["ˈkɒmɑːŋ","Команг (имя)"],"lamb":["læm","баранина, ягнёнок"],"last":["lɑːst","последний; прошлый"],"late":["leɪt","поздно; опоздавший"],"later":["ˈleɪtə","позже"],"layers":["ˈleɪəz","слои"],"lead":["liːd","вести, руководить"],"leadership":["ˈliːdəʃɪp","руководство"],"leave":["liːv","уходить; оставлять"],"left":["left","ушёл; оставил; левый"],"lemon":["ˈlemən","лимон"],"lentil":["ˈlentɪl","чечевичный"],"less":["les","меньше"],"let":["let","позволять"],"let's":["lets","давайте"],"lettuce":["ˈletɪs","салат-латук"],"lia":["ˈliːə","Лия (имя)"],"like":["laɪk","нравиться; как"],"lime":["laɪm","лайм"],"limited":["ˈlɪmɪtɪd","ограниченный"],"listen":["ˈlɪsən","слушать"],"living":["ˈlɪvɪŋ","живущий"],"london":["ˈlʌndən","Лондон"],"long":["lɒŋ","длинный; долго"],"lose":["luːz","терять"],"lot":["lɒt","много (a lot)"],"loukoumades":["ˌluːkuːˈmɑːðes","лукумадес: пончики с мёдом (греч.)"],"love":["lʌv","любить"],"loved":["lʌvd","понравилось, любил"],"lovely":["ˈlʌvli","чудесный"],"lunch":["lʌntʃ","обед"],"machine":["məˈʃiːn","аппарат, машина"],"made":["meɪd","сделанный"],"makaronia":["ˌmækəˈrɒnjə","макарония: макароны (греч.)"],"make":["meɪk","делать"],"management":["ˈmænɪdʒmənt","управление"],"manager":["ˈmænɪdʒə","менеджер, управляющий"],"mango":["ˈmæŋɡəʊ","манго"],"many":["ˈmeni","много"],"margarita":["ˌmɑːɡəˈriːtə","маргарита (коктейль)"],"marinated":["ˈmærɪneɪtɪd","маринованный"],"marked":["mɑːkt","отмеченный"],"mashed":["mæʃt","пюре (mashed potato)"],"maybe":["ˈmeɪbi","может быть"],"mayo":["ˈmeɪəʊ","майонез (разг.)"],"mayonnaise":["ˌmeɪəˈneɪz","майонез"],"me":["miː","меня, мне"],"means":["miːnz","значит; означает"],"meat":["miːt","мясо"],"meatballs":["ˈmiːtbɔːlz","фрикадельки, тефтели"],"meet":["miːt","встречать, знакомиться"],"meeting":["ˈmiːtɪŋ","встреча, собрание"],"melitzana":["ˌmelɪˈdʒɑːnə","мелидзана: баклажан (греч.)"],"member":["ˈmembə","член, участник"],"members":["ˈmembəz","сотрудники, участники"],"mentioned":["ˈmenʃənd","упомянул"],"menu":["ˈmenjuː","меню"],"meze":["ˈmezeɪ","мезе: ассорти закусок"],"mikalis":["mɪˈkɑːlɪs","Микалис (имя)"],"million":["ˈmɪljən","миллион"],"minced":["mɪnst","рубленый; minced beef — говяжий фарш"],"minutes":["ˈmɪnɪts","минуты"],"miss":["mɪs","пропускать; скучать"],"missing":["ˈmɪsɪŋ","недостающий"],"mistake":["mɪˈsteɪk","ошибка"],"mix":["mɪks","ассорти; смешивать"],"mixed":["mɪkst","смешанный"],"moment":["ˈməʊmənt","момент"],"monday":["ˈmʌndeɪ","понедельник"],"money":["ˈmʌni","деньги"],"month":["mʌnθ","месяц"],"monthly":["ˈmʌnθli","ежемесячный"],"more":["mɔː","больше; ещё"],"morning":["ˈmɔːnɪŋ","утро"],"most":["məʊst","больше всего; самый"],"mousaka":["muːˈsɑːkə","мусака"],"moussaka":["muːˈsɑːkə","мусака"],"much":["mʌtʃ","много"],"mullet":["ˈmʌlɪt","барабулька; red mullet — султанка"],"mustard":["ˈmʌstəd","горчица"],"my":["maɪ","мой"],"name":["neɪm","имя"],"napkins":["ˈnæpkɪnz","салфетки"],"napoletana":["ˌnæpɒleˈtɑːnə","по-неаполитански"],"napoli":["ˈnɑːpəli","неаполитанский (соус)"],"natural":["ˈnætʃrəl","естественный"],"nearby":["ˌnɪəˈbaɪ","рядом"],"need":["niːd","нуждаться; нужно"],"needs":["niːdz","нужно; нуждается"],"negotiate":["nɪˈɡəʊʃieɪt","вести переговоры"],"new":["njuː","новый"],"next":["nekst","следующий"],"nine":["naɪn","девять"],"no":["nəʊ","нет"],"noisy":["ˈnɔɪzi","шумный"],"normal":["ˈnɔːməl","обычный"],"not":["nɒt","не"],"nothing":["ˈnʌθɪŋ","ничего"],"noticed":["ˈnəʊtɪst","заметил"],"now":["naʊ","сейчас"],"numbers":["ˈnʌmbəz","цифры, числа"],"nut":["nʌt","орех"],"nutella":["nuːˈtelə","нутелла"],"nuts":["nʌts","орехи"],"o'clock":["əˈklɒk","ровно (о времени)"],"octopus":["ˈɒktəpəs","осьминог"],"of":["ɒv","из; (связка «чего»)"],"off":["ɒf","выходной (day off); прочь"],"offer":["ˈɒfə","предлагать"],"offered":["ˈɒfəd","предложил"],"offering":["ˈɒfrɪŋ","предлагая"],"offers":["ˈɒfəz","предлагает"],"oil":["ɔɪl","масло (растительное)"],"okay":["ˌəʊˈkeɪ","хорошо, ладно"],"old":["əʊld","старый"],"olive":["ˈɒlɪv","оливковый; оливка"],"olives":["ˈɒlɪvz","оливки"],"omelette":["ˈɒmlɪt","омлет"],"on":["ɒn","на"],"once":["wʌns","один раз"],"one":["wʌn","один"],"onion":["ˈʌnjən","лук"],"only":["ˈəʊnli","только"],"open":["ˈəʊpən","открытый; открывать"],"opens":["ˈəʊpənz","открывается"],"option":["ˈɒpʃən","вариант"],"options":["ˈɒpʃənz","варианты"],"or":["ɔː","или"],"order":["ˈɔːdə","заказ; заказывать"],"ordered":["ˈɔːdəd","заказал"],"ordering":["ˈɔːdərɪŋ","заказ (оформление)"],"oregano":["ˌɒrɪˈɡɑːnəʊ","орегано"],"organises":["ˈɔːɡənaɪzɪz","организует"],"other":["ˈʌðə","другой"],"our":["ˈaʊə","наш"],"out":["aʊt","вне; наружу"],"outside":["ˌaʊtˈsaɪd","снаружи, на улице"],"ouzo":["ˈuːzəʊ","узо (греческая водка)"],"owner":["ˈəʊnə","владелец"],"pace":["peɪs","темп"],"paid":["peɪd","оплатил"],"pancetta":["pænˈtʃetə","панчетта (грудинка)"],"panna":["ˈpænə","панна (panna cotta — панна-котта)"],"paprika":["ˈpæprɪkə","паприка, сладкий перец"],"parmesan":["ˈpɑːmɪzæn","пармезан"],"partner":["ˈpɑːtnə","партнёр"],"pasta":["ˈpæstə","паста"],"pastitsio":["pæˈstɪtsjəʊ","пастицио: запеканка из макарон (греч.)"],"pastry":["ˈpeɪstri","тесто; выпечка"],"patates":["pəˈtɑːtes","картофель (греч.)"],"patty":["ˈpæti","котлета"],"pay":["peɪ","платить"],"pea":["piː","горох; split pea — колотый горох"],"peas":["piːz","горошек"],"penne":["ˈpeneɪ","пенне (макароны)"],"pepper":["ˈpepə","перец"],"peppers":["ˈpepəz","перцы"],"per":["pɜː","за, в (per person — на человека)"],"percent":["pəˈsent","процент"],"perfect":["ˈpɜːfɪkt","идеальный"],"person":["ˈpɜːsən","человек"],"phone":["fəʊn","телефон"],"picky":["ˈpɪki","привередливый"],"pie":["paɪ","пирог"],"pita":["ˈpɪtə","пита (лепёшка)"],"pitch":["pɪtʃ","предлагать идею; презентация"],"pitching":["ˈpɪtʃɪŋ","презентация идеи"],"place":["pleɪs","место; размещать"],"places":["ˈpleɪsɪz","места"],"placing":["ˈpleɪsɪŋ","размещая"],"plan":["plæn","план"],"plate":["pleɪt","тарелка; блюдо"],"platter":["ˈplætə","большое блюдо, ассорти"],"please":["pliːz","пожалуйста"],"pm":["ˌpiːˈem","после полудня (8 pm — 20:00)"],"polite":["pəˈlaɪt","вежливый"],"popular":["ˈpɒpjʊlə","популярный"],"pork":["pɔːk","свинина"],"possible":["ˈpɒsɪbəl","возможный"],"potato":["pəˈteɪtəʊ","картофель"],"potatoes":["pəˈteɪtəʊz","картофель"],"potatokeftedes":["pəˌtɑːtəʊkefˈteðes","картофельные шарики (греч.)"],"praise":["preɪz","хвалить; похвала"],"praised":["preɪzd","похвалил(и)"],"prawn":["prɔːn","креветка"],"prawns":["prɔːnz","креветки"],"pre-order":["ˌpriːˈɔːdə","предзаказ"],"pre-shift":["ˌpriːˈʃɪft","перед сменой"],"prevent":["prɪˈvent","предотвращать"],"price":["praɪs","цена"],"prices":["ˈpraɪsɪz","цены"],"problem":["ˈprɒbləm","проблема"],"profit":["ˈprɒfɪt","прибыль"],"profiterole":["prəˈfɪtərəʊl","профитроли"],"promise":["ˈprɒmɪs","обещать"],"promised":["ˈprɒmɪst","обещал"],"puff":["pʌf","слоёный (puff pastry); заварное пирожное"],"puffs":["pʌfs","заварные пирожные"],"quality":["ˈkwɒlɪti","качество"],"quantities":["ˈkwɒntɪtiz","количество"],"questions":["ˈkwestʃənz","вопросы"],"quickly":["ˈkwɪkli","быстро"],"quiet":["ˈkwaɪət","тихий"],"quieter":["ˈkwaɪətə","тише"],"rained":["reɪnd","шёл дождь"],"rainy":["ˈreɪni","дождливый"],"raise":["reɪz","повышение (зарплаты); поднимать"],"rating":["ˈreɪtɪŋ","рейтинг, оценка"],"ravani":["rəˈvɑːni","равани: манный пирог (греч.)"],"reached":["riːtʃt","достиг"],"ready":["ˈredi","готовый"],"real":["rɪəl","настоящий"],"really":["ˈrɪəli","действительно, очень"],"receipt":["rɪˈsiːt","чек"],"recommend":["ˌrekəˈmend","рекомендовать"],"recommendations":["ˌrekəmənˈdeɪʃənz","рекомендации"],"red":["red","красный"],"refill":["ˈriːfɪl","повторное наполнение (бокала)"],"register":["ˈredʒɪstə","касса (cash register)"],"relaxed":["rɪˈlækst","расслабленный, спокойный"],"reliable":["rɪˈlaɪəbəl","надёжный"],"remake":["ˌriːˈmeɪk","переделать"],"remember":["rɪˈmembə","помнить"],"remembered":["rɪˈmembəd","запомнил, вспомнил"],"repair":["rɪˈpeə","ремонт; чинить"],"replace":["rɪˈpleɪs","заменять"],"replaced":["rɪˈpleɪst","заменил"],"reply":["rɪˈplaɪ","ответ; отвечать"],"report":["rɪˈpɔːt","отчёт"],"reservation":["ˌrezəˈveɪʃən","бронь"],"respect":["rɪˈspekt","уважение"],"responsibilities":["rɪˌspɒnsɪˈbɪlɪtiz","обязанности"],"responsibility":["rɪˌspɒnsɪˈbɪlɪti","ответственность, обязанность"],"rest":["rest","остальное; отдых"],"restaurant":["ˈrestrɒnt","ресторан"],"restaurant's":["ˈrestrɒnts","ресторана"],"restaurants":["ˈrestrɒnts","рестораны"],"results":["rɪˈzʌlts","результаты"],"return":["rɪˈtɜːn","возвращать(ся)"],"returning":["rɪˈtɜːnɪŋ","возвращающийся, постоянный"],"revenue":["ˈrevənjuː","выручка, доход"],"review":["rɪˈvjuː","отзыв"],"reviews":["rɪˈvjuːz","отзывы"],"revithokeftedes":["reˌviːθəʊkefˈteðes","ревифокефтедес: шарики из нута (греч.)"],"rice":["raɪs","рис"],"right":["raɪt","правильный; правый; сразу"],"roasted":["ˈrəʊstɪd","печёный, запечённый"],"rocket":["ˈrɒkɪt","руккола"],"rolled":["rəʊld","свёрнутый"],"room":["ruːm","место; комната"],"rude":["ruːd","грубый"],"rule":["ruːl","правило"],"rupiah":["ruːˈpiːə","рупия"],"russian":["ˈrʌʃən","русский"],"safe":["seɪf","безопасный"],"saganaki":["ˌsæɡəˈnɑːki","саганаки (в сковороде, греч.)"],"said":["sed","сказал"],"salad":["ˈsæləd","салат"],"salary":["ˈsæləri","зарплата"],"salmon":["ˈsæmən","лосось"],"same":["seɪm","тот же, такой же"],"sample":["ˈsæmpəl","образец, пробник"],"sandwich":["ˈsænwɪdʒ","сэндвич"],"sangria":["sæŋˈɡriːə","сангрия"],"santorini":["ˌsæntəˈriːni","Санторини"],"saturday":["ˈsætədeɪ","суббота"],"saturdays":["ˈsætədeɪz","по субботам"],"sauce":["sɔːs","соус"],"sausages":["ˈsɒsɪdʒɪz","сосиски, колбаски"],"say":["seɪ","сказать"],"says":["sez","говорит"],"schedule":["ˈʃedjuːl","график, расписание"],"schnitzel":["ˈʃnɪtsəl","шницель"],"scoops":["skuːps","шарики (мороженого)"],"scooter":["ˈskuːtə","скутер"],"scottish":["ˈskɒtɪʃ","шотландский"],"sea":["siː","море; морской"],"seasonal":["ˈsiːzənəl","сезонный"],"seasoned":["ˈsiːzənd","приправленный"],"secretly":["ˈsiːkrətli","тайно"],"section":["ˈsekʃən","секция, зона"],"see":["siː","видеть"],"seemed":["siːmd","казался"],"sell":["sel","продавать"],"sells":["selz","продаёт"],"send":["send","отправлять"],"sends":["sendz","отправляет"],"sent":["sent","отправил"],"sentences":["ˈsentənsɪz","предложения"],"served":["sɜːvd","подаётся"],"server":["ˈsɜːvə","официант"],"service":["ˈsɜːvɪs","обслуживание"],"set":["set","ставить; набор"],"several":["ˈsevrəl","несколько"],"shift":["ʃɪft","смена"],"shifts":["ʃɪfts","смены"],"short":["ʃɔːt","короткий"],"should":["ʃʊd","следует, должен"],"shouted":["ˈʃaʊtɪd","кричал"],"show":["ʃəʊ","показывать"],"showing":["ˈʃəʊɪŋ","показывая"],"sick":["sɪk","больной"],"side":["saɪd","гарнир; сторона"],"sign":["saɪn","подписывать; знак"],"simple":["ˈsɪmpəl","простой"],"singaporean":["ˌsɪŋəˈpɔːriən","сингапурский"],"sister's":["ˈsɪstəz","сестры"],"sit":["sɪt","сидеть, садиться"],"situation":["ˌsɪtʃʊˈeɪʃən","ситуация"],"six":["sɪks","шесть"],"skewer":["ˈskjuːə","шампур, шпажка"],"skewers":["ˈskjuːəz","шампуры"],"skordalia":["ˌskɔːdəˈljɑː","скордалья: чесночный соус (греч.)"],"slang":["slæŋ","сленг"],"slice":["slaɪs","ломтик, кусок"],"sliced":["slaɪst","нарезанный"],"slow":["sləʊ","медленный"],"slowest":["ˈsləʊɪst","самый медленный"],"slowly":["ˈsləʊli","медленно"],"small":["smɔːl","маленький"],"snapper":["ˈsnæpə","луциан (рыба)"],"so":["səʊ","так; поэтому"],"sold":["səʊld","продан"],"solve":["sɒlv","решать"],"some":["sʌm","немного; некоторые"],"somebody":["ˈsʌmbədi","кто-то"],"something":["ˈsʌmθɪŋ","что-то"],"somewhere":["ˈsʌmweə","где-то"],"son":["sʌn","сын"],"soon":["suːn","скоро"],"sorry":["ˈsɒri","извините"],"sounds":["saʊndz","звучит"],"soup":["suːp","суп"],"sourdough":["ˈsaʊədəʊ","хлеб на закваске"],"southern":["ˈsʌðən","южный"],"soutzoukakia":["ˌsuːdʒuːˈkɑːkjə","судзукакья: колбаски в томатном соусе (греч.)"],"souvlaki":["suːˈvlɑːki","сувлаки (шашлычки)"],"spaghetti":["spəˈɡeti","спагетти"],"spanakopita":["ˌspænəˈkɒpɪtə","спанакопита: пирог со шпинатом (греч.)"],"speak":["spiːk","говорить"],"special":["ˈspeʃəl","особый; блюдо дня"],"spicy":["ˈspaɪsi","острый"],"spinach":["ˈspɪnɪtʃ","шпинат"],"split":["splɪt","колотый; делить"],"staff":["stɑːf","персонал"],"star":["stɑː","звезда"],"start":["stɑːt","начинать"],"stay":["steɪ","оставаться; жить (в отеле)"],"staying":["ˈsteɪɪŋ","живёте, остановились"],"steak":["steɪk","стейк"],"steep":["stiːp","завышенный (о цене)"],"stick":["stɪk","палочка; crab stick — крабовая палочка"],"still":["stɪl","всё ещё"],"street":["striːt","улица"],"stuck":["stʌk","застрял"],"stuffed":["stʌft","фаршированный"],"style":["staɪl","стиль"],"suggest":["səˈdʒest","предлагать"],"sunset":["ˈsʌnset","закат"],"supplier":["səˈplaɪə","поставщик"],"suppliers":["səˈplaɪəz","поставщики"],"sure":["ʃɔː","конечно; уверен"],"surprise":["səˈpraɪz","сюрприз"],"swap":["swɒp","поменяться"],"table":["ˈteɪbəl","столик"],"tables":["ˈteɪbəlz","столики"],"take":["teɪk","брать"],"taken":["ˈteɪkən","занят"],"takes":["teɪks","занимает (время)"],"talk":["tɔːk","говорить"],"talked":["tɔːkt","поговорил"],"tasks":["tɑːsks","задания"],"taste":["teɪst","вкус; пробовать"],"tastes":["teɪsts","на вкус"],"tax":["tæks","налог"],"taxi":["ˈtæksi","такси"],"teach":["tiːtʃ","учить"],"team":["tiːm","команда"],"tell":["tel","сказать, рассказать"],"telling":["ˈtelɪŋ","говоря"],"temperature":["ˈtemprətʃə","температура"],"ten":["ten","десять"],"terms":["tɜːmz","условия"],"terrace":["ˈterəs","терраса"],"terrible":["ˈterɪbəl","ужасный"],"test":["test","проверка"],"than":["ðæn","чем"],"thank":["θæŋk","благодарить"],"thanks":["θæŋks","спасибо"],"that":["ðæt","тот, это; что"],"that's":["ðæts","это (that is)"],"the":["ðə","определённый артикль"],"their":["ðeə","их"],"them":["ðem","их, им"],"then":["ðen","потом"],"there":["ðeə","там"],"there's":["ðeəz","есть (there is)"],"these":["ðiːz","эти"],"they":["ðeɪ","они"],"thing":["θɪŋ","вещь"],"things":["θɪŋz","вещи, дела"],"think":["θɪŋk","думать"],"thinks":["θɪŋks","думает"],"thinly":["ˈθɪnli","тонко"],"thirty":["ˈθɜːti","тридцать"],"this":["ðɪs","этот"],"those":["ðəʊz","те"],"three":["θriː","три"],"time":["taɪm","время"],"tiramisu":["ˌtɪrəmɪˈsuː","тирамису"],"tired":["ˈtaɪəd","уставший"],"tirokafteri":["ˌtɪərəʊkæftəˈriː","тирокафтери: острый сырный соус (греч.)"],"tiropita":["tɪˈrɒpɪtə","тиропита: сырный пирог (греч.)"],"to":["tuː","к, в; чтобы"],"toasted":["ˈtəʊstɪd","поджаренный"],"today":["təˈdeɪ","сегодня"],"today's":["təˈdeɪz","сегодняшний"],"together":["təˈɡeðə","вместе"],"tomato":["təˈmɑːtəʊ","помидор"],"tomatoes":["təˈmɑːtəʊz","помидоры"],"tomatokeftedes":["təˌmɑːtəʊkefˈteðes","томатные оладьи (греч.)"],"tomorrow":["təˈmɒrəʊ","завтра"],"tonight":["təˈnaɪt","сегодня вечером"],"too":["tuː","слишком; тоже"],"topped":["tɒpt","сверху посыпан, покрыт"],"topping":["ˈtɒpɪŋ","топпинг, поливка"],"tou":["tuː","(греч.) «из»"],"traditional":["trəˈdɪʃənəl","традиционный"],"traffic":["ˈtræfɪk","пробки, движение"],"train":["treɪn","обучать"],"trial":["ˈtraɪəl","пробный период"],"trust":["trʌst","доверять"],"try":["traɪ","пробовать"],"trying":["ˈtraɪɪŋ","пробуя"],"tuesday":["ˈtjuːzdeɪ","вторник"],"tuna":["ˈtjuːnə","тунец"],"twelve":["twelv","двенадцать"],"twenty":["ˈtwenti","двадцать"],"two":["tuː","два"],"tzatziki":["tsætˈsiːki","дзадзики (соус)"],"under":["ˈʌndə","на (имя брони); под"],"understand":["ˌʌndəˈstænd","понимать"],"unfriendly":["ʌnˈfrendli","недружелюбный"],"uniform":["ˈjuːnɪfɔːm","униформа"],"unlike":["ʌnˈlaɪk","в отличие от"],"until":["ʌnˈtɪl","до"],"up":["ʌp","вверх"],"urgent":["ˈɜːdʒənt","срочный"],"us":["ʌs","нас, нам"],"use":["juːz","пользоваться"],"usual":["ˈjuːʒʊəl","обычный"],"usually":["ˈjuːʒʊəli","обычно"],"vanilla":["vəˈnɪlə","ванильный"],"vegan":["ˈviːɡən","веганский"],"vegetable":["ˈvedʒtəbəl","овощной"],"vegetables":["ˈvedʒtəbəlz","овощи"],"vegetarian":["ˌvedʒɪˈteərɪən","вегетарианский"],"very":["ˈveri","очень"],"view":["vjuː","вид"],"village":["ˈvɪlɪdʒ","деревня"],"vinegar":["ˈvɪnɪɡə","уксус"],"virgin":["ˈvɜːdʒɪn","нерафинированный (extra virgin)"],"wait":["weɪt","ждать"],"waited":["ˈweɪtɪd","ждал"],"waiter":["ˈweɪtə","официант"],"waiter's":["ˈweɪtəz","официанта"],"waiters":["ˈweɪtəz","официанты"],"waiting":["ˈweɪtɪŋ","ждёт"],"walnut":["ˈwɔːlnʌt","грецкий орех"],"walnuts":["ˈwɔːlnʌts","грецкие орехи"],"want":["wɒnt","хотеть"],"wants":["wɒnts","хочет"],"warm":["wɔːm","тёплый"],"warning":["ˈwɔːnɪŋ","предупреждение"],"was":["wɒz","был, была"],"watch":["wɒtʃ","смотреть"],"water":["ˈwɔːtə","вода"],"way":["weɪ","путь; способ"],"we":["wiː","мы"],"we'll":["wiːl","мы (сделаем) (we will)"],"we've":["wiːv","мы (уже) (we have)"],"wedding":["ˈwedɪŋ","свадьба"],"week":["wiːk","неделя"],"week's":["wiːks","недели"],"weekday":["ˈwiːkdeɪ","будний день"],"weekdays":["ˈwiːkdeɪz","будни"],"weekend":["ˌwiːkˈend","выходные"],"weekends":["ˌwiːkˈendz","выходные (по выходным)"],"weekly":["ˈwiːkli","еженедельный"],"welcome":["ˈwelkəm","добро пожаловать"],"well":["wel","хорошо; ну"],"went":["went","пошёл"],"were":["wɜː","были"],"what":["wɒt","что"],"what's":["wɒts","что (what is)"],"when":["wen","когда"],"where":["weə","где, куда"],"whether":["ˈweðə","ли"],"which":["wɪtʃ","который"],"who":["huː","кто"],"why":["waɪ","почему"],"will":["wɪl","будет (буд. время)"],"window":["ˈwɪndəʊ","окно"],"wine":["waɪn","вино"],"with":["wɪð","с"],"without":["wɪˈðaʊt","без"],"won't":["wəʊnt","не (будет) (will not)"],"work":["wɜːk","работать"],"works":["wɜːks","работает"],"worth":["wɜːθ","стоящий"],"would":["wʊd","бы"],"write":["raɪt","писать"],"wrong":["rɒŋ","неправильный"],"wrote":["rəʊt","написал"],"yellow":["ˈjeləʊ","жёлтый"],"yes":["jes","да"],"yoghurt":["ˈjɒɡət","йогурт"],"york":["jɔːk","Йорк (New York — Нью-Йорк)"],"you":["juː","вы, ты"],"you'll":["juːl","вы (сделаете) (you will)"],"you're":["jɔː","вы (you are)"],"your":["jɔː","ваш, твой"],"yourself":["jɔːˈself","себя, сам"],"zealand":["ˈziːlənd","Зеландия (New Zealand — Новая Зеландия)"],"zucchini":["zʊˈkiːni","цукини, кабачок"]};
+const WORDS = {"actually":["ˈæktʃuəli", "вообще-то, на самом деле"],"angry":["ˈæŋɡri", "злой, сердитый"],"brought":["brɔːt", "принёс (от bring)"],"celebrate":["ˈselɪbreɪt", "праздновать"],"clean":["kliːn", "чистить; чистый"],"eat":["iːt", "есть, кушать"],"found":["faʊnd", "нашёл (от find)"],"head":["hed", "голова"],"her":["hɜː", "её, ей"],"oh":["əʊ", "о!, ах"],"proposal":["prəˈpəʊzl", "предложение (деловое)"],"she":["ʃiː", "она"],"squid":["skwɪd", "кальмар"],"wife":["waɪf", "жена"],"windy":["ˈwɪndi", "ветреный; дует"],"earn":["ɜːn","зарабатывать, заслуживать"],"else":["els","ещё, другой (somewhere else — в другом месте)"],"fine":["faɪn","хорошо, ладно; прекрасный"],"look":["lʊk","смотреть (look at — на что-то)"],"reach":["riːtʃ","достигать"],"a":["ə","неопределённый артикль (один, какой-то)"],"about":["əˈbaʊt","о, про; около"],"achieve":["əˈtʃiːv","достигать"],"after":["ˈɑːftə","после"],"again":["əˈɡen","снова, ещё раз"],"agree":["əˈɡriː","соглашаться"],"all":["ɔːl","все, всё"],"allergic":["əˈlɜːdʒɪk","аллергический; с аллергией"],"allergies":["ˈælədʒiz","аллергии"],"allergy":["ˈælədʒi","аллергия"],"almond":["ˈɑːmənd","миндаль"],"already":["ɔːlˈredi","уже"],"also":["ˈɔːlsəʊ","тоже, также"],"alternatives":["ɔːlˈtɜːnətɪvz","варианты, альтернативы"],"always":["ˈɔːlweɪz","всегда"],"american":["əˈmerɪkən","американский; американец"],"an":["ən","неопределённый артикль (перед гласной)"],"and":["ænd","и"],"another":["əˈnʌðə","ещё один; другой"],"any":["ˈeni","любой; какой-нибудь"],"anyone":["ˈenɪwən","кто-нибудь; любой"],"apologise":["əˈpɒlədʒaɪz","извиняться"],"appetizer":["ˈæpɪtaɪzə","закуска"],"arakas":["ˌærəˈkɑːs","аракас: тушёный зелёный горошек (греч.)"],"are":["ɑː","есть, являются (форма be)"],"aren't":["ɑːnt","не являются (are not)"],"argue":["ˈɑːɡjuː","спорить"],"around":["əˈraʊnd","вокруг; около"],"arrive":["əˈraɪv","приезжать, прибывать"],"arrived":["əˈraɪvd","приехал(и), прибыл(и)"],"arrives":["əˈraɪvz","приезжает, прибывает"],"as":["æz","как; так как"],"ask":["ɑːsk","спрашивать; просить"],"asking":["ˈɑːskɪŋ","спрашивая; прося"],"asks":["ɑːsks","спрашивает; просит"],"at":["æt","в, на (место, время)"],"australian":["ɒˈstreɪlɪən","австралийский; австралиец"],"available":["əˈveɪləbəl","доступный, в наличии"],"average":["ˈævrɪdʒ","средний"],"away":["əˈweɪ","прочь; далеко"],"back":["bæk","назад, обратно"],"bacon":["ˈbeɪkən","бекон"],"bad":["bæd","плохой"],"bake":["beɪk","запеканка; запекать"],"baked":["beɪkt","запечённый"],"bakery":["ˈbeɪkəri","пекарня"],"balinese":["ˌbɑːlɪˈniːz","балийский"],"bali":["ˈbɑːli","Бали"],"baklava":["ˈbækləvɑː","баклава"],"balls":["bɔːlz","шарики"],"balsamic":["bɔːlˈsæmɪk","бальзамический (уксус)"],"banana":["bəˈnɑːnə","банан"],"bar":["bɑː","бар"],"barbounia":["bɑːˈbuːnjə","барбуня, султанка (рыба, греч.)"],"bartender":["ˈbɑːtendə","бармен"],"basil":["ˈbæzəl","базилик"],"bass":["bæs","сибас, морской окунь"],"bbq":["ˈbɑːbɪkjuː","барбекю, гриль"],"be":["biː","быть"],"beans":["biːnz","фасоль, бобы"],"because":["bɪˈkɒz","потому что"],"bechamel":["ˈbeɪʃəmel","бешамель (соус)"],"beef":["biːf","говядина"],"been":["biːn","был(о) (форма be)"],"before":["bɪˈfɔː","до, перед; раньше"],"behind":["bɪˈhaɪnd","за, позади"],"being":["ˈbiːɪŋ","будучи; находясь"],"bell":["bel","колокольчик; bell pepper — болгарский перец"],"belly":["ˈbeli","брюшко; pork belly — свиная грудинка"],"berry":["ˈberi","ягодный; ягода"],"best":["best","лучший; лучше всего"],"better":["ˈbetə","лучше"],"bifteki":["bɪfˈteki","бифтеки: греческая котлета"],"big":["bɪɡ","большой"],"bill":["bɪl","счёт"],"birthday":["ˈbɜːθdeɪ","день рождения"],"bit":["bɪt","немного, чуть-чуть"],"blaming":["ˈbleɪmɪŋ","обвиняя, сваливая вину"],"boiled":["bɔɪld","варёный"],"bolognese":["ˌbɒləˈneɪz","болоньезе (мясной соус)"],"booked":["bʊkt","забронировал(и)"],"booking":["ˈbʊkɪŋ","бронь, бронирование"],"boss":["bɒs","начальник, босс"],"bottle":["ˈbɒtəl","бутылка"],"box":["bɒks","коробка"],"boxes":["ˈbɒksɪz","коробки"],"branch":["brɑːntʃ","филиал"],"bread":["bred","хлеб"],"breads":["bredz","лепёшки, хлеб (несколько)"],"breakfast":["ˈbrekfəst","завтрак"],"breast":["brest","грудка"],"brief":["briːf","короткий, краткий"],"briefing":["ˈbriːfɪŋ","инструктаж, планёрка"],"bring":["brɪŋ","приносить"],"brings":["brɪŋz","приносит"],"british":["ˈbrɪtɪʃ","британский"],"bruschetta":["bruːˈsketə","брускетта"],"budget":["ˈbʌdʒɪt","бюджет"],"burger":["ˈbɜːɡə","бургер"],"burnt":["bɜːnt","подгоревший"],"busy":["ˈbɪzi","занятой; людный"],"but":["bʌt","но"],"butter":["ˈbʌtə","сливочное масло"],"by":["baɪ","к (сроку); у, рядом; кем-то"],"bye":["baɪ","пока"],"cabbage":["ˈkæbɪdʒ","капуста"],"cake":["keɪk","торт, пирог"],"calamari":["ˌkæləˈmɑːri","кальмары"],"california":["ˌkælɪˈfɔːnjə","Калифорния"],"call":["kɔːl","звонить; звать"],"calm":["kɑːm","спокойный"],"came":["keɪm","пришёл, пришли"],"can":["kæn","мочь, уметь"],"capers":["ˈkeɪpəz","каперсы"],"card":["kɑːd","карта (банковская)"],"care":["keə","забота; заботиться"],"carrots":["ˈkærəts","морковь"],"cash":["kæʃ","наличные"],"cashier":["kæˈʃɪə","кассир"],"ceremony":["ˈserɪməni","церемония"],"change":["tʃeɪndʒ","сдача; менять"],"changed":["tʃeɪndʒd","изменил(ся)"],"charge":["tʃɑːdʒ","брать плату; сбор"],"chatty":["ˈtʃæti","разговорчивый"],"cheaper":["ˈtʃiːpə","дешевле"],"check":["tʃek","проверять; счёт (амер.)"],"cheddar":["ˈtʃedə","чеддер (сыр)"],"cheese":["tʃiːz","сыр"],"chef":["ʃef","шеф-повар"],"cherry":["ˈtʃeri","вишня, черешня"],"chicken":["ˈtʃɪkən","курица"],"chinese":["tʃaɪˈniːz","китайский"],"chocolate":["ˈtʃɒklət","шоколад"],"choice":["tʃɔɪs","выбор"],"choose":["tʃuːz","выбирать"],"chop":["tʃɒp","котлета на кости; рубить"],"chops":["tʃɒps","котлеты на кости"],"cinnamon":["ˈsɪnəmən","корица"],"classic":["ˈklæsɪk","классический"],"clear":["klɪə","убирать (со стола); ясный"],"clearing":["ˈklɪərɪŋ","убирая (со стола)"],"clearly":["ˈklɪəli","ясно, чётко"],"club":["klʌb","клубный"],"coffee":["ˈkɒfi","кофе"],"cold":["kəʊld","холодный"],"come":["kʌm","приходить"],"comes":["kʌmz","приходит"],"coming":["ˈkʌmɪŋ","приходящий; идёт"],"compare":["kəmˈpeə","сравнивать"],"complain":["kəmˈpleɪn","жаловаться"],"complained":["kəmˈpleɪnd","пожаловался"],"complains":["kəmˈpleɪnz","жалуется"],"complaints":["kəmˈpleɪnts","жалобы"],"confirm":["kənˈfɜːm","подтверждать"],"confused":["kənˈfjuːzd","растерянный, сбитый с толку"],"congratulations":["kənˌɡrætʃəˈleɪʃənz","поздравляю"],"conflict":["ˈkɒnflɪkt","конфликт"],"contains":["kənˈteɪnz","содержит"],"contract":["ˈkɒntrækt","договор, контракт"],"contractions":["kənˈtrækʃənz","сокращения (I'm, don't)"],"contracts":["ˈkɒntrækts","договоры"],"cook":["kʊk","повар; готовить"],"cooked":["kʊkt","приготовленный"],"corn":["kɔːn","кукуруза"],"cost":["kɒst","стоить; стоимость"],"costing":["ˈkɒstɪŋ","стоимостью"],"costs":["kɒsts","стоит; расходы"],"cotta":["ˈkɒtə","котта (panna cotta — панна-котта)"],"could":["kʊd","мог бы"],"course":["kɔːs","курс; блюдо; of course — конечно"],"crab":["kræb","краб"],"crazy":["ˈkreɪzi","безумный"],"cream":["kriːm","сливки, крем"],"creta":["ˈkriːtə","Крит (греч. остров)"],"crepes":["kreɪps","блинчики"],"critic":["ˈkrɪtɪk","критик"],"croutons":["ˈkruːtɒnz","гренки, сухарики"],"crumbed":["krʌmd","в панировке"],"crusty":["ˈkrʌsti","хрустящий"],"cry":["kraɪ","плакать"],"cucumber":["ˈkjuːkʌmbə","огурец"],"curious":["ˈkjʊərɪəs","любопытный"],"current":["ˈkʌrənt","нынешний, текущий"],"custard":["ˈkʌstəd","заварной крем"],"daiquiri":["ˈdaɪkɪri","дайкири (коктейль)"],"damaged":["ˈdæmɪdʒd","повреждённый"],"dark":["dɑːk","тёмный"],"daughter":["ˈdɔːtə","дочь"],"day":["deɪ","день"],"days":["deɪz","дни"],"deal":["diːl","сделка; договорились"],"decide":["dɪˈsaɪd","решать"],"decrease":["dɪˈkriːs","уменьшать(ся); снижение"],"deliver":["dɪˈlɪvə","доставлять"],"delivered":["dɪˈlɪvəd","доставил(и)"],"delivery":["dɪˈlɪvəri","доставка"],"demanding":["dɪˈmɑːndɪŋ","требовательный"],"dessert":["dɪˈzɜːt","десерт"],"did":["dɪd","сделал (прош. от do)"],"didn't":["ˈdɪdənt","не (сделал)"],"different":["ˈdɪfrənt","разный, другой"],"dill":["dɪl","укроп"],"dinner":["ˈdɪnə","ужин"],"dip":["dɪp","соус для макания, дип"],"dips":["dɪps","соусы, дипы"],"disappointed":["ˌdɪsəˈpɔɪntɪd","разочарованный"],"discount":["ˈdɪskaʊnt","скидка"],"discuss":["dɪˈskʌs","обсуждать"],"dish":["dɪʃ","блюдо"],"dishes":["ˈdɪʃɪz","блюда"],"do":["duː","делать"],"dolmades":["dɒlˈmɑːðes","долмадес: голубцы (греч.)"],"don't":["dəʊnt","не (do not)"],"doughnuts":["ˈdəʊnʌts","пончики"],"dressing":["ˈdresɪŋ","заправка"],"drink":["drɪŋk","напиток; пить"],"drinks":["drɪŋks","напитки"],"driver":["ˈdraɪvə","водитель"],"during":["ˈdjʊərɪŋ","во время"],"dutch":["dʌtʃ","голландский"],"earlier":["ˈɜːlɪə","раньше"],"early":["ˈɜːli","рано; ранний"],"earned":["ɜːnd","заработал"],"easy":["ˈiːzi","лёгкий, простой"],"eclair":["ɪˈkleə","эклер"],"egg":["eɡ","яйцо"],"eggplant":["ˈeɡplɑːnt","баклажан"],"eggs":["eɡz","яйца"],"eight":["eɪt","восемь"],"either":["ˈaɪðə","либо; любой из двух"],"ekmek":["ekˈmek","экмек (греческий десерт)"],"eleven":["ɪˈlevən","одиннадцать"],"enjoy":["ɪnˈdʒɔɪ","наслаждаться; приятного"],"especially":["ɪˈspeʃli","особенно"],"evening":["ˈiːvnɪŋ","вечер"],"event":["ɪˈvent","мероприятие"],"every":["ˈevri","каждый"],"everybody":["ˈevrɪbɒdi","все"],"everything":["ˈevrɪθɪŋ","всё"],"example":["ɪɡˈzɑːmpəl","пример"],"excuse":["ɪkˈskjuːz","извинять; excuse me — извините"],"expat":["ˈekspæt","экспат, живущий за границей"],"expensive":["ɪkˈspensɪv","дорогой"],"explain":["ɪkˈspleɪn","объяснять"],"extra":["ˈekstrə","дополнительный"],"extras":["ˈekstrəz","дополнительно, добавки"],"fakies":["fæˈkjes","факес: суп из чечевицы (греч.)"],"falafel":["fəˈlæfəl","фалафель"],"family":["ˈfæmli","семья; семейный"],"fasolakia":["ˌfæsəˈlɑːkjə","фасолакья: тушёная стручковая фасоль (греч.)"],"fast":["fɑːst","быстрый; быстро"],"faster":["ˈfɑːstə","быстрее"],"fault":["fɔːlt","вина"],"fava":["ˈfɑːvə","фава: пюре из жёлтого гороха"],"fee":["fiː","сбор, плата"],"felt":["felt","почувствовал; казался"],"feta":["ˈfetə","фета (сыр)"],"fifteen":["ˌfɪfˈtiːn","пятнадцать"],"filled":["fɪld","наполненный"],"fillers":["ˈfɪləz","слова-паразиты (um, well)"],"fillet":["ˈfɪlɪt","филе"],"filling":["ˈfɪlɪŋ","начинка"],"filo":["ˈfiːləʊ","фило (тонкое тесто)"],"find":["faɪnd","находить"],"firm":["fɜːm","твёрдый, уверенный"],"first":["fɜːst","первый"],"fish":["fɪʃ","рыба"],"fits":["fɪts","подходит"],"five":["faɪv","пять"],"fix":["fɪks","исправлять, чинить"],"follow":["ˈfɒləʊ","следовать, идти за"],"food":["fuːd","еда"],"for":["fɔː","для; на (время)"],"forget":["fəˈɡet","забывать"],"forty":["ˈfɔːti","сорок"],"four":["fɔː","четыре"],"fournou":["ˈfuːrnuː","«из печи» (греч.)"],"free":["friː","свободный; бесплатный"],"french":["frentʃ","французский"],"fresh":["freʃ","свежий"],"fresher":["ˈfreʃə","свежее"],"friday":["ˈfraɪdeɪ","пятница"],"fried":["fraɪd","жареный"],"friendlier":["ˈfrendliə","дружелюбнее"],"friendly":["ˈfrendli","дружелюбный"],"fries":["fraɪz","картофель фри"],"fritter":["ˈfrɪtə","оладья"],"fritters":["ˈfrɪtəz","оладьи"],"from":["frɒm","из, от"],"front":["frʌnt","перед; in front — впереди"],"frozen":["ˈfrəʊzən","замороженный"],"fruit":["fruːt","фрукты"],"fully":["ˈfʊli","полностью"],"further":["ˈfɜːðə","дальше; подробнее"],"galaktoboureko":["ˌɡæləktəˈbuːrekəʊ","галактобуреко: пирог с манным кремом (греч.)"],"garlic":["ˈɡɑːlɪk","чеснок"],"gemista":["ˌjemɪˈstɑː","гемиста: фаршированные овощи (греч.)"],"general":["ˈdʒenrəl","общий"],"german":["ˈdʒɜːmən","немецкий"],"get":["ɡet","получать; становиться"],"giga":["ˈɡiːɡə","гига: большая порция"],"give":["ɡɪv","давать"],"go":["ɡəʊ","идти, ехать"],"goal":["ɡəʊl","цель"],"goes":["ɡəʊz","идёт"],"going":["ˈɡəʊɪŋ","идущий; собираться"],"good":["ɡʊd","хороший"],"google":["ˈɡuːɡəl","Google"],"got":["ɡɒt","получил"],"great":["ɡreɪt","отличный"],"greek":["ɡriːk","греческий"],"green":["ɡriːn","зелёный"],"grill":["ɡrɪl","гриль"],"grilled":["ɡrɪld","на гриле"],"group":["ɡruːp","группа, компания"],"guest":["ɡest","гость"],"guests":["ɡests","гости"],"gyros":["ˈjiːrɒs","гирос (мясо с вертела)"],"had":["hæd","имел (прош. от have)"],"half":["hɑːf","половина"],"halloumi":["həˈluːmi","халуми (сыр)"],"happen":["ˈhæpən","случаться"],"happens":["ˈhæpənz","случается"],"happy":["ˈhæpi","счастливый, довольный"],"hard":["hɑːd","трудный"],"has":["hæz","имеет"],"have":["hæv","иметь"],"he":["hiː","он"],"hello":["həˈləʊ","здравствуйте"],"help":["help","помогать; помощь"],"herbs":["hɜːbz","травы"],"here":["hɪə","здесь, сюда"],"here's":["hɪəz","вот (here is)"],"hi":["haɪ","привет"],"high":["haɪ","высокий"],"higher":["ˈhaɪə","выше"],"him":["hɪm","его, ему"],"hire":["ˈhaɪə","нанимать"],"his":["hɪz","его"],"hit":["hɪt","удача; hit or miss — то так, то сяк"],"hmm":["hm","хм"],"homemade":["ˌhəʊmˈmeɪd","домашний"],"honey":["ˈhʌni","мёд"],"hope":["həʊp","надеяться"],"hotel":["həʊˈtel","отель"],"hour":["ˈaʊə","час"],"hours":["ˈaʊəz","часы"],"how":["haʊ","как"],"however":["ˌhaʊˈevə","как угодно; однако"],"hummus":["ˈhʊməs","хумус"],"hundred":["ˈhʌndrəd","сто"],"hurry":["ˈhʌri","спешить"],"i":["aɪ","я"],"i'd":["aɪd","я бы (I would)"],"i'll":["aɪl","я (сделаю) (I will)"],"i'm":["aɪm","я (I am)"],"i've":["aɪv","я (уже) (I have)"],"ice":["aɪs","лёд; ice cream — мороженое"],"idea":["aɪˈdɪə","идея"],"if":["ɪf","если"],"important":["ɪmˈpɔːtənt","важный"],"impressed":["ɪmˈprest","впечатлённый"],"improve":["ɪmˈpruːv","улучшать"],"in":["ɪn","в"],"increase":["ɪnˈkriːs","увеличивать(ся); рост"],"indian":["ˈɪndɪən","индийский"],"inside":["ˌɪnˈsaɪd","внутри"],"instead":["ɪnˈsted","вместо"],"introduce":["ˌɪntrəˈdjuːs","представлять, знакомить"],"invite":["ɪnˈvaɪt","приглашать"],"invoice":["ˈɪnvɔɪs","счёт-фактура, накладная"],"irish":["ˈaɪrɪʃ","ирландский"],"irritated":["ˈɪrɪteɪtɪd","раздражённый"],"is":["ɪz","есть, является"],"isn't":["ˈɪzənt","не является (is not)"],"it":["ɪt","это; оно"],"it's":["ɪts","это (it is)"],"italian":["ɪˈtæljən","итальянский"],"japanese":["ˌdʒæpəˈniːz","японский"],"javanese":["ˌdʒɑːvəˈniːz","яванский"],"job":["dʒɒb","работа"],"just":["dʒʌst","просто; только что"],"kalamata":["ˌkæləˈmɑːtə","каламата (сорт оливок)"],"kavourosalata":["kæˌvuːrəʊsəˈlɑːtə","кавуросалата: крабовый салат (греч.)"],"kebab":["kəˈbæb","кебаб"],"keep":["kiːp","держать; сохранять"],"ketut":["kəˈtʊt","Кетут (имя)"],"kg":["ˈkɪləɡræm","килограмм"],"kids":["kɪdz","дети"],"kilo":["ˈkiːləʊ","килограмм"],"kilos":["ˈkiːləʊz","килограммы"],"kima":["kɪˈmɑː","кима: фарш (греч.)"],"kitchen":["ˈkɪtʃən","кухня"],"know":["nəʊ","знать"],"kolokythokeftedes":["ˌkɒləˌkiːθəʊkefˈteðes","колокифокефтедес: кабачковые оладьи (греч.)"],"komang":["ˈkɒmɑːŋ","Команг (имя)"],"lamb":["læm","баранина, ягнёнок"],"last":["lɑːst","последний; прошлый"],"late":["leɪt","поздно; опоздавший"],"later":["ˈleɪtə","позже"],"layers":["ˈleɪəz","слои"],"lead":["liːd","вести, руководить"],"leadership":["ˈliːdəʃɪp","руководство"],"leave":["liːv","уходить; оставлять"],"left":["left","ушёл; оставил; левый"],"lemon":["ˈlemən","лимон"],"lentil":["ˈlentɪl","чечевичный"],"less":["les","меньше"],"let":["let","позволять"],"let's":["lets","давайте"],"lettuce":["ˈletɪs","салат-латук"],"lia":["ˈliːə","Лия (имя)"],"like":["laɪk","нравиться; как"],"lime":["laɪm","лайм"],"limited":["ˈlɪmɪtɪd","ограниченный"],"listen":["ˈlɪsən","слушать"],"living":["ˈlɪvɪŋ","живущий"],"london":["ˈlʌndən","Лондон"],"long":["lɒŋ","длинный; долго"],"lose":["luːz","терять"],"lot":["lɒt","много (a lot)"],"loukoumades":["ˌluːkuːˈmɑːðes","лукумадес: пончики с мёдом (греч.)"],"love":["lʌv","любить"],"loved":["lʌvd","понравилось, любил"],"lovely":["ˈlʌvli","чудесный"],"lunch":["lʌntʃ","обед"],"machine":["məˈʃiːn","аппарат, машина"],"made":["meɪd","сделанный"],"makaronia":["ˌmækəˈrɒnjə","макарония: макароны (греч.)"],"make":["meɪk","делать"],"management":["ˈmænɪdʒmənt","управление"],"manager":["ˈmænɪdʒə","менеджер, управляющий"],"mango":["ˈmæŋɡəʊ","манго"],"many":["ˈmeni","много"],"margarita":["ˌmɑːɡəˈriːtə","маргарита (коктейль)"],"marinated":["ˈmærɪneɪtɪd","маринованный"],"marked":["mɑːkt","отмеченный"],"mashed":["mæʃt","пюре (mashed potato)"],"maybe":["ˈmeɪbi","может быть"],"mayo":["ˈmeɪəʊ","майонез (разг.)"],"mayonnaise":["ˌmeɪəˈneɪz","майонез"],"me":["miː","меня, мне"],"means":["miːnz","значит; означает"],"meat":["miːt","мясо"],"meatballs":["ˈmiːtbɔːlz","фрикадельки, тефтели"],"meet":["miːt","встречать, знакомиться"],"meeting":["ˈmiːtɪŋ","встреча, собрание"],"melitzana":["ˌmelɪˈdʒɑːnə","мелидзана: баклажан (греч.)"],"member":["ˈmembə","член, участник"],"members":["ˈmembəz","сотрудники, участники"],"mentioned":["ˈmenʃənd","упомянул"],"menu":["ˈmenjuː","меню"],"meze":["ˈmezeɪ","мезе: ассорти закусок"],"mikalis":["mɪˈkɑːlɪs","Микалис (имя)"],"million":["ˈmɪljən","миллион"],"minced":["mɪnst","рубленый; minced beef — говяжий фарш"],"minutes":["ˈmɪnɪts","минуты"],"miss":["mɪs","пропускать; скучать"],"missing":["ˈmɪsɪŋ","недостающий"],"mistake":["mɪˈsteɪk","ошибка"],"mix":["mɪks","ассорти; смешивать"],"mixed":["mɪkst","смешанный"],"moment":["ˈməʊmənt","момент"],"monday":["ˈmʌndeɪ","понедельник"],"money":["ˈmʌni","деньги"],"month":["mʌnθ","месяц"],"monthly":["ˈmʌnθli","ежемесячный"],"more":["mɔː","больше; ещё"],"morning":["ˈmɔːnɪŋ","утро"],"most":["məʊst","больше всего; самый"],"mousaka":["muːˈsɑːkə","мусака"],"moussaka":["muːˈsɑːkə","мусака"],"much":["mʌtʃ","много"],"mullet":["ˈmʌlɪt","барабулька; red mullet — султанка"],"mustard":["ˈmʌstəd","горчица"],"my":["maɪ","мой"],"name":["neɪm","имя"],"napkins":["ˈnæpkɪnz","салфетки"],"napoletana":["ˌnæpɒleˈtɑːnə","по-неаполитански"],"napoli":["ˈnɑːpəli","неаполитанский (соус)"],"natural":["ˈnætʃrəl","естественный"],"nearby":["ˌnɪəˈbaɪ","рядом"],"need":["niːd","нуждаться; нужно"],"needs":["niːdz","нужно; нуждается"],"negotiate":["nɪˈɡəʊʃieɪt","вести переговоры"],"new":["njuː","новый"],"next":["nekst","следующий"],"nine":["naɪn","девять"],"no":["nəʊ","нет"],"noisy":["ˈnɔɪzi","шумный"],"normal":["ˈnɔːməl","обычный"],"not":["nɒt","не"],"nothing":["ˈnʌθɪŋ","ничего"],"noticed":["ˈnəʊtɪst","заметил"],"now":["naʊ","сейчас"],"numbers":["ˈnʌmbəz","цифры, числа"],"nut":["nʌt","орех"],"nutella":["nuːˈtelə","нутелла"],"nuts":["nʌts","орехи"],"o'clock":["əˈklɒk","ровно (о времени)"],"octopus":["ˈɒktəpəs","осьминог"],"of":["ɒv","из; (связка «чего»)"],"off":["ɒf","выходной (day off); прочь"],"offer":["ˈɒfə","предлагать"],"offered":["ˈɒfəd","предложил"],"offering":["ˈɒfrɪŋ","предлагая"],"offers":["ˈɒfəz","предлагает"],"oil":["ɔɪl","масло (растительное)"],"okay":["ˌəʊˈkeɪ","хорошо, ладно"],"old":["əʊld","старый"],"olive":["ˈɒlɪv","оливковый; оливка"],"olives":["ˈɒlɪvz","оливки"],"omelette":["ˈɒmlɪt","омлет"],"on":["ɒn","на"],"once":["wʌns","один раз"],"one":["wʌn","один"],"onion":["ˈʌnjən","лук"],"only":["ˈəʊnli","только"],"open":["ˈəʊpən","открытый; открывать"],"opens":["ˈəʊpənz","открывается"],"option":["ˈɒpʃən","вариант"],"options":["ˈɒpʃənz","варианты"],"or":["ɔː","или"],"order":["ˈɔːdə","заказ; заказывать"],"ordered":["ˈɔːdəd","заказал"],"ordering":["ˈɔːdərɪŋ","заказ (оформление)"],"oregano":["ˌɒrɪˈɡɑːnəʊ","орегано"],"organises":["ˈɔːɡənaɪzɪz","организует"],"other":["ˈʌðə","другой"],"our":["ˈaʊə","наш"],"out":["aʊt","вне; наружу"],"outside":["ˌaʊtˈsaɪd","снаружи, на улице"],"ouzo":["ˈuːzəʊ","узо (греческая водка)"],"owner":["ˈəʊnə","владелец"],"pace":["peɪs","темп"],"paid":["peɪd","оплатил"],"pancetta":["pænˈtʃetə","панчетта (грудинка)"],"panna":["ˈpænə","панна (panna cotta — панна-котта)"],"paprika":["ˈpæprɪkə","паприка, сладкий перец"],"parmesan":["ˈpɑːmɪzæn","пармезан"],"partner":["ˈpɑːtnə","партнёр"],"pasta":["ˈpæstə","паста"],"pastitsio":["pæˈstɪtsjəʊ","пастицио: запеканка из макарон (греч.)"],"pastry":["ˈpeɪstri","тесто; выпечка"],"patates":["pəˈtɑːtes","картофель (греч.)"],"patty":["ˈpæti","котлета"],"pay":["peɪ","платить"],"pea":["piː","горох; split pea — колотый горох"],"peas":["piːz","горошек"],"penne":["ˈpeneɪ","пенне (макароны)"],"pepper":["ˈpepə","перец"],"peppers":["ˈpepəz","перцы"],"per":["pɜː","за, в (per person — на человека)"],"percent":["pəˈsent","процент"],"perfect":["ˈpɜːfɪkt","идеальный"],"person":["ˈpɜːsən","человек"],"phone":["fəʊn","телефон"],"picky":["ˈpɪki","привередливый"],"pie":["paɪ","пирог"],"pita":["ˈpɪtə","пита (лепёшка)"],"pitch":["pɪtʃ","предлагать идею; презентация"],"pitching":["ˈpɪtʃɪŋ","презентация идеи"],"place":["pleɪs","место; размещать"],"places":["ˈpleɪsɪz","места"],"placing":["ˈpleɪsɪŋ","размещая"],"plan":["plæn","план"],"plate":["pleɪt","тарелка; блюдо"],"platter":["ˈplætə","большое блюдо, ассорти"],"please":["pliːz","пожалуйста"],"pm":["ˌpiːˈem","после полудня (8 pm — 20:00)"],"polite":["pəˈlaɪt","вежливый"],"popular":["ˈpɒpjʊlə","популярный"],"pork":["pɔːk","свинина"],"possible":["ˈpɒsɪbəl","возможный"],"potato":["pəˈteɪtəʊ","картофель"],"potatoes":["pəˈteɪtəʊz","картофель"],"potatokeftedes":["pəˌtɑːtəʊkefˈteðes","картофельные шарики (греч.)"],"praise":["preɪz","хвалить; похвала"],"praised":["preɪzd","похвалил(и)"],"prawn":["prɔːn","креветка"],"prawns":["prɔːnz","креветки"],"pre-order":["ˌpriːˈɔːdə","предзаказ"],"pre-shift":["ˌpriːˈʃɪft","перед сменой"],"prevent":["prɪˈvent","предотвращать"],"price":["praɪs","цена"],"prices":["ˈpraɪsɪz","цены"],"problem":["ˈprɒbləm","проблема"],"profit":["ˈprɒfɪt","прибыль"],"profiterole":["prəˈfɪtərəʊl","профитроли"],"promise":["ˈprɒmɪs","обещать"],"promised":["ˈprɒmɪst","обещал"],"puff":["pʌf","слоёный (puff pastry); заварное пирожное"],"puffs":["pʌfs","заварные пирожные"],"quality":["ˈkwɒlɪti","качество"],"quantities":["ˈkwɒntɪtiz","количество"],"questions":["ˈkwestʃənz","вопросы"],"quickly":["ˈkwɪkli","быстро"],"quiet":["ˈkwaɪət","тихий"],"quieter":["ˈkwaɪətə","тише"],"rained":["reɪnd","шёл дождь"],"rainy":["ˈreɪni","дождливый"],"raise":["reɪz","повышение (зарплаты); поднимать"],"rating":["ˈreɪtɪŋ","рейтинг, оценка"],"ravani":["rəˈvɑːni","равани: манный пирог (греч.)"],"reached":["riːtʃt","достиг"],"ready":["ˈredi","готовый"],"real":["rɪəl","настоящий"],"really":["ˈrɪəli","действительно, очень"],"receipt":["rɪˈsiːt","чек"],"recommend":["ˌrekəˈmend","рекомендовать"],"recommendations":["ˌrekəmənˈdeɪʃənz","рекомендации"],"red":["red","красный"],"refill":["ˈriːfɪl","повторное наполнение (бокала)"],"register":["ˈredʒɪstə","касса (cash register)"],"relaxed":["rɪˈlækst","расслабленный, спокойный"],"reliable":["rɪˈlaɪəbəl","надёжный"],"remake":["ˌriːˈmeɪk","переделать"],"remember":["rɪˈmembə","помнить"],"remembered":["rɪˈmembəd","запомнил, вспомнил"],"repair":["rɪˈpeə","ремонт; чинить"],"replace":["rɪˈpleɪs","заменять"],"replaced":["rɪˈpleɪst","заменил"],"reply":["rɪˈplaɪ","ответ; отвечать"],"report":["rɪˈpɔːt","отчёт"],"reservation":["ˌrezəˈveɪʃən","бронь"],"respect":["rɪˈspekt","уважение"],"responsibilities":["rɪˌspɒnsɪˈbɪlɪtiz","обязанности"],"responsibility":["rɪˌspɒnsɪˈbɪlɪti","ответственность, обязанность"],"rest":["rest","остальное; отдых"],"restaurant":["ˈrestrɒnt","ресторан"],"restaurant's":["ˈrestrɒnts","ресторана"],"restaurants":["ˈrestrɒnts","рестораны"],"results":["rɪˈzʌlts","результаты"],"return":["rɪˈtɜːn","возвращать(ся)"],"returning":["rɪˈtɜːnɪŋ","возвращающийся, постоянный"],"revenue":["ˈrevənjuː","выручка, доход"],"review":["rɪˈvjuː","отзыв"],"reviews":["rɪˈvjuːz","отзывы"],"revithokeftedes":["reˌviːθəʊkefˈteðes","ревифокефтедес: шарики из нута (греч.)"],"rice":["raɪs","рис"],"right":["raɪt","правильный; правый; сразу"],"roasted":["ˈrəʊstɪd","печёный, запечённый"],"rocket":["ˈrɒkɪt","руккола"],"rolled":["rəʊld","свёрнутый"],"room":["ruːm","место; комната"],"rude":["ruːd","грубый"],"rule":["ruːl","правило"],"rupiah":["ruːˈpiːə","рупия"],"russian":["ˈrʌʃən","русский"],"safe":["seɪf","безопасный"],"saganaki":["ˌsæɡəˈnɑːki","саганаки (в сковороде, греч.)"],"said":["sed","сказал"],"salad":["ˈsæləd","салат"],"salary":["ˈsæləri","зарплата"],"salmon":["ˈsæmən","лосось"],"same":["seɪm","тот же, такой же"],"sample":["ˈsæmpəl","образец, пробник"],"sandwich":["ˈsænwɪdʒ","сэндвич"],"sangria":["sæŋˈɡriːə","сангрия"],"santorini":["ˌsæntəˈriːni","Санторини"],"saturday":["ˈsætədeɪ","суббота"],"saturdays":["ˈsætədeɪz","по субботам"],"sauce":["sɔːs","соус"],"sausages":["ˈsɒsɪdʒɪz","сосиски, колбаски"],"say":["seɪ","сказать"],"says":["sez","говорит"],"schedule":["ˈʃedjuːl","график, расписание"],"schnitzel":["ˈʃnɪtsəl","шницель"],"scoops":["skuːps","шарики (мороженого)"],"scooter":["ˈskuːtə","скутер"],"scottish":["ˈskɒtɪʃ","шотландский"],"sea":["siː","море; морской"],"seasonal":["ˈsiːzənəl","сезонный"],"seasoned":["ˈsiːzənd","приправленный"],"secretly":["ˈsiːkrətli","тайно"],"section":["ˈsekʃən","секция, зона"],"see":["siː","видеть"],"seemed":["siːmd","казался"],"sell":["sel","продавать"],"sells":["selz","продаёт"],"send":["send","отправлять"],"sends":["sendz","отправляет"],"sent":["sent","отправил"],"sentences":["ˈsentənsɪz","предложения"],"served":["sɜːvd","подаётся"],"server":["ˈsɜːvə","официант"],"service":["ˈsɜːvɪs","обслуживание"],"set":["set","ставить; набор"],"several":["ˈsevrəl","несколько"],"shift":["ʃɪft","смена"],"shifts":["ʃɪfts","смены"],"short":["ʃɔːt","короткий"],"should":["ʃʊd","следует, должен"],"shouted":["ˈʃaʊtɪd","кричал"],"show":["ʃəʊ","показывать"],"showing":["ˈʃəʊɪŋ","показывая"],"sick":["sɪk","больной"],"side":["saɪd","гарнир; сторона"],"sign":["saɪn","подписывать; знак"],"simple":["ˈsɪmpəl","простой"],"singaporean":["ˌsɪŋəˈpɔːriən","сингапурский"],"sister's":["ˈsɪstəz","сестры"],"sit":["sɪt","сидеть, садиться"],"situation":["ˌsɪtʃʊˈeɪʃən","ситуация"],"six":["sɪks","шесть"],"skewer":["ˈskjuːə","шампур, шпажка"],"skewers":["ˈskjuːəz","шампуры"],"skordalia":["ˌskɔːdəˈljɑː","скордалья: чесночный соус (греч.)"],"slang":["slæŋ","сленг"],"slice":["slaɪs","ломтик, кусок"],"sliced":["slaɪst","нарезанный"],"slow":["sləʊ","медленный"],"slowest":["ˈsləʊɪst","самый медленный"],"slowly":["ˈsləʊli","медленно"],"small":["smɔːl","маленький"],"snapper":["ˈsnæpə","луциан (рыба)"],"so":["səʊ","так; поэтому"],"sold":["səʊld","продан"],"solve":["sɒlv","решать"],"some":["sʌm","немного; некоторые"],"somebody":["ˈsʌmbədi","кто-то"],"something":["ˈsʌmθɪŋ","что-то"],"somewhere":["ˈsʌmweə","где-то"],"son":["sʌn","сын"],"soon":["suːn","скоро"],"sorry":["ˈsɒri","извините"],"sounds":["saʊndz","звучит"],"soup":["suːp","суп"],"sourdough":["ˈsaʊədəʊ","хлеб на закваске"],"southern":["ˈsʌðən","южный"],"soutzoukakia":["ˌsuːdʒuːˈkɑːkjə","судзукакья: колбаски в томатном соусе (греч.)"],"souvlaki":["suːˈvlɑːki","сувлаки (шашлычки)"],"spaghetti":["spəˈɡeti","спагетти"],"spanakopita":["ˌspænəˈkɒpɪtə","спанакопита: пирог со шпинатом (греч.)"],"speak":["spiːk","говорить"],"special":["ˈspeʃəl","особый; блюдо дня"],"spicy":["ˈspaɪsi","острый"],"spinach":["ˈspɪnɪtʃ","шпинат"],"split":["splɪt","колотый; делить"],"staff":["stɑːf","персонал"],"star":["stɑː","звезда"],"start":["stɑːt","начинать"],"stay":["steɪ","оставаться; жить (в отеле)"],"staying":["ˈsteɪɪŋ","живёте, остановились"],"steak":["steɪk","стейк"],"steep":["stiːp","завышенный (о цене)"],"stick":["stɪk","палочка; crab stick — крабовая палочка"],"still":["stɪl","всё ещё"],"street":["striːt","улица"],"stuck":["stʌk","застрял"],"stuffed":["stʌft","фаршированный"],"style":["staɪl","стиль"],"suggest":["səˈdʒest","предлагать"],"sunset":["ˈsʌnset","закат"],"supplier":["səˈplaɪə","поставщик"],"suppliers":["səˈplaɪəz","поставщики"],"sure":["ʃɔː","конечно; уверен"],"surprise":["səˈpraɪz","сюрприз"],"swap":["swɒp","поменяться"],"table":["ˈteɪbəl","столик"],"tables":["ˈteɪbəlz","столики"],"take":["teɪk","брать"],"taken":["ˈteɪkən","занят"],"takes":["teɪks","занимает (время)"],"talk":["tɔːk","говорить"],"talked":["tɔːkt","поговорил"],"tasks":["tɑːsks","задания"],"taste":["teɪst","вкус; пробовать"],"tastes":["teɪsts","на вкус"],"tax":["tæks","налог"],"taxi":["ˈtæksi","такси"],"teach":["tiːtʃ","учить"],"team":["tiːm","команда"],"tell":["tel","сказать, рассказать"],"telling":["ˈtelɪŋ","говоря"],"temperature":["ˈtemprətʃə","температура"],"ten":["ten","десять"],"terms":["tɜːmz","условия"],"terrace":["ˈterəs","терраса"],"terrible":["ˈterɪbəl","ужасный"],"test":["test","проверка"],"than":["ðæn","чем"],"thank":["θæŋk","благодарить"],"thanks":["θæŋks","спасибо"],"that":["ðæt","тот, это; что"],"that's":["ðæts","это (that is)"],"the":["ðə","определённый артикль"],"their":["ðeə","их"],"them":["ðem","их, им"],"then":["ðen","потом"],"there":["ðeə","там"],"there's":["ðeəz","есть (there is)"],"these":["ðiːz","эти"],"they":["ðeɪ","они"],"thing":["θɪŋ","вещь"],"things":["θɪŋz","вещи, дела"],"think":["θɪŋk","думать"],"thinks":["θɪŋks","думает"],"thinly":["ˈθɪnli","тонко"],"thirty":["ˈθɜːti","тридцать"],"this":["ðɪs","этот"],"those":["ðəʊz","те"],"three":["θriː","три"],"time":["taɪm","время"],"tiramisu":["ˌtɪrəmɪˈsuː","тирамису"],"tired":["ˈtaɪəd","уставший"],"tirokafteri":["ˌtɪərəʊkæftəˈriː","тирокафтери: острый сырный соус (греч.)"],"tiropita":["tɪˈrɒpɪtə","тиропита: сырный пирог (греч.)"],"to":["tuː","к, в; чтобы"],"toasted":["ˈtəʊstɪd","поджаренный"],"today":["təˈdeɪ","сегодня"],"today's":["təˈdeɪz","сегодняшний"],"together":["təˈɡeðə","вместе"],"tomato":["təˈmɑːtəʊ","помидор"],"tomatoes":["təˈmɑːtəʊz","помидоры"],"tomatokeftedes":["təˌmɑːtəʊkefˈteðes","томатные оладьи (греч.)"],"tomorrow":["təˈmɒrəʊ","завтра"],"tonight":["təˈnaɪt","сегодня вечером"],"too":["tuː","слишком; тоже"],"topped":["tɒpt","сверху посыпан, покрыт"],"topping":["ˈtɒpɪŋ","топпинг, поливка"],"tou":["tuː","(греч.) «из»"],"traditional":["trəˈdɪʃənəl","традиционный"],"traffic":["ˈtræfɪk","пробки, движение"],"train":["treɪn","обучать"],"trial":["ˈtraɪəl","пробный период"],"trust":["trʌst","доверять"],"try":["traɪ","пробовать"],"trying":["ˈtraɪɪŋ","пробуя"],"tuesday":["ˈtjuːzdeɪ","вторник"],"tuna":["ˈtjuːnə","тунец"],"twelve":["twelv","двенадцать"],"twenty":["ˈtwenti","двадцать"],"two":["tuː","два"],"tzatziki":["tsætˈsiːki","дзадзики (соус)"],"under":["ˈʌndə","на (имя брони); под"],"understand":["ˌʌndəˈstænd","понимать"],"unfriendly":["ʌnˈfrendli","недружелюбный"],"uniform":["ˈjuːnɪfɔːm","униформа"],"unlike":["ʌnˈlaɪk","в отличие от"],"until":["ʌnˈtɪl","до"],"up":["ʌp","вверх"],"urgent":["ˈɜːdʒənt","срочный"],"us":["ʌs","нас, нам"],"use":["juːz","пользоваться"],"usual":["ˈjuːʒʊəl","обычный"],"usually":["ˈjuːʒʊəli","обычно"],"vanilla":["vəˈnɪlə","ванильный"],"vegan":["ˈviːɡən","веганский"],"vegetable":["ˈvedʒtəbəl","овощной"],"vegetables":["ˈvedʒtəbəlz","овощи"],"vegetarian":["ˌvedʒɪˈteərɪən","вегетарианский"],"very":["ˈveri","очень"],"view":["vjuː","вид"],"village":["ˈvɪlɪdʒ","деревня"],"vinegar":["ˈvɪnɪɡə","уксус"],"virgin":["ˈvɜːdʒɪn","нерафинированный (extra virgin)"],"wait":["weɪt","ждать"],"waited":["ˈweɪtɪd","ждал"],"waiter":["ˈweɪtə","официант"],"waiter's":["ˈweɪtəz","официанта"],"waiters":["ˈweɪtəz","официанты"],"waiting":["ˈweɪtɪŋ","ждёт"],"walnut":["ˈwɔːlnʌt","грецкий орех"],"walnuts":["ˈwɔːlnʌts","грецкие орехи"],"want":["wɒnt","хотеть"],"wants":["wɒnts","хочет"],"warm":["wɔːm","тёплый"],"warning":["ˈwɔːnɪŋ","предупреждение"],"was":["wɒz","был, была"],"watch":["wɒtʃ","смотреть"],"water":["ˈwɔːtə","вода"],"way":["weɪ","путь; способ"],"we":["wiː","мы"],"we'll":["wiːl","мы (сделаем) (we will)"],"we've":["wiːv","мы (уже) (we have)"],"wedding":["ˈwedɪŋ","свадьба"],"week":["wiːk","неделя"],"week's":["wiːks","недели"],"weekday":["ˈwiːkdeɪ","будний день"],"weekdays":["ˈwiːkdeɪz","будни"],"weekend":["ˌwiːkˈend","выходные"],"weekends":["ˌwiːkˈendz","выходные (по выходным)"],"weekly":["ˈwiːkli","еженедельный"],"welcome":["ˈwelkəm","добро пожаловать"],"well":["wel","хорошо; ну"],"went":["went","пошёл"],"were":["wɜː","были"],"what":["wɒt","что"],"what's":["wɒts","что (what is)"],"when":["wen","когда"],"where":["weə","где, куда"],"whether":["ˈweðə","ли"],"which":["wɪtʃ","который"],"who":["huː","кто"],"why":["waɪ","почему"],"will":["wɪl","будет (буд. время)"],"window":["ˈwɪndəʊ","окно"],"wine":["waɪn","вино"],"with":["wɪð","с"],"without":["wɪˈðaʊt","без"],"won't":["wəʊnt","не (будет) (will not)"],"work":["wɜːk","работать"],"works":["wɜːks","работает"],"worth":["wɜːθ","стоящий"],"would":["wʊd","бы"],"write":["raɪt","писать"],"wrong":["rɒŋ","неправильный"],"wrote":["rəʊt","написал"],"yellow":["ˈjeləʊ","жёлтый"],"yes":["jes","да"],"yoghurt":["ˈjɒɡət","йогурт"],"york":["jɔːk","Йорк (New York — Нью-Йорк)"],"you":["juː","вы, ты"],"you'll":["juːl","вы (сделаете) (you will)"],"you're":["jɔː","вы (you are)"],"your":["jɔː","ваш, твой"],"yourself":["jɔːˈself","себя, сам"],"zealand":["ˈziːlənd","Зеландия (New Zealand — Новая Зеландия)"],"zucchini":["zʊˈkiːni","цукини, кабачок"]};
 /* ---------- word popup: select an English word → transcription + translation ----------
    The sound button in .wp-say plays the recorded word (say()). */
 (function(){
