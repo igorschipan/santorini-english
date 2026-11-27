@@ -147,6 +147,7 @@ main::-webkit-scrollbar{display:none}
 .mist{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--pebble)}
 .mist:first-child{border-top:0;padding-top:2px}
 .mist .x{flex:1;min-width:0}
+.mist .th{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:none;box-shadow:var(--shadow-lo)}
 .mist s{color:var(--terra);text-decoration-thickness:1.5px}
 .mist .ok{font-weight:700;margin-top:2px}
 .mist .ru{font-size:14px;color:var(--ink-2);margin-top:2px}
@@ -269,7 +270,7 @@ select.in{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(-
 .who{font-size:14px;font-weight:700;color:var(--aegean);margin:0 0 4px 74px}
 .note{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:17px;line-height:1.5;margin-bottom:14px}
 .note .lbl{font-size:14px;font-weight:700;color:var(--ink-2);margin-bottom:4px}
-.dish{border-radius:20px;overflow:hidden;background:#fff;box-shadow:var(--shadow);margin-bottom:16px}
+.dish{flex:none;border-radius:20px;overflow:hidden;background:#fff;box-shadow:var(--shadow);margin-bottom:16px}
 .dish img{width:100%;height:210px;object-fit:cover}
 .dish .nm{padding:10px 14px 12px;font-weight:800;font-size:19px}
 .slots{display:flex;flex-wrap:wrap;gap:8px;min-height:116px;padding:10px 0;border-bottom:2px solid var(--pebble);margin-bottom:18px;align-content:flex-start;
@@ -1296,8 +1297,8 @@ function renderPath(){
 /* mistakes */
 function renderMist(){
   const open = S.mistakes.filter(m => !m.fixed), fixed = S.mistakes.filter(m => m.fixed);
-  const item = m => `<div class="mist"><div class="x">${m.wrong ? `<div><s>${esc(m.wrong)}</s></div>` : ""}<div class="ok">${esc(m.en)}</div><div class="ru">${esc(m.ru)}${m.src ? " · " + esc(m.src) : ""}</div></div>
-    <span class="stamp ${m.fixed ? "fixed" : "todo"}">${m.fixed ? "Исправлено" : "Повторить"}</span></div>`;
+  const item = m => { const dx = dishOf(m); return `<div class="mist">${dx ? pic(IMG.dish(dx.d.i), "", "th") : ""}<div class="x">${m.wrong ? `<div><s>${esc(m.wrong)}</s></div>` : ""}<div class="ok">${esc(m.en)}</div><div class="ru">${esc(m.ru)}${m.src ? " · " + esc(m.src) : ""}</div></div>
+    <span class="stamp ${m.fixed ? "fixed" : "todo"}">${m.fixed ? "Исправлено" : "Повторить"}</span></div>`; };
   $("#main").innerHTML = `<div class="pane"><h1>Мои ошибки</h1>
     <p class="lead">Ошибки не исчезают. Каждая возвращается в повторение, пока вы не ответите правильно, и тогда получает штамп «Исправлено».</p>
     ${open.length ? `<button class="btn" data-review>Повторить ошибки (${Math.min(open.length, 8)})</button><p class="lead" style="font-size:14px;margin-top:8px">Каждый верный ответ в повторении возвращает сердечко.</p>`
@@ -1441,10 +1442,17 @@ function renderMe(){
 let L = null;
 function others(lesson, en){ return shuffle(lesson.p.map(p => p[0]).filter(x => x !== en)); }
 const DISHES = MENU.filter(d => d.i && d.d && d.n !== "Extras");
+function dishPool(d){ const same = shuffle(DISHES.filter(x => x !== d && x.c === d.c)); return same.length >= 2 ? same : shuffle(DISHES.filter(x => x !== d)); }
+/* a saved mistake from a dish task: find its dish again (also works for mistakes saved before this fix) */
+function dishOf(m){
+  const n = m.ru === "Название блюда" && DISHES.find(d => d.n === m.en);
+  if (n) return { d:n, type:"dish" };
+  const dd = DISHES.find(d => d.d === m.en);
+  return dd ? { d:dd, type:"describe" } : null;
+}
 function dishTasks(n, T){
   shuffle(DISHES).slice(0, n).forEach((d, k) => {
-    const same = shuffle(DISHES.filter(x => x !== d && x.c === d.c)), any = shuffle(DISHES.filter(x => x !== d));
-    const pool = (same.length >= 2 ? same : any);
+    const pool = dishPool(d);
     if (k % 2 === 0) T.push({ type:"dish", d, en:d.n, opts: shuffle([d.n, pool[0].n, pool[1].n]) });
     else T.push({ type:"describe", d, en:d.d, opts: shuffle([d.d, pool[0].d, pool[1].d]) });
   });
@@ -1683,9 +1691,19 @@ function build(lesson){
 function buildReview(only){
   const items = shuffle(S.mistakes.filter(m => !m.fixed && (!only || only.includes(m.en)))).slice(0, 8);
   const pool = LESSONS.flatMap(l => (l.p || []).map(p => p[0]));
-  return items.map((m, i) => (i % 2 && m.en.split(" ").length <= 9)
-    ? { type:"order", en:m.en, ru:m.ru, extra:[], mref:m }
-    : { type:"ru2en", en:m.en, ru:m.ru, opts: shuffle([m.en, m.wrong || shuffle(pool)[0], shuffle(pool.filter(x => x !== m.en))[0]]), mref:m });
+  const fixes = LESSONS.flatMap(l => l.f || []);
+  return items.map((m, i) => {
+    /* dish mistakes come back with the dish photo, as in the lesson */
+    const x = dishOf(m);
+    if (x){ const p = dishPool(x.d), key = x.type === "dish" ? "n" : "d";
+      return { type:x.type, d:x.d, en:x.d[key], opts: shuffle([x.d[key], p[0][key], p[1][key]]), mref:m }; }
+    /* "which phrase has no mistake" comes back as the same question; the rule is shown only after the answer */
+    const f = fixes.find(f => f.ok === m.en);
+    if (f) return Object.assign({ type:"fix" }, f, { mref:m });
+    return (i % 2 && m.en.split(" ").length <= 9)
+      ? { type:"order", en:m.en, ru:m.ru, extra:[], mref:m }
+      : { type:"ru2en", en:m.en, ru:m.ru, opts: shuffle([m.en, m.wrong || shuffle(pool)[0], shuffle(pool.filter(x => x !== m.en))[0]]), mref:m };
+  });
 }
 function startLesson(id, only, opt){
   const review = id === "review", daily = !!(opt && opt.daily);
