@@ -1849,7 +1849,7 @@ function answerOf(t){
 function check(){
   const t = L.tasks[L.i];
   if (L.timedOut) return;
-  tmrStop();
+  killMic(); tmrStop();
   let [got, want] = answerOf(t);
   let ok;
   if (t.type === "type") ok = close(got, want);
@@ -2026,14 +2026,25 @@ function silenceAll(){ stopVoice(); [SFX.ok, SFX.bad, VA].forEach(a => { try { a
 function micFail(msg){ if (!$("#heard")) return;
   $("#tin").classList.remove("hide"); $(".mic") && $(".mic").classList.add("hide");
   $("#heard").innerHTML = `<div class="hint">${I.mic}<span>${msg}нажмите в поле выше, затем микрофон на клавиатуре и скажите фразу.</span></div>`; }
-let micTries = 0, recStop = null;
+let micTries = 0, recStop = null, recPrev = null, recWait = 0;
 /* Safari can keep the microphone busy after recognition "ended": always release it hard.
    Also used when the task changes, the lesson closes or Safari goes to the background. */
-function killMic(){ const r = recog; if (!r) return; r._killed = true; recog = null; try { r.abort(); } catch(e){} if (r.onend) r.onend(); }
+function killMic(){ clearTimeout(recWait); recWait = 0; const r = recog; if (!r) return; r._killed = true; recog = null; try { r.abort(); } catch(e){} if (r.onend) r.onend(); }
+/* the previous task's recognizer may still hold the microphone: a new one then shows "Говорите…" but hears nothing.
+   Wait until the phone has really released it (plus 0.4 s), at most 2 s. */
 function toggleMic(btn){
   if (recog){ if (recStop) recStop(); return; }
+  if (recWait) return;
+  const p = recPrev, t0 = Date.now(), free = () => p._gone && Date.now() - p._gone >= 400;
+  if (!p || free()){ recPrev = null; return startMic(btn); }
+  btn.querySelector("span").textContent = "Подождите…";
+  const go = () => { recWait = 0; if (!btn.isConnected || recog) return;
+    if (free() || Date.now() - t0 > 2000){ recPrev = null; startMic(btn); } else recWait = setTimeout(go, 100); };
+  recWait = setTimeout(go, 100);
+}
+function startMic(btn){
   silenceAll(); micSession(true);
-  const r = recog = new REC(); r.lang = "en-US"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = true;
+  const r = recog = new REC(); recPrev = r; r.addEventListener("end", () => { r._gone = Date.now(); }); r.lang = "en-US"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = true;
   const t0 = Date.now(); let got = false, failed = false, ended = false, stopT = 0;
   /* polite stop first; if the phone does not finish within 1.5 s, cut the microphone off */
   const finish = () => { if (recog !== r) return; try { r.stop(); } catch(e){}
